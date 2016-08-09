@@ -1,0 +1,10 @@
+services:
+    riot-api:
+        class: LeagueOfData\Adapters\API\ApiAdapter
+        arguments: ['@logger', '%apiKey%']
+    sql-adapter:
+        class: LeagueOfData\Adapters\SQL\SqlAdapter
+        arguments: ['@logger', '@database_connection']
+    rabbitmq:
+        class: LeagueOfData\Service\RabbitMQ
+        arguments: ['@logger']

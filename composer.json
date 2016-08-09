@@ -1,0 +1,46 @@
+{
+    "name": "blackknight/phpspec-training",
+    "description": "Description of project phpspec-training.",
+    "authors": [
+        {
+            "name": "Caitlyn Osborne",
+            "email": "caitlyn.osborne@affiliatewindow.com"
+        }
+    ],
+    "require": {
+        "symfony/class-loader": "^3.1",
+        "symfony/console": "^3.1",
+        "monolog/monolog": "^1.20",
+        "symfony/monolog-bundle": "^2.11",
+        "symfony/framework-bundle": "^3.1",
+        "doctrine/dbal": "^2.5",
+        "doctrine/doctrine-bundle": "^1.6",
+        "php-amqplib/php-amqplib": "2.6.*",
+        "incenteev/composer-parameter-handler": "~2.0"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src"
+        },
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "extra": {
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        }
+    }
+}
