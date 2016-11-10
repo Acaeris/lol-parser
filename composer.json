@@ -1,10 +1,10 @@
 {
-    "name": "blackknight/phpspec-training",
-    "description": "Description of project phpspec-training.",
+    "name": "Acaeris/lol-parser",
+    "description": "League of Legends API processor.",
     "authors": [
         {
             "name": "Caitlyn Osborne",
-            "email": "caitlyn.osborne@affiliatewindow.com"
+            "email": "acaeris@gmail.com"
         }
     ],
     "require": {
@@ -16,7 +16,8 @@
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "php-amqplib/php-amqplib": "2.6.*",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"

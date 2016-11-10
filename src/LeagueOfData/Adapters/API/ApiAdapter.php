@@ -3,17 +3,26 @@
 namespace LeagueOfData\Adapters\API;
 
 use Psr\Log\LoggerInterface;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Client;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\API\Exception\APIException;
 
 class ApiAdapter implements AdapterInterface
 {
+    const API_PROCEED = 1;
+    const API_SKIP = 2;
+    const API_REPEAT = 3;
+    const API_FAIL = 0;
+    
     private $log;
+    private $client;
     private $apiKey;
 
     public function __construct(LoggerInterface $log, $apiKey)
     {
         $this->log = $log;
+        $this->client = new Client();
         $this->apiKey = $apiKey;
     }
 
@@ -35,33 +44,24 @@ class ApiAdapter implements AdapterInterface
 
     private function request(Request $request)
     {
-        $ch = curl_init();
-        $url = $request->call() . '?api_key=' . $this->apiKey;
-
-        foreach ($request->params() as $key => $value) {
-            $url .= '&' . $key . '=' . $value;
-        }
-
-        curl_setopt($ch, CURLOPT_URL, $url); // Store this in config
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-
-        $this->log->info('Calling API');
-        $response = curl_exec($ch);
-        
-        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $headerSize);
-        $body = substr($response, $headerSize);
-        
-        // Store response...?
-        $response = json_decode($body);
-        if ($this->processStatus($header, $response)) {
-            return $response;
-        } else {
-            sleep(1);
-            return $this->request($request);
-        }
+        $response = $this->client->get($request->call(), [
+            'query' => array_merge($request->params(), ['api_key' => $this->apiKey]),
+            'headers' => [
+                'Content-type' => 'application/json'
+            ]
+        ]);
+        $action = $this->checkResponse($response);
+        switch ($action) {
+            case self::API_PROCEED:
+                return json_decode($response->getBody());
+            case self::API_REPEAT:
+                sleep(1);
+                return $this->guzzleRequest($request);
+            case self::API_FAIL:
+                exit;
+            case self::API_SKIP:
+                return false;
+        } 
     }
 
     private function buildRequest($type, $data)
@@ -82,18 +82,21 @@ class ApiAdapter implements AdapterInterface
         }
     }
 
-    private function processStatus($header, $response)
+    private function checkResponse(ResponseInterface $response)
     {
-        if (isset($response->status)) {
-            switch ($response->status->status_code) {
-                case 503 :
-                    $this->log->error("Service unavailable. Waiting to retry");
-                    return false;
-                default:
-                    $this->log->error("Response Status [{$response->status->status_code}]: {$response->status->message}");
-                    exit;
-            }
+        switch ($response->getStatusCode()) {
+            case 200: 
+                return self::API_PROCEED;
+            case 503:
+                $this->log->error("Service unavailable. Waiting to retry");
+                sleep(1);
+                return self::API_RETRY;
+            case 404:
+                $this->log->error("Data unavailable. Skipping");
+                return self::API_SKIP;
+            default:
+                $this->log->error("Unknown response: " . $response->getStatusCode());
+                return self::API_FAIL;
         }
-        return true;
     }
 }
