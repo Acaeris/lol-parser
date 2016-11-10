@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Models\Json;
 
-use LeagueOfData\Models\Summoners;
+use LeagueOfData\Models\Interfaces\Summoners;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\API\SummonerRequest;
 

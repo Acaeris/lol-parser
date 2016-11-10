@@ -2,11 +2,11 @@
 
 namespace LeagueOfData\Models\Sql;
 
-use LeagueOfData\Models\Champions;
+use LeagueOfData\Models\Interfaces\Champions;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 
-class SqlChampions implements Champions
+final class SqlChampions implements Champions
 {
     private $db;
     private $log;
@@ -18,13 +18,15 @@ class SqlChampions implements Champions
         $this->log = $log;
     }
 
-    public function store(AdapterInterface $adapter) {
+    public function store(AdapterInterface $adapter)
+    {
         foreach ($this->champions as $champion) {
             $champion->store($adapter);
         }
     }
 
-    public function collectAll() {
+    public function collectAll()
+    {
         $this->champions = [];
         $results = $this->db->fetchAll('SELECT * FROM champions');
         foreach ($results as $champion) {
@@ -33,13 +35,15 @@ class SqlChampions implements Champions
         return $this->champions;
     }
 
-    public function collect($id) {
+    public function collect($id)
+    {
         $result = $this->db->fetchAssoc('SELECT * FROM champions WHERE id = ?', array($id));
         $this->champions = [ new Champion($result) ];
         return $this->champions;
     }
 
-    public function transfer() {
+    public function transfer()
+    {
         return $this->champions;
     }
 }

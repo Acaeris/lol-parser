@@ -7,11 +7,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use LeagueOfData\Models\Json\JsonVersions;
 
-class VersionProcessorCommand extends ContainerAwareCommand
+class VersionUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('process:version')
+        $this->setName('update:version')
             ->setDescription('API processor command for version data');
     }
 
@@ -28,9 +28,9 @@ class VersionProcessorCommand extends ContainerAwareCommand
         foreach ($versions as $version) {
             $version->store($this->getContainer()->get('sql-adapter'));
             $log->info("Queuing update for version " . $version->versionNumber());
-            $mq->addProcessToQueue('champion', '{
-                "command" : "process:champion",
-                "version" : "' . $version->versionNumber() . '"
+            $mq->addProcessToQueue('update:champion', '{
+                "command" : "update:champion",
+                "release" : "' . $version->versionNumber() . '"
             }');
         }
     }

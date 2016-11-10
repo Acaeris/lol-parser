@@ -9,11 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use LeagueOfData\Models\Json\JsonMatchHistories;
 use LeagueOfData\Processor\MatchHistoryProcessor;
 
-class MatchHistoryProcessorCommand extends ContainerAwareCommand
+class MatchHistoryUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('process:matchhistory')
+        $this->setName('update:matchhistory')
             ->setDescription('API processor command to get match history for a specific player')
             ->addArgument('playerId', InputArgument::REQUIRED, 'Player ID to process data for');
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Interfaces;
 
 interface Summoners {
     function add($id, $name, $level, $iconId, $revisionDate);

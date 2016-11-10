@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Models\Json;
 
-use LeagueOfData\Models\Summoner;
+use LeagueOfData\Models\Interfaces\Summoner;
 
 final class JsonSummoner implements Summoner
 {

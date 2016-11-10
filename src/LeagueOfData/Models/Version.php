@@ -3,6 +3,7 @@
 namespace LeagueOfData\Models;
 
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Models\Interfaces\Version as VersionInterface;
 
 final class Version implements VersionInterface
 {

@@ -15,11 +15,11 @@
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">appDevDebugProjectContainer</parameter>
-    <parameter key="secret">some_value_that_isn't_known_about</parameter>
+    <parameter key="secret">some_value_that_isnt_known_about</parameter>
     <parameter key="apikey">c156f990-88f9-4f26-9a7f-286fdfe2d865</parameter>
     <parameter key="fragment.renderer.hinclude.global_template"></parameter>
     <parameter key="fragment.path">/_fragment</parameter>
-    <parameter key="kernel.secret">some_value_that_isn't_known_about</parameter>
+    <parameter key="kernel.secret">some_value_that_isnt_known_about</parameter>
     <parameter key="kernel.http_method_override">true</parameter>
     <parameter key="kernel.trusted_hosts" type="collection"/>
     <parameter key="kernel.trusted_proxies" type="collection"/>
@@ -139,6 +139,7 @@
   <services>
     <service id="riot-api" class="LeagueOfData\Adapters\API\ApiAdapter">
       <argument type="service" id="logger"/>
+      <argument>c156f990-88f9-4f26-9a7f-286fdfe2d865</argument>
     </service>
     <service id="sql-adapter" class="LeagueOfData\Adapters\SQL\SqlAdapter">
       <argument type="service" id="logger"/>
@@ -205,8 +206,8 @@
                 <service class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
                   <tag name="cache.pool"/>
                   <argument>n7CFluaByd</argument>
-                  <argument></argument>
-                  <argument>41uq2-okKJNhOvZnqsHLcA</argument>
+                  <argument>0</argument>
+                  <argument>J6YYx5pWksq3CW0KGU5TPg</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -218,8 +219,8 @@
                 <service class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
                   <tag name="cache.pool"/>
                   <argument>Jrt6LE+P5f</argument>
-                  <argument></argument>
-                  <argument>41uq2-okKJNhOvZnqsHLcA</argument>
+                  <argument>0</argument>
+                  <argument>J6YYx5pWksq3CW0KGU5TPg</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -241,7 +242,7 @@
       <argument>/home/acaeris/Workspace/lol-parser/app/Resources</argument>
     </service>
     <service id="uri_signer" class="Symfony\Component\HttpKernel\UriSigner">
-      <argument>some_value_that_isn't_known_about</argument>
+      <argument>some_value_that_isnt_known_about</argument>
     </service>
     <service id="config_cache_factory" class="Symfony\Component\Config\ResourceCheckerConfigCacheFactory">
       <argument type="collection">
@@ -527,7 +528,7 @@
     <service id="cache.app" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
       <tag name="cache.pool"/>
       <argument>9zUmO4RKyJ</argument>
-      <argument></argument>
+      <argument>0</argument>
       <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -536,8 +537,8 @@
     <service id="cache.system" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <tag name="cache.pool"/>
       <argument>h4AN2QDpUL</argument>
-      <argument></argument>
-      <argument>41uq2-okKJNhOvZnqsHLcA</argument>
+      <argument>0</argument>
+      <argument>J6YYx5pWksq3CW0KGU5TPg</argument>
       <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -592,9 +593,9 @@
       </call>
     </service>
     <service id="debug.controller_resolver" class="Symfony\Component\HttpKernel\Controller\TraceableControllerResolver">
+      <tag name="monolog.logger" channel="request"/>
       <argument type="service">
         <service class="Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver" public="false">
-          <tag name="monolog.logger" channel="request"/>
           <argument type="service" id="service_container"/>
           <argument type="service">
             <service class="Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser" public="false">
@@ -640,17 +641,24 @@
       </argument>
       <argument type="service" id="debug.stopwatch"/>
     </service>
+    <service id="monolog.processor.psr_log_message" class="Monolog\Processor\PsrLogMessageProcessor" public="false"/>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <argument>/home/acaeris/Workspace/lol-parser/var/logs/dev.log</argument>
       <argument>200</argument>
       <argument>true</argument>
       <argument>null</argument>
+      <call method="pushProcessor">
+        <argument type="service" id="monolog.processor.psr_log_message"/>
+      </call>
     </service>
     <service id="monolog.handler.console" class="Symfony\Bridge\Monolog\Handler\ConsoleHandler">
       <tag name="kernel.event_subscriber"/>
       <argument>null</argument>
       <argument>false</argument>
       <argument type="collection"/>
+      <call method="pushProcessor">
+        <argument type="service" id="monolog.processor.psr_log_message"/>
+      </call>
     </service>
     <service id="doctrine.dbal.connection_factory" class="Doctrine\Bundle\DoctrineBundle\ConnectionFactory">
       <argument type="collection"/>
@@ -763,6 +771,7 @@
         <argument type="service" id="monolog.handler.main"/>
       </call>
     </service>
+    <service id="monolog.handler.null_internal" class="Monolog\Handler\NullHandler"/>
     <service id="cache.default_redis_provider" class="Redis">
       <argument>redis://localhost</argument>
       <factory class="Symfony\Component\Cache\Adapter\RedisAdapter" method="createConnection"/>

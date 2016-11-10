@@ -9,11 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use LeagueOfData\Models\Json\JsonSummoners;
 use LeagueOfData\Processor\PlayerProcessor;
 
-class PlayerProcessorCommand extends ContainerAwareCommand
+class PlayerUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('process:player')
+        $this->setName('update:player')
             ->setDescription('API processor command for player data')
             ->addArgument('playerIds', InputArgument::IS_ARRAY, 'List of player IDs to process data for');
     }

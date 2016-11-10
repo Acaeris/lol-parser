@@ -1,5 +1,5 @@
 <?php
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Interfaces;
 
 interface Versions {
     function collectAll();

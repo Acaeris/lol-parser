@@ -60,12 +60,14 @@ class appDevDebugProjectContainer extends Container
             'logger' => 'getLoggerService',
             'monolog.handler.console' => 'getMonolog_Handler_ConsoleService',
             'monolog.handler.main' => 'getMonolog_Handler_MainService',
+            'monolog.handler.null_internal' => 'getMonolog_Handler_NullInternalService',
             'monolog.logger.cache' => 'getMonolog_Logger_CacheService',
             'monolog.logger.doctrine' => 'getMonolog_Logger_DoctrineService',
             'monolog.logger.event' => 'getMonolog_Logger_EventService',
             'monolog.logger.php' => 'getMonolog_Logger_PhpService',
             'monolog.logger.request' => 'getMonolog_Logger_RequestService',
             'monolog.logger.translation' => 'getMonolog_Logger_TranslationService',
+            'monolog.processor.psr_log_message' => 'getMonolog_Processor_PsrLogMessageService',
             'property_accessor' => 'getPropertyAccessorService',
             'rabbitmq' => 'getRabbitmqService',
             'request_stack' => 'getRequestStackService',
@@ -121,6 +123,14 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isFrozen()
+    {
+        return true;
+    }
+
+    /**
      * Gets the 'annotation_reader' service.
      *
      * This service is shared.
@@ -143,7 +153,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_AppService()
     {
-        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('9zUmO4RKyJ', '', (__DIR__.'/pools'));
+        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('9zUmO4RKyJ', 0, (__DIR__.'/pools'));
 
         if ($this->has('monolog.logger.cache')) {
             $instance->setLogger($this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
@@ -175,7 +185,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_SystemService()
     {
-        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('h4AN2QDpUL', '', '41uq2-okKJNhOvZnqsHLcA', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('h4AN2QDpUL', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -193,8 +203,8 @@ class appDevDebugProjectContainer extends Container
         $b = new \Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer();
         $b->addPool($this->get('cache.app'));
         $b->addPool($this->get('cache.system'));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('n7CFluaByd', '', '41uq2-okKJNhOvZnqsHLcA', (__DIR__.'/pools'), $a));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('Jrt6LE+P5f', '', '41uq2-okKJNhOvZnqsHLcA', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('n7CFluaByd', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('Jrt6LE+P5f', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $a));
 
         return $this->services['cache_clearer'] = new \Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer(array(0 => $b));
     }
@@ -540,7 +550,11 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getMonolog_Handler_ConsoleService()
     {
-        return $this->services['monolog.handler.console'] = new \Symfony\Bridge\Monolog\Handler\ConsoleHandler(NULL, false, array());
+        $this->services['monolog.handler.console'] = $instance = new \Symfony\Bridge\Monolog\Handler\ConsoleHandler(NULL, false, array());
+
+        $instance->pushProcessor($this->get('monolog.processor.psr_log_message'));
+
+        return $instance;
     }
 
     /**
@@ -553,7 +567,24 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getMonolog_Handler_MainService()
     {
-        return $this->services['monolog.handler.main'] = new \Monolog\Handler\StreamHandler(($this->targetDirs[2].'/logs/dev.log'), 200, true, NULL);
+        $this->services['monolog.handler.main'] = $instance = new \Monolog\Handler\StreamHandler(($this->targetDirs[2].'/logs/dev.log'), 200, true, NULL);
+
+        $instance->pushProcessor($this->get('monolog.processor.psr_log_message'));
+
+        return $instance;
+    }
+
+    /**
+     * Gets the 'monolog.handler.null_internal' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \Monolog\Handler\NullHandler A Monolog\Handler\NullHandler instance
+     */
+    protected function getMonolog_Handler_NullInternalService()
+    {
+        return $this->services['monolog.handler.null_internal'] = new \Monolog\Handler\NullHandler();
     }
 
     /**
@@ -726,7 +757,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getRiotapiService()
     {
-        return $this->services['riot-api'] = new \LeagueOfData\Adapters\API\ApiAdapter($this->get('logger'));
+        return $this->services['riot-api'] = new \LeagueOfData\Adapters\API\ApiAdapter($this->get('logger'), 'c156f990-88f9-4f26-9a7f-286fdfe2d865');
     }
 
     /**
@@ -1180,7 +1211,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getUriSignerService()
     {
-        return $this->services['uri_signer'] = new \Symfony\Component\HttpKernel\UriSigner('some_value_that_isn\'t_known_about');
+        return $this->services['uri_signer'] = new \Symfony\Component\HttpKernel\UriSigner('some_value_that_isnt_known_about');
     }
 
     /**
@@ -1194,6 +1225,23 @@ class appDevDebugProjectContainer extends Container
     protected function getValidateRequestListenerService()
     {
         return $this->services['validate_request_listener'] = new \Symfony\Component\HttpKernel\EventListener\ValidateRequestListener();
+    }
+
+    /**
+     * Gets the 'monolog.processor.psr_log_message' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * This service is private.
+     * If you want to be able to request this service from the container directly,
+     * make it public, otherwise you might end up with broken code.
+     *
+     * @return \Monolog\Processor\PsrLogMessageProcessor A Monolog\Processor\PsrLogMessageProcessor instance
+     */
+    protected function getMonolog_Processor_PsrLogMessageService()
+    {
+        return $this->services['monolog.processor.psr_log_message'] = new \Monolog\Processor\PsrLogMessageProcessor();
     }
 
     /**
@@ -1279,11 +1327,11 @@ class appDevDebugProjectContainer extends Container
             ),
             'kernel.charset' => 'UTF-8',
             'kernel.container_class' => 'appDevDebugProjectContainer',
-            'secret' => 'some_value_that_isn\'t_known_about',
+            'secret' => 'some_value_that_isnt_known_about',
             'apikey' => 'c156f990-88f9-4f26-9a7f-286fdfe2d865',
             'fragment.renderer.hinclude.global_template' => '',
             'fragment.path' => '/_fragment',
-            'kernel.secret' => 'some_value_that_isn\'t_known_about',
+            'kernel.secret' => 'some_value_that_isnt_known_about',
             'kernel.http_method_override' => true,
             'kernel.trusted_hosts' => array(
 

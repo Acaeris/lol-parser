@@ -3,7 +3,7 @@
 namespace LeagueOfData\Models\Json;
 
 use LeagueOfData\Models\Version;
-use LeagueOfData\Models\Versions;
+use LeagueOfData\Models\Interfaces\Versions;
 use LeagueOfData\Adapters\AdapterInterface;
 
 final class JsonVersions implements Versions

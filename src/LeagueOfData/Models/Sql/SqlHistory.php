@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Models\Sql;
 
-use LeagueOfData\Models\History;
+use LeagueOfData\Models\Interfaces\History;
 
 final class SqlHistory implements History {
 

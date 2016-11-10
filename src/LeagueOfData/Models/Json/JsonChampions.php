@@ -3,7 +3,7 @@
 namespace LeagueOfData\Models\Json;
 
 use LeagueOfData\Models\Champion;
-use LeagueOfData\Models\Champions;
+use LeagueOfData\Models\Interfaces\Champions;
 use LeagueOfData\Adapters\AdapterInterface;
 
 final class JsonChampions implements Champions

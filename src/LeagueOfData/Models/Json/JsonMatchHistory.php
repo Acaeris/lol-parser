@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Models\Json;
 
-use LeagueOfData\Models\MatchHistory;
+use LeagueOfData\Models\Interfaces\MatchHistory;
 
 class JsonMatchHistory implements MatchHistory
 {

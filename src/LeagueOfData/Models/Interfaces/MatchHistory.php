@@ -1,5 +1,5 @@
 <?php
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Interfaces;
 
 interface MatchHistory {
     public function id();

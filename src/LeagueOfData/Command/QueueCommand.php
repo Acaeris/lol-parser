@@ -39,7 +39,7 @@ final class QueueCommand extends ContainerAwareCommand
     {
         $this->log->info('Starting process');
         $task = json_decode($msg->body, true);
-        $command = $this->getApplication()->find('process:' . $task['command']);
+        $command = $this->getApplication()->find($task['command']);
         $commandInput = new ArrayInput($task['params']);
         $command->run($commandInput, $this->output);
         sleep(1);

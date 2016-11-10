@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Models\Json;
 
-use LeagueOfData\Models\MatchHistories;
+use LeagueOfData\Models\Interfaces\MatchHistories;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Models\Json\JsonMatchHistory;
 use LeagueOfData\Adapters\API\MatchListRequest;

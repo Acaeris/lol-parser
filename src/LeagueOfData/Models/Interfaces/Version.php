@@ -1,10 +1,10 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Interfaces;
 
 use LeagueOfData\Adapters\AdapterInterface;
 
-interface VersionInterface {
+interface Version {
     public function toArray();
     public function versionNumber();
     public function store(AdapterInterface $adapter);

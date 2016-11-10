@@ -1,6 +1,6 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Interfaces;
 
 interface Summoner {
     public function id();
