@@ -37,7 +37,7 @@ final class JsonItems implements Items
             'id' => $item->id,
             'name' => $item->name,
             'description' => $item->sanitizedDescription,
-            'image' => $this->image->full,
+            'image' => $item->image->full,
             'version' => $version
         ]);
     }
