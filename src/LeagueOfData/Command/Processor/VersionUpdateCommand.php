@@ -32,6 +32,10 @@ class VersionUpdateCommand extends ContainerAwareCommand
                 "command" : "update:champion",
                 "release" : "' . $version->versionNumber() . '"
             }');
+            $mq->addProcessToQueue('update:item', '{
+                "command" : "update:item",
+                "release" : "' . $version->versionNumber() . '"
+            }');
         }
     }
 }

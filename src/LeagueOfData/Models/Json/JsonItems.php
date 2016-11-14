@@ -20,7 +20,11 @@ final class JsonItems implements Items
         $response = $this->source->fetch('item', [ 'version' => $version ]);
         $items = [];
         foreach ($response->data as $item) {
-            $items[] = $this->create($item, $response->version);
+            try {
+                $items[] = $this->create($item, $response->version);
+            } catch (\Exception $e) {
+                var_dump($item); echo $e; die();
+            }
         }
         return $items;
     }
@@ -35,8 +39,8 @@ final class JsonItems implements Items
     {
         return new Item([
             'id' => $item->id,
-            'name' => $item->name,
-            'description' => $item->sanitizedDescription,
+            'name' => (isset($item->name) ? $item->name : 'N/A'),
+            'description' => (isset($item->sanitizedDescription) ? $item->sanitizedDescription : 'N/A'),
             'image' => $item->image->full,
             'version' => $version
         ]);

@@ -46,8 +46,8 @@ class ItemUpdateCommand extends ContainerAwareCommand
     private function fetch($itemId, $version)
     {
         $this->log->info("Fetching items for version {$version}" . (isset($itemId) ? " [{$itemId}]" : ""));
-        if (!empty($championId)) {
-            $this->data = $this->service->collect($championId, $version);
+        if (!empty($itemId)) {
+            $this->data = $this->service->collect($itemId, $version);
         } else {
             $this->data = $this->service->collectAll($version);
         }

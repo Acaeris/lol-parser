@@ -33,6 +33,9 @@ final class SqlChampions implements Champions
             'query' => 'SELECT * FROM champion WHERE version = ?',
             'params' => [$version]
         ]);
+        if ($results === false) {
+            return [];
+        }
         foreach ($results as $champion) {
             $this->champions[] = new Champion($champion);
         }

@@ -32,6 +32,9 @@ final class SqlItems implements Items
             'query' => 'SELECT * FROM item WHERE version = ?',
             'params' => [$version]
         ]);
+        if ($results === false) {
+            return [];
+        }
         foreach ($results as $item) {
             $this->items[] = new Item($item);
         }
