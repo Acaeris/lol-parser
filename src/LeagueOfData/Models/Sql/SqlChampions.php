@@ -3,6 +3,7 @@
 namespace LeagueOfData\Models\Sql;
 
 use LeagueOfData\Models\Interfaces\Champions;
+use LeagueOfData\Models\Champion;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 
@@ -25,19 +26,25 @@ final class SqlChampions implements Champions
         }
     }
 
-    public function collectAll()
+    public function collectAll($version)
     {
         $this->champions = [];
-        $results = $this->db->fetchAll('SELECT * FROM champions');
+        $results = $this->db->fetch('champion', [
+            'query' => 'SELECT * FROM champion WHERE version = ?',
+            'params' => [$version]
+        ]);
         foreach ($results as $champion) {
             $this->champions[] = new Champion($champion);
         }
         return $this->champions;
     }
 
-    public function collect($id)
+    public function collect($id, $version)
     {
-        $result = $this->db->fetchAssoc('SELECT * FROM champions WHERE id = ?', array($id));
+        $result = $this->db->fetch('champion', [
+            'query' => 'SELECT * FROM champion WHERE id = ? AND version = ?',
+            'params' => [$id, $version]
+        ]);
         $this->champions = [ new Champion($result) ];
         return $this->champions;
     }

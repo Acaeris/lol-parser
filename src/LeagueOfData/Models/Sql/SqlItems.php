@@ -25,19 +25,25 @@ final class SqlItems implements Items
         }
     }
 
-    public function collectAll()
+    public function collectAll($version)
     {
         $this->items = [];
-        $results = $this->db->fetchAll('SELECT * FROM items');
+        $results = $this->db->fetch('item', [
+            'query' => 'SELECT * FROM item WHERE version = ?',
+            'params' => [$version]
+        ]);
         foreach ($results as $item) {
             $this->items[] = new Item($item);
         }
         return $this->items;
     }
 
-    public function collect($id)
+    public function collect($id, $version)
     {
-        $result = $this->db->fetchAssoc('SELECT * FROM items WHERE id = ?', array($id));
+        $result = $this->db->fetch('item', [
+            'query' => 'SELECT * FROM item WHERE id = ? AND version = ?',
+            'params' => [$id, $version]
+        ]);
         $this->items = [ new Item($result) ];
         return $this->items;
     }
