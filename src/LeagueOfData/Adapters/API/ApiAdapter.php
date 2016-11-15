@@ -5,6 +5,8 @@ namespace LeagueOfData\Adapters\API;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ClientException;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\API\Exception\APIException;
 
@@ -44,19 +46,29 @@ class ApiAdapter implements AdapterInterface
 
     private function request(Request $request)
     {
-        $response = $this->client->get($request->call(), [
-            'query' => array_merge($request->params(), ['api_key' => $this->apiKey]),
-            'headers' => [
-                'Content-type' => 'application/json'
-            ]
-        ]);
-        $action = $this->checkResponse($response);
-        switch ($action) {
+        try {
+            $response = $this->client->get($request->call(), [
+                'query' => array_merge($request->params(), ['api_key' => $this->apiKey]),
+                'headers' => [
+                    'Content-type' => 'application/json'
+                ]
+            ]);
+        } catch (ServerException $e) {
+            $this->log->error('Guzzle Server Exception:', ['status' => $e->getResponse()->getStatusCode(),
+                'request' => $e->getRequest()->getUri(), 'response' => $e->getResponse()->getBody()]);
+            $response = $e->getResponse();
+        } catch (ClientException $e) {
+            $this->log->error('Guzzle Client Exception:', ['status' => $e->getResponse()->getStatusCode(),
+                'request' => $e->getRequest()->getUri(), 'response' => $e->getResponse()->getBody()]);
+            $response = $e->getResponse();
+        }
+        $state = $this->checkResponse($response);
+        switch ($state) {
             case self::API_PROCEED:
                 return json_decode($response->getBody());
             case self::API_REPEAT:
                 sleep(1);
-                return $this->guzzleRequest($request);
+                return $this->request($request);
             case self::API_FAIL:
                 exit;
             case self::API_SKIP:
@@ -88,14 +100,13 @@ class ApiAdapter implements AdapterInterface
             case 200: 
                 return self::API_PROCEED;
             case 503:
-                $this->log->error("Service unavailable. Waiting to retry");
-                sleep(1);
-                return self::API_RETRY;
+                $this->log->info("API unavailable. Waiting to retry.");
+                return self::API_REPEAT;
             case 404:
-                $this->log->error("Data unavailable. Skipping");
+                $this->log->info("Data unavailable. Skipping.");
                 return self::API_SKIP;
             default:
-                $this->log->error("Unknown response: " . $response->getStatusCode());
+                $this->log->info("Unknown response: " . $response->getStatusCode());
                 return self::API_FAIL;
         }
     }

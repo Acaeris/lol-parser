@@ -2,9 +2,10 @@
 
 namespace LeagueOfData\Models\Sql;
 
-use LeagueOfData\Models\Interfaces\Items;
-use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Models\Interfaces\Items;
+use LeagueOfData\Models\Item;
+use Psr\Log\LoggerInterface;
 
 final class SqlItems implements Items
 {

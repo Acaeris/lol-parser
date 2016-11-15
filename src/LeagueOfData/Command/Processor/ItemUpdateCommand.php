@@ -36,7 +36,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
 
         $itemDb = new SqlItems($this->sql, $this->log);
 
-        if (count($itemDb->collectAll($input->getArgument('release'))) == 0 || $this->getOption('force')) {
+        if (count($itemDb->collectAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
             $this->updateData($input);
         } else {
             $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
