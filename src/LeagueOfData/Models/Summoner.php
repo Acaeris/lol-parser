@@ -1,16 +1,16 @@
 <?php
 
-namespace LeagueOfData\Models\Json;
+namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\Summoner;
+use LeagueOfData\Models\Interfaces\Summoner as SummonerInterface;
 
-final class JsonSummoner implements Summoner
+final class Summoner implements SummonerInterface
 {
     private $data;
 
-    public function __construct($json)
+    public function __construct($data)
     {
-        $this->data = $json;
+        $this->data = $data;
     }
 
     public function icon() {

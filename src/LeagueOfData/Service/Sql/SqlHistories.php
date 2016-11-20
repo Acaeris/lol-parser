@@ -1,11 +1,11 @@
 <?php
 
-namespace LeagueOfData\Models\Sql;
+namespace LeagueOfData\Service\Sql;
 
-use LeagueOfData\Models\Interfaces\Histories;
+use LeagueOfData\Service\Interfaces\HistoryService;
 use LeagueOfData\Adapters\SQL\HistoryRequest;
 
-final class SqlHistories implements Histories
+final class SqlHistories implements HistoryService
 {
     private $source;
 

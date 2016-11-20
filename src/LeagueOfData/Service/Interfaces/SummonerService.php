@@ -1,8 +1,8 @@
 <?php
 
-namespace LeagueOfData\Models\Interfaces;
+namespace LeagueOfData\Service\Interfaces;
 
-interface Summoners {
+interface SummonerService {
     function add($id, $name, $level, $iconId, $revisionDate);
     function find($ids);
 }

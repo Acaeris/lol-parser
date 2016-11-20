@@ -1,13 +1,13 @@
 <?php
 
-namespace LeagueOfData\Models\Json;
+namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Models\Interfaces\MatchHistories;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Models\Json\JsonMatchHistory;
 use LeagueOfData\Adapters\API\MatchListRequest;
+use LeagueOfData\Service\Interfaces\MatchHistoryService;
+use LeagueOfData\Models\MatchHistory;
 
-class JsonMatchHistories implements MatchHistories
+class JsonMatchHistories implements MatchHistoryService
 {
     private $source;
 
@@ -17,18 +17,18 @@ class JsonMatchHistories implements MatchHistories
     }
 
     public function add($id, $region) {
-        return new JsonMatchHistory(json_decode("{"
+        return new MatchHistory(json_decode("{"
             . "'matchId': {$id},"
             . "'region': {$region}"
             . "}"));
     }
 
-    public function findBySummoner($id) {
+    public function find($id) {
         $request = new MatchListRequest();
         $response = $this->source->fetch($request->prepare(['id' => $id, 'region' => 'euw']));
         $matches = [];
         foreach ($response->matches as $match) {
-            $matches[] = new JsonMatchHistory($match);
+            $matches[] = new MatchHistory($match);
         }
         return $matches;
     }

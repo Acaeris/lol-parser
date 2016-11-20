@@ -2,34 +2,33 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Models\Interfaces\Champion as ChampionInterface;
+use LeagueOfData\Models\Interfaces\Stats;
 
 final class Champion implements ChampionInterface {
 
-    private $data;
+    private $id;
+    private $name;
+    private $title;
+    private $version;
+    private $stats;
 
-    public function __construct($data) {
-        $this->data = $data;
-    }
-
-    public function name() {
-        return $this->data['name'];
+    public function __construct($id, $name, $title, $version, Stats $stats)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->title = $title;
+        $this->version = $version;
+        $this->stats = $stats;
     }
 
     public function toArray() {
-        return $this->data;
-    }
-
-    public function store(AdapterInterface $adapter)
-    {
-        if ($adapter->fetch('champion', [
-            'query' => 'SELECT name FROM leagueOfData.champion WHERE id = ? AND version = ?',
-            'params' => [ $this->data['id'], $this->data['version'] ]
-        ])) {
-            $adapter->update('champion', $this->data, [ 'id' => $this->data['id'], 'version' => $this->data['version'] ]);
-        } else {
-            $adapter->insert('champion', $this->data);
-        }
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'title' => $this->title,
+            'stats' => $this->stats,
+            'version' => $this->version
+        ];
     }
 }

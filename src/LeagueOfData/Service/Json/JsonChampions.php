@@ -1,41 +1,55 @@
 <?php
 
-namespace LeagueOfData\Models\Json;
+namespace LeagueOfData\Service\Json;
 
 use LeagueOfData\Models\Champion;
-use LeagueOfData\Models\Interfaces\Champions;
+use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Adapters\AdapterInterface;
+use Psr\Log\LoggerInterface;
 
-final class JsonChampions implements Champions
+final class JsonChampions implements ChampionService
 {
     private $source;
+    private $log;
+    private $champions;
 
-    public function __construct(AdapterInterface $adapter)
+    public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
         $this->source = $adapter;
+        $this->log = $log;
     }
 
-    public function collectAll($version) {
+    public function add(Champion $champion) {
+        $this->champions[] = $champion;
+    }
+
+    public function findAll($version) {
         $response = $this->source->fetch('champion', [ 'version' => $version ]);
-        $champions = [];
+        $this->champions = [];
         foreach ($response->data as $champion) {
-            $champions[] = $this->create($champion, $response->version);
+            $this->champions[] = $this->create($champion, $response->version);
         }
-        return $champions;
+        return $this->champions;
     }
 
-    public function collect($id, $version)
+    public function find($id, $version)
     {
         $response = $this->source->fetch('champion', ['id' => $id, 'region' => 'euw', 'version' => $version]);
-        return $this->create($response, $version);
+        $this->champions = [ $this->create($response, $version) ];
+        return $this->champions;
+    }
+
+    public function store() {
+        $this->log->error("Request to store data through JSON API not available.");
     }
 
     private function create($champion, $version)
     {
-        return new Champion([
-                'id' => $champion->id,
-                'name' => $champion->name,
-                'title' => $champion->title,
+        return new Champion(
+                $champion->id,
+                $champion->name,
+                $champion->title,
+                [
                 'attackRange' => $champion->stats->attackrange,
                 'moveSpeed' => $champion->stats->movespeed,
                 'hp' => $champion->stats->hp,
@@ -55,8 +69,9 @@ final class JsonChampions implements Champions
                 'armor' => $champion->stats->armor,
                 'armorPerLevel' => $champion->stats->armorperlevel,
                 'spellBlock' => $champion->stats->spellblock,
-                'spellBlockPerLevel' => $champion->stats->spellblockperlevel,
-                'version' => $version
-            ]);
+                'spellBlockPerLevel' => $champion->stats->spellblockperlevel
+                ],
+                $version
+            );
     }
 }

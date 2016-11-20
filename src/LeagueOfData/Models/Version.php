@@ -2,7 +2,6 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Models\Interfaces\Version as VersionInterface;
 
 final class Version implements VersionInterface
@@ -20,7 +19,7 @@ final class Version implements VersionInterface
         $this->hotfix = $parts[2];
     }
 
-    public function versionNumber() {
+    public function fullVersion() {
         return $this->fullVersion;
     }
 
@@ -31,17 +30,5 @@ final class Version implements VersionInterface
             'version' => $this->version,
             'hotfix' => $this->hotfix
         ];
-    }
-
-    public function store(AdapterInterface $adapter)
-    {
-        if ($adapter->fetch('version', [
-            'query' => 'SELECT fullVersion FROM leagueOfData.version WHERE fullVersion = ?',
-            'params' => [ $this->fullVersion ]
-        ])) {
-            $adapter->update('version', $this->toArray(), [ 'fullVersion' => $this->fullVersion ]);
-        } else {
-            $adapter->insert('version', $this->toArray());
-        }
     }
 }

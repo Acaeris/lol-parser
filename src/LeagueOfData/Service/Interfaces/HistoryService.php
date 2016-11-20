@@ -1,8 +1,8 @@
 <?php
 
-namespace LeagueOfData\Models\Interfaces;
+namespace LeagueOfData\Service\Interfaces;
 
-interface Histories {
+interface HistoryService {
     function add($id, $timestamp, $type, $data);
     function findByRequest($params);
     function findByType($type);

@@ -1,12 +1,12 @@
 <?php
 
-namespace LeagueOfData\Models\Json;
+namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Models\Interfaces\Items;
+use LeagueOfData\Service\Interfaces\ItemService;
 use LeagueOfData\Models\Item;
 use LeagueOfData\Adapters\AdapterInterface;
 
-final class JsonItems implements Items
+final class JsonItems implements ItemService
 {
     private $source;
 
@@ -15,7 +15,7 @@ final class JsonItems implements Items
         $this->source = $adapter;
     }
 
-    public function collectAll($version)
+    public function findAll($version)
     {
         $response = $this->source->fetch('item', [ 'version' => $version ]);
         $items = [];
@@ -29,7 +29,7 @@ final class JsonItems implements Items
         return $items;
     }
 
-    public function collect($id, $version)
+    public function find($id, $version)
     {
         $response = $this->source->fetch('item', ['id' => $id, 'region' => 'euw', 'version' => $version]);
         return $this->create($response, $version);

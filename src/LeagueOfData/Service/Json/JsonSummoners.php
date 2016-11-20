@@ -1,12 +1,13 @@
 <?php
 
-namespace LeagueOfData\Models\Json;
+namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Models\Interfaces\Summoners;
+use LeagueOfData\Service\Interfaces\SummonerService;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\API\SummonerRequest;
+use LeagueOfData\Models\Summoner;
 
-class JsonSummoners implements Summoners
+class JsonSummoners implements SummonerService
 {
     private $source;
 
@@ -26,7 +27,7 @@ class JsonSummoners implements Summoners
      * @return \LeagueOfData\Models\Json\JsonSummoner
      */
     public function add($id, $name, $level, $iconId, $revisionDate) {
-        return new JsonSummoner(json_decode("{"
+        return new Summoner(json_decode("{"
             . "'id': {$id},"
             . "'name': {$name},"
             . "'summonerLevel': {$level},"
@@ -42,7 +43,7 @@ class JsonSummoners implements Summoners
         foreach ($splitIds as $group) {
             $response = $this->source->fetch($request->prepare(['ids' => implode(',', $group), 'region' => 'euw' ]));
             foreach ($response as $player) {
-                $players[] = new JsonSummoner($player);
+                $players[] = new Summoner($player);
             }
         }
         return $players;

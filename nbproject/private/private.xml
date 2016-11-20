@@ -3,6 +3,11 @@
     <coverage xmlns="http://www.netbeans.org/ns/code-coverage/1" enabled="false"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/acaeris/Projects/lol-parser/data/create.sql</file>
+            <file>file:/home/acaeris/Projects/lol-parser/src/LeagueOfData/Command/Processor/ItemUpdateCommand.php</file>
+            <file>file:/home/acaeris/Projects/lol-parser/src/LeagueOfData/Adapters/API/ApiAdapter.php</file>
+            <file>file:/home/acaeris/Projects/lol-parser/app/config/config_dev.yml</file>
+        </group>
     </open-files>
 </project-private>

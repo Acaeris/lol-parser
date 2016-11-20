@@ -32,11 +32,14 @@ class appDevDebugProjectContainer extends Container
         $this->services = array();
         $this->methodMap = array(
             'annotation_reader' => 'getAnnotationReaderService',
+            'api-adapter' => 'getApiadapterService',
             'cache.app' => 'getCache_AppService',
             'cache.default_redis_provider' => 'getCache_DefaultRedisProviderService',
             'cache.system' => 'getCache_SystemService',
             'cache_clearer' => 'getCacheClearerService',
             'cache_warmer' => 'getCacheWarmerService',
+            'champion-api' => 'getChampionapiService',
+            'champion-db' => 'getChampiondbService',
             'config_cache_factory' => 'getConfigCacheFactoryService',
             'debug.argument_resolver' => 'getDebug_ArgumentResolverService',
             'debug.controller_resolver' => 'getDebug_ControllerResolverService',
@@ -54,6 +57,8 @@ class appDevDebugProjectContainer extends Container
             'fragment.renderer.inline' => 'getFragment_Renderer_InlineService',
             'fragment.renderer.ssi' => 'getFragment_Renderer_SsiService',
             'http_kernel' => 'getHttpKernelService',
+            'item-api' => 'getItemapiService',
+            'item-db' => 'getItemdbService',
             'kernel' => 'getKernelService',
             'kernel.class_cache.cache_warmer' => 'getKernel_ClassCache_CacheWarmerService',
             'locale_listener' => 'getLocaleListenerService',
@@ -72,7 +77,6 @@ class appDevDebugProjectContainer extends Container
             'rabbitmq' => 'getRabbitmqService',
             'request_stack' => 'getRequestStackService',
             'response_listener' => 'getResponseListenerService',
-            'riot-api' => 'getRiotapiService',
             'service_container' => 'getServiceContainerService',
             'sql-adapter' => 'getSqladapterService',
             'streamed_response_listener' => 'getStreamedResponseListenerService',
@@ -107,6 +111,8 @@ class appDevDebugProjectContainer extends Container
             'translator_listener' => 'getTranslatorListenerService',
             'uri_signer' => 'getUriSignerService',
             'validate_request_listener' => 'getValidateRequestListenerService',
+            'version-api' => 'getVersionapiService',
+            'version-db' => 'getVersiondbService',
         );
         $this->aliases = array(
             'database_connection' => 'doctrine.dbal.default_connection',
@@ -144,6 +150,19 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * Gets the 'api-adapter' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Adapters\API\ApiAdapter A LeagueOfData\Adapters\API\ApiAdapter instance
+     */
+    protected function getApiadapterService()
+    {
+        return $this->services['api-adapter'] = new \LeagueOfData\Adapters\API\ApiAdapter($this->get('logger'), 'c156f990-88f9-4f26-9a7f-286fdfe2d865');
+    }
+
+    /**
      * Gets the 'cache.app' service.
      *
      * This service is shared.
@@ -153,7 +172,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_AppService()
     {
-        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('9zUmO4RKyJ', 0, (__DIR__.'/pools'));
+        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('GzCtDJsy78', 0, (__DIR__.'/pools'));
 
         if ($this->has('monolog.logger.cache')) {
             $instance->setLogger($this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
@@ -185,7 +204,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_SystemService()
     {
-        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('h4AN2QDpUL', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('m0R9LqW30W', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -203,8 +222,8 @@ class appDevDebugProjectContainer extends Container
         $b = new \Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer();
         $b->addPool($this->get('cache.app'));
         $b->addPool($this->get('cache.system'));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('n7CFluaByd', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $a));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('Jrt6LE+P5f', 0, 'J6YYx5pWksq3CW0KGU5TPg', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('7HtNfH369E', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('Qdh5c6uWID', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $a));
 
         return $this->services['cache_clearer'] = new \Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer(array(0 => $b));
     }
@@ -220,6 +239,32 @@ class appDevDebugProjectContainer extends Container
     protected function getCacheWarmerService()
     {
         return $this->services['cache_warmer'] = new \Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate(array(0 => $this->get('kernel.class_cache.cache_warmer'), 1 => new \Symfony\Bundle\FrameworkBundle\CacheWarmer\TranslationsCacheWarmer($this->get('translator'))));
+    }
+
+    /**
+     * Gets the 'champion-api' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Json\JsonChampions A LeagueOfData\Service\Json\JsonChampions instance
+     */
+    protected function getChampionapiService()
+    {
+        return $this->services['champion-api'] = new \LeagueOfData\Service\Json\JsonChampions($this->get('api-adapter'), $this->get('logger'));
+    }
+
+    /**
+     * Gets the 'champion-db' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Sql\SqlChampions A LeagueOfData\Service\Sql\SqlChampions instance
+     */
+    protected function getChampiondbService()
+    {
+        return $this->services['champion-db'] = new \LeagueOfData\Service\Sql\SqlChampions($this->get('sql-adapter'), $this->get('logger'));
     }
 
     /**
@@ -480,6 +525,32 @@ class appDevDebugProjectContainer extends Container
     protected function getHttpKernelService()
     {
         return $this->services['http_kernel'] = new \Symfony\Component\HttpKernel\HttpKernel($this->get('debug.event_dispatcher'), $this->get('debug.controller_resolver'), $this->get('request_stack'), $this->get('debug.argument_resolver'));
+    }
+
+    /**
+     * Gets the 'item-api' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Json\JsonItems A LeagueOfData\Service\Json\JsonItems instance
+     */
+    protected function getItemapiService()
+    {
+        return $this->services['item-api'] = new \LeagueOfData\Service\Json\JsonItems($this->get('api-adapter'), $this->get('logger'));
+    }
+
+    /**
+     * Gets the 'item-db' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Sql\SqlItems A LeagueOfData\Service\Sql\SqlItems instance
+     */
+    protected function getItemdbService()
+    {
+        return $this->services['item-db'] = new \LeagueOfData\Service\Sql\SqlItems($this->get('sql-adapter'), $this->get('logger'));
     }
 
     /**
@@ -745,19 +816,6 @@ class appDevDebugProjectContainer extends Container
     protected function getResponseListenerService()
     {
         return $this->services['response_listener'] = new \Symfony\Component\HttpKernel\EventListener\ResponseListener('UTF-8');
-    }
-
-    /**
-     * Gets the 'riot-api' service.
-     *
-     * This service is shared.
-     * This method always returns the same instance of the service.
-     *
-     * @return \LeagueOfData\Adapters\API\ApiAdapter A LeagueOfData\Adapters\API\ApiAdapter instance
-     */
-    protected function getRiotapiService()
-    {
-        return $this->services['riot-api'] = new \LeagueOfData\Adapters\API\ApiAdapter($this->get('logger'), 'c156f990-88f9-4f26-9a7f-286fdfe2d865');
     }
 
     /**
@@ -1225,6 +1283,32 @@ class appDevDebugProjectContainer extends Container
     protected function getValidateRequestListenerService()
     {
         return $this->services['validate_request_listener'] = new \Symfony\Component\HttpKernel\EventListener\ValidateRequestListener();
+    }
+
+    /**
+     * Gets the 'version-api' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Json\JsonVersions A LeagueOfData\Service\Json\JsonVersions instance
+     */
+    protected function getVersionapiService()
+    {
+        return $this->services['version-api'] = new \LeagueOfData\Service\Json\JsonVersions($this->get('api-adapter'), $this->get('logger'));
+    }
+
+    /**
+     * Gets the 'version-db' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Sql\SqlVersions A LeagueOfData\Service\Sql\SqlVersions instance
+     */
+    protected function getVersiondbService()
+    {
+        return $this->services['version-db'] = new \LeagueOfData\Service\Sql\SqlVersions($this->get('sql-adapter'), $this->get('logger'));
     }
 
     /**

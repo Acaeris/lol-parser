@@ -20,7 +20,7 @@ class SqlAdapter implements AdapterInterface {
     }
 
     public function fetch($type, $data) {
-        return $this->db->fetchAssoc($data['query'], $data['params']);
+        return $this->db->fetchAll($data['query'], $data['params']);
     }
 
     public function update($table, $data, $where) {

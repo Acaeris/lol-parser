@@ -1,13 +1,13 @@
 <?php
 
-namespace LeagueOfData\Models\Sql;
+namespace LeagueOfData\Service\Sql;
 
-use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Models\Interfaces\Items;
-use LeagueOfData\Models\Item;
 use Psr\Log\LoggerInterface;
+use LeagueOfData\Service\Interfaces\ItemService;
+use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Models\Item;
 
-final class SqlItems implements Items
+final class SqlItems implements ItemService
 {
     private $db;
     private $log;
@@ -26,7 +26,7 @@ final class SqlItems implements Items
         }
     }
 
-    public function collectAll($version)
+    public function findAll($version)
     {
         $this->items = [];
         $results = $this->db->fetch('item', [
@@ -42,7 +42,7 @@ final class SqlItems implements Items
         return $this->items;
     }
 
-    public function collect($id, $version)
+    public function find($id, $version)
     {
         $result = $this->db->fetch('item', [
             'query' => 'SELECT * FROM item WHERE id = ? AND version = ?',

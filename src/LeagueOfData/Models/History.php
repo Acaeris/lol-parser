@@ -1,10 +1,10 @@
 <?php
 
-namespace LeagueOfData\Models\Sql;
+namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\History;
+use LeagueOfData\Models\Interfaces\History as HistoryInterface;
 
-final class SqlHistory implements History {
+final class History implements HistoryInterface {
 
     private $timestamp;
     private $type;
