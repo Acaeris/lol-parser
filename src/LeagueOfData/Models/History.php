@@ -2,10 +2,8 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\History as HistoryInterface;
-
-final class History implements HistoryInterface {
-
+final class History
+{
     private $timestamp;
     private $type;
     private $data;

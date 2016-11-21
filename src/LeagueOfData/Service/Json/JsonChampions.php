@@ -3,6 +3,10 @@
 namespace LeagueOfData\Service\Json;
 
 use LeagueOfData\Models\Champion;
+use LeagueOfData\Models\ChampionStats;
+use LeagueOfData\Models\ChampionResource;
+use LeagueOfData\Models\ChampionAttack;
+use LeagueOfData\Models\ChampionDefense;
 use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Adapters\AdapterInterface;
 use Psr\Log\LoggerInterface;
@@ -45,32 +49,46 @@ final class JsonChampions implements ChampionService
 
     private function create($champion, $version)
     {
+        $health = new ChampionResource(
+            ChampionResource::RESOURCE_HEALTH,
+            $champion->stats->hp,
+            $champion->stats->hpperlevel,
+            $champion->stats->hpregen,
+            $champion->stats->hpregenperlevel
+        );
+        $resource = new ChampionResource(
+            $champion->partype,
+            $champion->stats->mp,
+            $champion->stats->mpperlevel,
+            $champion->stats->mpregen,
+            $champion->stats->mpregenperlevel
+        );
+        $attack = new ChampionAttack(
+            $champion->stats->attackrange,
+            $champion->stats->attackdamage,
+            $champion->stats->attackdamageperlevel,
+            $champion->stats->attackspeedoffset,
+            $champion->stats->attackspeedperlevel,
+            $champion->stats->crit,
+            $champion->stats->critperlevel
+        );
+        $armor = new ChampionDefense(
+            ChampionDefense::DEFENSE_ARMOR,
+            $champion->stats->armor,
+            $champion->stats->armorperlevel
+        );
+        $magicResist = new ChampionDefense(
+            ChampionDefense::DEFENSE_MAGICRESIST,
+            $champion->stats->spellblock,
+            $champion->stats->spellblockperlevel
+        );
+        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion->stats->movespeed);
+        
         return new Champion(
                 $champion->id,
                 $champion->name,
                 $champion->title,
-                [
-                'attackRange' => $champion->stats->attackrange,
-                'moveSpeed' => $champion->stats->movespeed,
-                'hp' => $champion->stats->hp,
-                'hpPerLevel' => $champion->stats->hpperlevel,
-                'hpRegen' => $champion->stats->hpregen,
-                'hpRegenPerLevel' => $champion->stats->hpregenperlevel,
-                'mp' => $champion->stats->mp,
-                'mpPerLevel' => $champion->stats->mpperlevel,
-                'mpRegen' => $champion->stats->mpregen,
-                'mpRegenPerLevel' => $champion->stats->mpregenperlevel,
-                'attackDamage' => $champion->stats->attackdamage,
-                'attackDamagePerLevel' => $champion->stats->attackdamageperlevel,
-                'attackSpeedOffset' => $champion->stats->attackspeedoffset,
-                'attackSpeedPerLevel' => $champion->stats->attackspeedperlevel,
-                'crit' => $champion->stats->crit,
-                'critPerLevel' => $champion->stats->critperlevel,
-                'armor' => $champion->stats->armor,
-                'armorPerLevel' => $champion->stats->armorperlevel,
-                'spellBlock' => $champion->stats->spellblock,
-                'spellBlockPerLevel' => $champion->stats->spellblockperlevel
-                ],
+                $stats,
                 $version
             );
     }

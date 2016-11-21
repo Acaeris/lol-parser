@@ -2,10 +2,13 @@
 
 namespace LeagueOfData\Service\Sql;
 
-use LeagueOfData\Service\Interfaces\ChampionService;
-use LeagueOfData\Models\Champion;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Service\Interfaces\ChampionService;
+use LeagueOfData\Models\Champion;
+use LeagueOfData\Models\ChampionResource;
+use LeagueOfData\Models\ChampionAttack;
+use LeagueOfData\Models\ChampionDefense;
 
 final class SqlChampions implements ChampionService
 {
@@ -73,11 +76,46 @@ final class SqlChampions implements ChampionService
 
     private function create($champion)
     {
+        $health = new ChampionResource(
+            ChampionResource::RESOURCE_HEALTH,
+            $champion['hp'],
+            $champion['hpPerLevel'],
+            $champion['hpRegen'],
+            $champion['hpRegenPerLevel']
+        );
+        $resource = new ChampionResource(
+            $champion['resourceType'],
+            $champion['mp'],
+            $champion['mpPerLevel'],
+            $champion['mpRegen'],
+            $champion['mpRegenPerLevel']
+        );
+        $attack = new ChampionAttack(
+            $champion['attackRange'],
+            $champion['attackDamage'],
+            $champion['attackDamagePerLevel'],
+            $champion['attackSpeedOffset'],
+            $champion['attackSpeedPerLevel'],
+            $champion['crit'],
+            $champion['critPerLevel']
+        );
+        $armor = new ChampionDefense(
+            ChampionDefense::DEFENSE_ARMOR,
+            $champion['armor'],
+            $champion['armorPerLevel']
+        );
+        $magicResist = new ChampionDefense(
+            ChampionDefense::DEFENSE_MAGICRESIST,
+            $champion['spellBlock'],
+            $champion['spellBlockPerLevel']
+        );
+        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
+
         return new Champion(
             $champion['id'],
             $champion['name'],
             $champion['title'],
-            [],
+            $stats,
             $champion['version']
         );
     }

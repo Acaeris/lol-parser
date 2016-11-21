@@ -2,9 +2,7 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\MatchHistory as MatchHistoryInterface;
-
-class MatchHistory implements MatchHistoryInterface
+final class MatchHistory
 {
     private $data;
 

@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `champion` (
   `hpPerLevel` float DEFAULT NULL,
   `hpRegen` float DEFAULT NULL,
   `hpRegenPerLevel` float DEFAULT NULL,
+  `resourceType` varchar(20) DEFAULT NULL,
   `mp` float DEFAULT NULL,
   `mpPerLevel` float DEFAULT NULL,
   `mpRegen` float DEFAULT NULL,

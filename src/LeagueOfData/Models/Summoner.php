@@ -2,9 +2,7 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\Summoner as SummonerInterface;
-
-final class Summoner implements SummonerInterface
+final class Summoner
 {
     private $data;
 

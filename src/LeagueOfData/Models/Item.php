@@ -3,10 +3,9 @@
 namespace LeagueOfData\Models;
 
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Models\Interfaces\Item as ItemInterface;
 
-final class Item implements ItemInterface {
-
+final class Item
+{
     private $data;
 
     public function __construct($data) {

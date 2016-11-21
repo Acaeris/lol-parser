@@ -2,33 +2,34 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\Stats as StatsInterface;
-use LeagueOfData\Models\ChampionHealth;
-use LeagueOfData\Models\ChampionMana;
-
-final class ChampionStats implements StatsInterface
+final class ChampionStats
 {
     private $health;
-    private $mana;
+    private $resource;
     private $attack;
     private $armor;
-    private $armorPerLevel;
-    private $spellBlock;
-    private $spellBlockPerLevel;
+    private $magicResist;
     private $moveSpeed;
 
     public function __construct(
-        ChampionHealth $health,
-        ChampionMana $mana,
-        ChampionAttack $attack
+        ChampionResource $health,
+        ChampionResource $mana,
+        ChampionAttack $attack,
+        ChampionDefense $armor,
+        ChampionDefense $magicResist,
+        $moveSpeed
     ) {
         $this->health = $health;
-        $this->mana = $mana;
+        $this->resource = $mana;
         $this->attack = $attack;
+        $this->armor = $armor;
+        $this->magicResist = $magicResist;
+        $this->moveSpeed = $moveSpeed;
     }
     
     public function toArray()
     {
-        return [];
+        return array_merge(['moveSpeed' => $this->moveSpeed], $this->health->toArray(), $this->resource->toArray(),
+            $this->attack->toArray(), $this->armor->toArray(), $this->magicResist->toArray());
     }
 }

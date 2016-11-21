@@ -2,9 +2,7 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\Version as VersionInterface;
-
-final class Version implements VersionInterface
+final class Version
 {
     private $fullVersion;
     private $season;

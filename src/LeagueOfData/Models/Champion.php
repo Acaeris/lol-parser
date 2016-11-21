@@ -2,10 +2,9 @@
 
 namespace LeagueOfData\Models;
 
-use LeagueOfData\Models\Interfaces\Champion as ChampionInterface;
-use LeagueOfData\Models\Interfaces\Stats;
+use LeagueOfData\Models\ChampionStats;
 
-final class Champion implements ChampionInterface {
+final class Champion {
 
     private $id;
     private $name;
@@ -13,7 +12,7 @@ final class Champion implements ChampionInterface {
     private $version;
     private $stats;
 
-    public function __construct($id, $name, $title, $version, Stats $stats)
+    public function __construct($id, $name, $title, ChampionStats $stats, $version)
     {
         $this->id = $id;
         $this->name = $name;
@@ -22,13 +21,20 @@ final class Champion implements ChampionInterface {
         $this->stats = $stats;
     }
 
+    public function id() {
+        return $this->id;
+    }
+
+    public function version() {
+        return $this->version;
+    }
+
     public function toArray() {
-        return [
+        return array_merge([
             'id' => $this->id,
             'name' => $this->name,
             'title' => $this->title,
-            'stats' => $this->stats,
             'version' => $this->version
-        ];
+        ], $this->stats->toArray());
     }
 }

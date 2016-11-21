@@ -4,10 +4,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/acaeris/Projects/lol-parser/data/create.sql</file>
-            <file>file:/home/acaeris/Projects/lol-parser/src/LeagueOfData/Command/Processor/ItemUpdateCommand.php</file>
-            <file>file:/home/acaeris/Projects/lol-parser/src/LeagueOfData/Adapters/API/ApiAdapter.php</file>
-            <file>file:/home/acaeris/Projects/lol-parser/app/config/config_dev.yml</file>
+            <file>file:/home/acaeris/Workspace/lol-parser/src/LeagueOfData/Models/Version.php</file>
+            <file>file:/home/acaeris/Workspace/lol-parser/src/LeagueOfData/Service/Sql/SqlChampions.php</file>
+            <file>file:/home/acaeris/Workspace/lol-parser/data/create.sql</file>
+            <file>file:/home/acaeris/Workspace/lol-parser/src/LeagueOfData/Models/ChampionResource.php</file>
+            <file>file:/home/acaeris/Workspace/lol-parser/src/LeagueOfData/Models/Champion.php</file>
         </group>
     </open-files>
 </project-private>
