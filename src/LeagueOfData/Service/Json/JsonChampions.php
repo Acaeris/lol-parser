@@ -9,6 +9,7 @@ use LeagueOfData\Models\ChampionAttack;
 use LeagueOfData\Models\ChampionDefense;
 use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\Request\ChampionRequest;
 use Psr\Log\LoggerInterface;
 
 final class JsonChampions implements ChampionService
@@ -28,7 +29,8 @@ final class JsonChampions implements ChampionService
     }
 
     public function findAll($version) {
-        $response = $this->source->fetch('champion', [ 'version' => $version ]);
+        $request = new ChampionRequest(['version' => $version]);
+        $response = $this->source->fetch($request);
         $this->champions = [];
         foreach ($response->data as $champion) {
             $this->champions[] = $this->create($champion, $response->version);
@@ -38,7 +40,8 @@ final class JsonChampions implements ChampionService
 
     public function find($id, $version)
     {
-        $response = $this->source->fetch('champion', ['id' => $id, 'region' => 'euw', 'version' => $version]);
+        $request = new ChampionRequest(['id' => $id, 'region' => 'euw', 'version' => $version]);
+        $response = $this->source->fetch($request);
         $this->champions = [ $this->create($response, $version) ];
         return $this->champions;
     }

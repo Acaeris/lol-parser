@@ -5,6 +5,7 @@ namespace LeagueOfData\Service\Sql;
 use LeagueOfData\Service\Interfaces\VersionService;
 use LeagueOfData\Models\Version;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\Request\VersionRequest;
 use Psr\Log\LoggerInterface;
 
 final class SqlVersions implements VersionService
@@ -32,15 +33,12 @@ final class SqlVersions implements VersionService
     public function store()
     {
         foreach ($this->versions as $version) {
-            if ($this->db->fetch('version', [
-                'query' => 'SELECT fullversion FROM version WHERE fullversion = ?',
-                'params' => [ $version->fullVersion() ]
-            ])) {
-                $this->db->update('version', $version->toArray(), [
-                    'fullVersion' => $version->fullVersion()
-                ]);
+            $request = new VersionRequest([ 'fullversion' => $version->fullVersion() ],
+                'SELECT fullversion FROM version WHERE fullversion = :fullversion', $version->toArray());
+            if ($this->db->fetch($request)) {
+                $this->db->update($request);
             } else {
-                $this->db->insert('version', $version->toArray());
+                $this->db->insert($request);
             }
         }
     }
@@ -48,10 +46,8 @@ final class SqlVersions implements VersionService
     public function findAll()
     {
         $this->versions = [];
-        $results = $this->db->fetch('version', [
-            'query' => 'SELECT * FROM version',
-            'params' => []
-        ]);
+        $request = new VersionRequest([], 'SELECT * FROM version');
+        $results = $this->db->fetch($request);
         if ($results !== false) {
             foreach ($results as $version) {
                 $this->versions[] = new Version($version);

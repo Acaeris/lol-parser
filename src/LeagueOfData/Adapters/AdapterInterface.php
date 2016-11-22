@@ -2,9 +2,11 @@
 
 namespace LeagueOfData\Adapters;
 
+use LeagueOfData\Adapters\RequestInterface;
+
 interface AdapterInterface
 {
-    public function fetch($type, $where);
-    public function insert($type, $data);
-    public function update($type, $data, $where);
+    public function fetch(RequestInterface $request);
+    public function insert(RequestInterface $request);
+    public function update(RequestInterface $request);
 }

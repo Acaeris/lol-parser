@@ -8,7 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use LeagueOfData\Adapters\API\Exception\APIException;
 
 class ChampionUpdateCommand extends ContainerAwareCommand
 {
@@ -73,7 +72,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
                 $this->db->add($champion);
             }
             $this->db->store();
-        } catch (APIException $e) {
+        } catch (\Exception $e) {
             $this->recover($input, 'Unexpected API response: ', $e);
         } catch (ForeignKeyConstraintViolationException $e) {
             preg_match("/CONSTRAINT `(\w+)`/", $e, $matches);

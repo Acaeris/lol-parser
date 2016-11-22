@@ -1,14 +1,12 @@
 <?php
 
-namespace LeagueOfData\Adapters\API;
+namespace LeagueOfData\Adapters;
 
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
-use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\API\Exception\APIException;
 
 class ApiAdapter implements AdapterInterface
 {
@@ -28,27 +26,12 @@ class ApiAdapter implements AdapterInterface
         $this->apiKey = $apiKey;
     }
 
-    public function fetch($type, $data)
+    public function fetch(RequestInterface $request)
     {
-        $request = $this->buildRequest($type, $data);
-        $this->log->debug('<info>URL:</> ' . $request->call());
-        return $this->request($request);
-    }
-
-    public function insert($type, $data)
-    {
-        $this->log->error("API is read-only");
-    }
-
-    public function update($type, $data, $where) {
-        $this->log->error("API is read-only");
-    }
-
-    private function request(Request $request)
-    {
+        $request->outputFormat(RequestInterface::REQUEST_JSON);
         try {
-            $response = $this->client->get($request->call(), [
-                'query' => array_merge($request->params(), ['api_key' => $this->apiKey]),
+            $response = $this->client->get($request->query(), [
+                'query' => array_merge($request->where(), ['api_key' => $this->apiKey]),
                 'headers' => [
                     'Content-type' => 'application/json'
                 ]
@@ -73,25 +56,16 @@ class ApiAdapter implements AdapterInterface
                 exit;
             case self::API_SKIP:
                 return false;
-        } 
+        }
     }
 
-    private function buildRequest($type, $data)
+    public function insert(RequestInterface $request)
     {
-        switch ($type) {
-            case 'champion' :
-                return new ChampionRequest($data);
-            case 'summoner' :
-                return new SummonerRequest($data);
-            case 'matchList' :
-                return new MatchListRequest($data);
-            case 'version' :
-                return new VersionRequest($data);
-            case 'item' :
-                return new ItemRequest($data);
-            default:
-                throw new APIException("Request type unavailable: " . $type);
-        }
+        $this->log->error("API is read-only");
+    }
+
+    public function update(RequestInterface $request) {
+        $this->log->error("API is read-only");
     }
 
     private function checkResponse(ResponseInterface $response)

@@ -4,6 +4,7 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Models\Champion;
 use LeagueOfData\Models\ChampionResource;
@@ -30,16 +31,13 @@ final class SqlChampions implements ChampionService
     public function store()
     {
         foreach ($this->champions as $champion) {
-            if ($this->db->fetch('champion', [
-                'query' => 'SELECT name FROM champion WHERE id = ? AND version = ?',
-                'params' => [ $champion->id(), $champion->version() ]
-            ])) {
-                $this->db->update('champion', $champion->toArray(), [
-                    'id' => $champion->id(),
-                    'version' => $champion->version()
-                ]);
+            $request = new ChampionRequest(['id' => $champion->id(), 'version' => $champion->version()],
+                'SELECT name FROM champion WHERE id = :id AND version = :version', $champion->toArray());
+
+            if ($this->db->fetch($request)) {
+                $this->db->update($request);
             } else {
-                $this->db->insert('champion', $champion->toArray());
+                $this->db->insert($request);
             }
         }
     }
@@ -47,10 +45,8 @@ final class SqlChampions implements ChampionService
     public function findAll($version)
     {
         $this->champions = [];
-        $results = $this->db->fetch('champion', [
-            'query' => 'SELECT * FROM champion WHERE version = ?',
-            'params' => [$version]
-        ]);
+        $request = new ChampionRequest(['version' => $version], 'SELECT * FROM champion WHERE version = :version');
+        $results = $this->db->fetch($request);
         if ($results !== false) {
             foreach ($results as $champion) {
                 $this->champions[] = $this->create($champion);
@@ -61,10 +57,9 @@ final class SqlChampions implements ChampionService
 
     public function find($id, $version)
     {
-        $result = $this->db->fetch('champion', [
-            'query' => 'SELECT * FROM champion WHERE id = ? AND version = ?',
-            'params' => [$id, $version]
-        ]);
+        $request = new ChampionRequest(['id' => $id, 'version' => $version],
+            'SELECT * FROM champion WHERE id = :id AND version = :version');
+        $result = $this->db->fetch($request);
         $this->champions = [ $this->create($result) ];
         return $this->champions;
     }

@@ -5,6 +5,7 @@ namespace LeagueOfData\Service\Json;
 use LeagueOfData\Models\Version;
 use LeagueOfData\Service\Interfaces\VersionService;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\Request\VersionRequest;
 use Psr\Log\LoggerInterface;
 
 final class JsonVersions implements VersionService
@@ -21,7 +22,8 @@ final class JsonVersions implements VersionService
 
     public function findAll()
     {
-        $response = $this->source->fetch('version', []);
+        $request = new VersionRequest([]);
+        $response = $this->source->fetch($request);
         $this->versions = [];
         foreach ($response as $version) {
             $this->versions[] = new Version($version);

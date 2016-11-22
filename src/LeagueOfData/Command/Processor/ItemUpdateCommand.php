@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use LeagueOfData\Adapters\API\Exception\APIException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class ItemUpdateCommand extends ContainerAwareCommand
@@ -72,7 +71,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
             foreach ($this->data as $item) {
                 $item->store($this->getContainer()->get('sql-adapter'));
             }
-        } catch (APIException $e) {
+        } catch (\Exception $e) {
             $this->recover($input, 'Unexpected API response: ', $e);
         } catch (ForeignKeyConstraintViolationException $e) {
             preg_match("/CONSTRAINT `(\w+)`/", $e, $matches);

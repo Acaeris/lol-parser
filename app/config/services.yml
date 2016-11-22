@@ -1,9 +1,9 @@
 services:
     api-adapter:
-        class: LeagueOfData\Adapters\API\ApiAdapter
+        class: LeagueOfData\Adapters\ApiAdapter
         arguments: ['@logger', '%apiKey%']
     sql-adapter:
-        class: LeagueOfData\Adapters\SQL\SqlAdapter
+        class: LeagueOfData\Adapters\SqlAdapter
         arguments: ['@logger', '@database_connection']
     rabbitmq:
         class: LeagueOfData\Service\RabbitMQ
