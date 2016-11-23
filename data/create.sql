@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `champion` (
   `id` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `title` varchar(45) DEFAULT NULL,
+  `tags` varchar(45) DEFAULT NULL,
   `attackRange` float DEFAULT NULL,
   `moveSpeed` float DEFAULT NULL,
   `hp` float DEFAULT NULL,

@@ -91,6 +91,7 @@ final class JsonChampions implements ChampionService
                 $champion->id,
                 $champion->name,
                 $champion->title,
+                implode('|', $champion->tags),
                 $stats,
                 $version
             );

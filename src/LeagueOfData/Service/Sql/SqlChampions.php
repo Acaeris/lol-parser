@@ -110,6 +110,7 @@ final class SqlChampions implements ChampionService
             $champion['id'],
             $champion['name'],
             $champion['title'],
+            $champion['tags'],
             $stats,
             $champion['version']
         );

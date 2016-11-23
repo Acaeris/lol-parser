@@ -11,14 +11,16 @@ final class Champion {
     private $title;
     private $version;
     private $stats;
+    private $tags;
 
-    public function __construct($id, $name, $title, ChampionStats $stats, $version)
+    public function __construct($id, $name, $title, $tags, ChampionStats $stats, $version)
     {
         $this->id = $id;
         $this->name = $name;
         $this->title = $title;
         $this->version = $version;
         $this->stats = $stats;
+        $this->tags = $tags;
     }
 
     public function id() {
@@ -34,6 +36,7 @@ final class Champion {
             'id' => $this->id,
             'name' => $this->name,
             'title' => $this->title,
+            'tags' => $this->tags,
             'version' => $this->version
         ], $this->stats->toArray());
     }
