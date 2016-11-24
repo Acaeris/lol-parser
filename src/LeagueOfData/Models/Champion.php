@@ -4,8 +4,8 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Models\ChampionStats;
 
-final class Champion {
-
+final class Champion
+{
     private $id;
     private $name;
     private $title;
@@ -23,15 +23,18 @@ final class Champion {
         $this->tags = $tags;
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function version() {
+    public function version()
+    {
         return $this->version;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return array_merge([
             'id' => $this->id,
             'name' => $this->name,
