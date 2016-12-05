@@ -57,7 +57,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         }
         $mq = $this->getContainer()->get('rabbitmq');
         $mq->addProcessToQueue('update:champion', "{ {$params} }");
-        $this->log->error($msg . ['exception' => $e]);
+        $this->log->error($msg, ['exception' => $e]);
     }
 
     private function updateData(InputInterface $input)

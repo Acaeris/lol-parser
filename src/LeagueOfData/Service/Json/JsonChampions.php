@@ -60,7 +60,7 @@ final class JsonChampions implements ChampionService
             $champion->stats->hpregenperlevel
         );
         $resource = new ChampionResource(
-            $champion->partype,
+            ChampionResource::RESOURCE_MANA,
             $champion->stats->mp,
             $champion->stats->mpperlevel,
             $champion->stats->mpregen,
@@ -91,6 +91,7 @@ final class JsonChampions implements ChampionService
                 $champion->id,
                 $champion->name,
                 $champion->title,
+                $champion->partype,
                 implode('|', $champion->tags),
                 $stats,
                 $version

@@ -7,9 +7,6 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Models\Champion;
-use LeagueOfData\Models\ChampionResource;
-use LeagueOfData\Models\ChampionAttack;
-use LeagueOfData\Models\ChampionDefense;
 
 final class SqlChampions implements ChampionService
 {
@@ -49,7 +46,7 @@ final class SqlChampions implements ChampionService
         $results = $this->db->fetch($request);
         if ($results !== false) {
             foreach ($results as $champion) {
-                $this->champions[] = $this->create($champion);
+                $this->champions[] = Champion::fromState($champion);
             }
         }
         return $this->champions;
@@ -60,59 +57,12 @@ final class SqlChampions implements ChampionService
         $request = new ChampionRequest(['id' => $id, 'version' => $version],
             'SELECT * FROM champion WHERE id = :id AND version = :version');
         $result = $this->db->fetch($request);
-        $this->champions = [ $this->create($result) ];
+        $this->champions = [ Champion::fromState($result) ];
         return $this->champions;
     }
 
     public function transfer()
     {
         return $this->champions;
-    }
-
-    private function create($champion)
-    {
-        $health = new ChampionResource(
-            ChampionResource::RESOURCE_HEALTH,
-            $champion['hp'],
-            $champion['hpPerLevel'],
-            $champion['hpRegen'],
-            $champion['hpRegenPerLevel']
-        );
-        $resource = new ChampionResource(
-            $champion['resourceType'],
-            $champion['mp'],
-            $champion['mpPerLevel'],
-            $champion['mpRegen'],
-            $champion['mpRegenPerLevel']
-        );
-        $attack = new ChampionAttack(
-            $champion['attackRange'],
-            $champion['attackDamage'],
-            $champion['attackDamagePerLevel'],
-            $champion['attackSpeedOffset'],
-            $champion['attackSpeedPerLevel'],
-            $champion['crit'],
-            $champion['critPerLevel']
-        );
-        $armor = new ChampionDefense(
-            ChampionDefense::DEFENSE_ARMOR,
-            $champion['armor'],
-            $champion['armorPerLevel']
-        );
-        $magicResist = new ChampionDefense(
-            ChampionDefense::DEFENSE_MAGICRESIST,
-            $champion['spellBlock'],
-            $champion['spellBlockPerLevel']
-        );
-        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
-
-        return new Champion(
-            $champion['id'],
-            $champion['name'],
-            $champion['title'],
-            $champion['tags'],
-            $stats,
-            $champion['version']
-        );
     }
 }

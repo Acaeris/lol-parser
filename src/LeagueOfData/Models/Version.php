@@ -9,6 +9,11 @@ final class Version
     private $version;
     private $hotfix;
 
+    public static function fromState(array $version) : Version
+    {
+        return new self($version['fullVersion']);
+    }
+
     public function __construct($data) {
         $parts = explode('.', $data);
         $this->fullVersion = $data;

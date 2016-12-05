@@ -2,8 +2,15 @@
 
 namespace LeagueOfData\Models;
 
-final class ChampionResource
+use LeagueOfData\Library\Immutable\ImmutableInterface;
+use LeagueOfData\Library\Immutable\ImmutableTrait;
+
+final class ChampionResource implements ImmutableInterface
 {
+    use ImmutableTrait {
+        __construct as constructImmutable;
+    }
+
     const RESOURCE_HEALTH = 'hp';
     const RESOURCE_MANA = 'mp';
 
@@ -13,8 +20,21 @@ final class ChampionResource
     private $regen;
     private $regenPerLevel;
 
-    public function __construct($type, $baseValue, $perLevel, $regen, $regenPerLevel)
+    public static function fromState(string $type, array $champion) : ChampionResource
     {
+        return new self(
+            $type,
+            $champion[$type],
+            $champion[$type . 'PerLevel'],
+            $champion[$type . 'Regen'],
+            $champion[$type . 'RegenPerLevel']
+        );
+    }
+
+    public function __construct(string $type, int $baseValue, int $perLevel, int $regen, int $regenPerLevel)
+    {
+        $this->constructImmutable();
+
         $this->type = $type;
         $this->baseValue = $baseValue;
         $this->perLevel = $perLevel;
@@ -22,24 +42,48 @@ final class ChampionResource
         $this->regenPerLevel = $regenPerLevel;
     }
 
-    public function toArray()
+    public function toArray() : array
     {
-        if ($this->type == self::RESOURCE_HEALTH) {
-            $data = [
-                'hp' => $this->baseValue,
-                'hpPerLevel' => $this->perLevel,
-                'hpRegen' => $this->regen,
-                'hpRegenPerLevel' => $this->regenPerLevel
-            ];
-        } else {
-            $data = [
-                'resourceType' => $this->type,
-                'mp' => $this->baseValue,
-                'mpPerLevel' => $this->perLevel,
-                'mpRegen' => $this->regen,
-                'mpRegenPerLevel' => $this->regenPerLevel
-            ];
-        }
-        return $data;
+        return [
+            $this->type => $this->baseValue,
+            $this->type . 'PerLevel' => $this->perLevel,
+            $this->type . 'Regen' => $this->regen,
+            $this->type . 'RegenPerLevel' => $this->regenPerLevel
+        ];
+    }
+
+    public function type() : string
+    {
+        return $this->type;
+    }
+
+    public function baseValue() : int
+    {
+        return $this->baseValue;
+    }
+
+    public function increasePerLevel() : int
+    {
+        return $this->perLevel;
+    }
+
+    public function valueAtLevel(int $level) : int
+    {
+        return $this->baseValue + $this->perLevel * $level;
+    }
+
+    public function regenBaseValue() : int
+    {
+        return $this->regen;
+    }
+
+    public function regenIncreasePerLevel() : int
+    {
+        return $this->regenPerLevel;
+    }
+
+    public function regenAtLevel(int $level) : int
+    {
+        return $this->regen + $this->regenPerLevel * $level;
     }
 }
