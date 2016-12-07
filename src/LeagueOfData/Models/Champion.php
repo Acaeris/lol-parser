@@ -4,6 +4,7 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 
 final class Champion implements ImmutableInterface
 {
@@ -82,7 +83,7 @@ final class Champion implements ImmutableInterface
         string $title,
         string $resourceType,
         string $tags,
-        ChampionStats $stats,
+        ChampionStatsInterface $stats,
         string $version
     ) {
         $this->constructImmutable();

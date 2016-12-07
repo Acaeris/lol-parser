@@ -3,19 +3,19 @@
 namespace spec\LeagueOfData\Models;
 
 use PhpSpec\ObjectBehavior;
+use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
+use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
 use LeagueOfData\Models\ChampionResource;
-use LeagueOfData\Models\ChampionAttack;
-use LeagueOfData\Models\ChampionDefense;
 
 class ChampionStatsSpec extends ObjectBehavior
 {
-    function let()
-    {
+    function let(
+        ChampionAttackInterface $attack,
+        ChampionDefenseInterface $armor,
+        ChampionDefenseInterface $magicResist
+    ) {
         $health = new ChampionResource(ChampionResource::RESOURCE_HEALTH, 100, 5, 10, 1);
         $mana = new ChampionResource(ChampionResource::RESOURCE_MANA, 100, 5, 10, 1);
-        $attack = new ChampionAttack(100, 10, 1, 20, 2, 15, 1);
-        $armor = new ChampionDefense(ChampionDefense::DEFENSE_ARMOR, 100, 1);
-        $magicResist = new ChampionDefense(ChampionDefense::DEFENSE_MAGICRESIST, 100, 1);
         $this->beConstructedWith($health, $mana, $attack, $armor, $magicResist, 250);
     }
 

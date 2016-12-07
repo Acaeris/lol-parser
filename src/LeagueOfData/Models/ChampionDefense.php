@@ -4,6 +4,7 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
 
 /**
  * Champion Defense.
@@ -13,7 +14,7 @@ use LeagueOfData\Library\Immutable\ImmutableTrait;
  * 
  * @author caitlyn.osborne
  */
-final class ChampionDefense implements ImmutableInterface
+final class ChampionDefense implements ChampionDefenseInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;

@@ -4,8 +4,11 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
+use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 
-final class ChampionStats implements ImmutableInterface
+final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -71,9 +74,9 @@ final class ChampionStats implements ImmutableInterface
     public function __construct(
         ChampionResource $health,
         ChampionResource $mana,
-        ChampionAttack $attack,
-        ChampionDefense $armor,
-        ChampionDefense $magicResist,
+        ChampionAttackInterface $attack,
+        ChampionDefenseInterface $armor,
+        ChampionDefenseInterface $magicResist,
         int $moveSpeed
     ) {
         $this->constructImmutable();

@@ -4,6 +4,7 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
 
 /**
  * Champion Attack.
@@ -11,7 +12,7 @@ use LeagueOfData\Library\Immutable\ImmutableTrait;
  * 
  * @author caitlyn.osborne
  */
-final class ChampionAttack implements ImmutableInterface
+final class ChampionAttack implements ChampionAttackInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -37,7 +38,7 @@ final class ChampionAttack implements ImmutableInterface
      * Use as an alternative constructor as PHP does not support multiple constructors.
      * 
      * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return \LeagueOfData\Models\ChampionAttack Resultant Champion Attack
+     * @return ChampionAttack Resultant Champion Attack
      */
     public static function fromState(array $champion) : ChampionAttack
     {
