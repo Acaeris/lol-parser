@@ -21,27 +21,27 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     }
 
     /**
-     * @var ChamptionResource Health details
+     * @var ChamptionResourceInterface Health details
      */
     private $health;
 
     /**
-     * @var ChampionResource Resource details (e.g. Mana, Rage, Energy)
+     * @var ChampionResourceInterface Resource details (e.g. Mana, Rage, Energy)
      */
     private $resource;
 
     /**
-     * @var ChampionAttack Attack details 
+     * @var ChampionAttackInterface Attack details 
      */
     private $attack;
 
     /**
-     * @var ChampionDefense Armor details 
+     * @var ChampionDefenseInterface Armor details 
      */
     private $armor;
 
     /**
-     * @var ChampionDefense Magic resistance details
+     * @var ChampionDefenseInterface Magic resistance details
      */
     private $magicResist;
 
@@ -54,9 +54,9 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      * Factory Constructor
      * 
      * @param array $champion
-     * @return ChampionStats
+     * @return ChampionStatsInterface
      */
-    public static function fromState(array $champion) : ChampionStats
+    public static function fromState(array $champion) : ChampionStatsInterface
     {
         $health = ChampionResource::fromState(ChampionResource::RESOURCE_HEALTH, $champion);
         $resource = ChampionResource::fromState(ChampionResource::RESOURCE_MANA, $champion);

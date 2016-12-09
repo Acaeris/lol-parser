@@ -14,11 +14,12 @@ class ChampionAttackSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\ChampionAttack');
+        $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionAttackInterface');
     }
 
     function it_is_immutable()
     {
-        $this->shouldHaveType('LeagueOfData\Library\Immutable\ImmutableInterface');
+        $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
     function it_can_output_an_attack_range()

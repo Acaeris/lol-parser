@@ -4,9 +4,10 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 
-final class Champion implements ImmutableInterface
+final class Champion implements ChampionInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -51,9 +52,9 @@ final class Champion implements ImmutableInterface
      * Factory Construction
      * 
      * @param array $champion
-     * @return Champion
+     * @return ChampionInterface
      */
-    public static function fromState(array $champion): Champion
+    public static function fromState(array $champion): ChampionInterface
     {
         return new self(
             $champion['id'],
@@ -98,6 +99,23 @@ final class Champion implements ImmutableInterface
     }
 
     /**
+     * Array of Champion data
+     * 
+     * @return array
+     */
+    public function toArray() : array
+    {
+        return array_merge([
+            'id' => $this->id,
+            'name' => $this->name,
+            'title' => $this->title,
+            'resourceType' => $this->resourceType,
+            'tags' => $this->tags,
+            'version' => $this->version
+        ], $this->stats->toArray());
+    }
+
+    /**
      * Champion ID
      * 
      * @return int
@@ -138,19 +156,32 @@ final class Champion implements ImmutableInterface
     }
 
     /**
-     * Array of Champion data
+     * Champion Stats
+     * 
+     * @return ChampionStatsInterface
+     */
+    public function stats() : ChampionStatsInterface
+    {
+        return $this->stats;
+    }
+
+    /**
+     * Champion tags as array
      * 
      * @return array
      */
-    public function toArray() : array
+    public function tags() : array
     {
-        return array_merge([
-            'id' => $this->id,
-            'name' => $this->name,
-            'title' => $this->title,
-            'resourceType' => $this->resourceType,
-            'tags' => $this->tags,
-            'version' => $this->version
-        ], $this->stats->toArray());
+        return explode('|', $this->tags);
+    }
+
+    /**
+     * Champion tags as original format
+     * 
+     * @return string
+     */
+    public function tagsAsString() : string
+    {
+        return $this->tags;
     }
 }

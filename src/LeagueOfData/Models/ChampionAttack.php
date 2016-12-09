@@ -38,9 +38,9 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      * Use as an alternative constructor as PHP does not support multiple constructors.
      * 
      * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return ChampionAttack Resultant Champion Attack
+     * @return ChampionAttackInterface Resultant Champion Attack
      */
-    public static function fromState(array $champion) : ChampionAttack
+    public static function fromState(array $champion) : ChampionAttackInterface
     {
         return new self(
             $champion['attackRange'],

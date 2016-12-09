@@ -4,6 +4,7 @@ namespace LeagueOfData\Models;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\ChampionResourceInterface;
 
 /**
  * Champion Resources.
@@ -17,7 +18,7 @@ use LeagueOfData\Library\Immutable\ImmutableTrait;
  * 
  * @author caitlyn.osborne
  */
-final class ChampionResource implements ImmutableInterface
+final class ChampionResource implements ChampionResourceInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -45,9 +46,9 @@ final class ChampionResource implements ImmutableInterface
      * 
      * @param string $type Type of resource represented by this object
      * @param array $champion Data from an existing state (e.g. SQL result, Json or object converted to array)
-     * @return \LeagueOfData\Models\ChampionResource Resultant Champion Resource
+     * @return ChampionResourceInterface Resultant Champion Resource
      */
-    public static function fromState(string $type, array $champion) : ChampionResource
+    public static function fromState(string $type, array $champion) : ChampionResourceInterface
     {
         return new self(
             $type,

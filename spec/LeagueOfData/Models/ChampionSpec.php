@@ -16,6 +16,12 @@ class ChampionSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Champion');
+        $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionInterface');
+    }
+
+    function it_is_immutable()
+    {
+        $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
     function it_has_an_id()
@@ -36,5 +42,20 @@ class ChampionSpec extends ObjectBehavior
     function it_has_a_client_version()
     {
         $this->version()->shouldReturn('6.21.1');
+    }
+
+    function it_has_tags()
+    {
+        $this->tags()->shouldReturn(['Fighter', 'Mage']);
+    }
+
+    function it_can_return_tags_in_original_format()
+    {
+        $this->tagsAsString()->shouldReturn("Fighter|Mage");
+    }
+
+    function it_has_stats()
+    {
+        $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
     }
 }

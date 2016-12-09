@@ -24,7 +24,8 @@ final class JsonChampions implements ChampionService
         $this->log = $log;
     }
 
-    public function add(Champion $champion) {
+    public function add(Champion $champion)
+    {
         $this->champions[] = $champion;
     }
 

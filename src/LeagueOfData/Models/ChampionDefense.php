@@ -38,9 +38,9 @@ final class ChampionDefense implements ChampionDefenseInterface, ImmutableInterf
      * 
      * @param string $type Type of defence represented by this object
      * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return \LeagueOfData\Models\ChampionDefense Resultant Champion Defense
+     * @return ChampionDefenseInterface Resultant Champion Defense
      */
-    public static function fromState(string $type, array $champion) : ChampionDefense
+    public static function fromState(string $type, array $champion) : ChampionDefenseInterface
     {
         return new self(
             $type,
