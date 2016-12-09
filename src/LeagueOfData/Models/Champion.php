@@ -51,7 +51,7 @@ final class Champion implements ImmutableInterface
      * Factory Construction
      * 
      * @param array $champion
-     * @return \LeagueOfData\Models\Champion
+     * @return Champion
      */
     public static function fromState(array $champion): Champion
     {
@@ -74,7 +74,7 @@ final class Champion implements ImmutableInterface
      * @param string $title
      * @param string $resourceType
      * @param string $tags
-     * @param \LeagueOfData\Models\ChampionStats $stats
+     * @param ChampionStatsInterface $stats
      * @param string $version
      */
     public function __construct(
