@@ -49,10 +49,11 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $resourceType;
 
     /**
-     * Factory Construction
+     * Creates a new Champion Defence from an existing state.
+     * Use as an alternative constructor as PHP does not support multiple constructors.
      * 
-     * @param array $champion
-     * @return ChampionInterface
+     * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
+     * @return ChampionInterface Resultant Champion
      */
     public static function fromState(array $champion): ChampionInterface
     {
@@ -68,15 +69,15 @@ final class Champion implements ChampionInterface, ImmutableInterface
     }
 
     /**
-     * Main Constructor
+     * Construct a Champion object
      * 
-     * @param int $id
-     * @param string $name
-     * @param string $title
-     * @param string $resourceType
-     * @param string $tags
-     * @param ChampionStatsInterface $stats
-     * @param string $version
+     * @param int $id Champion ID
+     * @param string $name Champion Name
+     * @param string $title Champion Title
+     * @param string $resourceType Champion Resource Type
+     * @param string $tags Class tags
+     * @param ChampionStatsInterface $stats Statistics
+     * @param string $version Full version number
      */
     public function __construct(
         int $id,
@@ -99,9 +100,10 @@ final class Champion implements ChampionInterface, ImmutableInterface
     }
 
     /**
-     * Array of Champion data
+     * Correctly convert the object to an array.
+     * Use instead of PHP's type conversion
      * 
-     * @return array
+     * @return array Champion data as an array
      */
     public function toArray() : array
     {
@@ -183,5 +185,16 @@ final class Champion implements ChampionInterface, ImmutableInterface
     public function tagsAsString() : string
     {
         return $this->tags;
+    }
+
+    /**
+     * Champion resource type
+     * 
+     * @return string
+     * @todo Remove and let the actual resource model handle this.
+     */
+    public function resourceType() : string
+    {
+        return $this->resourceType;
     }
 }

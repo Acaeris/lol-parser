@@ -2,36 +2,117 @@
 
 namespace LeagueOfData\Models;
 
-final class Version
+use LeagueOfData\Library\Immutable\ImmutableInterface;
+use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\Interfaces\VersionInterface;
+
+final class Version implements VersionInterface, ImmutableInterface
 {
+    use ImmutableTrait {
+        __construct as constructImmutable;
+    }
+
+    /**
+     * @var string Full version string
+     */
     private $fullVersion;
+
+    /**
+     * @var int Season number
+     */
     private $season;
+
+    /**
+     * @var int Major version number 
+     */
     private $version;
+
+    /**
+     * @var int Hotfix ID
+     */
     private $hotfix;
 
-    public static function fromState(array $version) : Version
+    /**
+     * Creates a new Champion Defence from an existing state.
+     * Use as an alternative constructor as PHP does not support multiple constructors.
+     * 
+     * @param array $version Data from an existing state (e.g. SQL result, Json, or object converted to array)
+     * @return VersionInterface Resultant Version object
+     */
+    public static function fromState(array $version) : VersionInterface
     {
         return new self($version['fullVersion']);
     }
 
-    public function __construct($data) {
+    /**
+     * Construct a version object
+     * 
+     * @param string $data Version
+     */
+    public function __construct(string $data)
+    {
+        $this->constructImmutable();
+
         $parts = explode('.', $data);
         $this->fullVersion = $data;
-        $this->season = $parts[0];
-        $this->version = $parts[1];
-        $this->hotfix = $parts[2];
+        $this->season = (int) $parts[0];
+        $this->version = (int) $parts[1];
+        $this->hotfix = (int) $parts[2];
     }
 
-    public function fullVersion() {
-        return $this->fullVersion;
-    }
-
-    public function toArray() {
+    /**
+     * Correctly convert the object to an array.
+     * Use instead of PHP's type conversion
+     * 
+     * @return array Version data as an array
+     */
+    public function toArray() : array
+    {
         return [
             'fullVersion' => $this->fullVersion,
             'season' => $this->season,
             'version' => $this->version,
             'hotfix' => $this->hotfix
         ];
+    }
+
+    /**
+     * Full version string
+     * 
+     * @return string
+     */
+    public function fullVersion() : string
+    {
+        return $this->fullVersion;
+    }
+
+    /**
+     * Season number
+     * 
+     * @return int
+     */
+    public function season() : int
+    {
+        return $this->season;
+    }
+
+    /**
+     * Major version number
+     * 
+     * @return int
+     */
+    public function majorVersion() : int
+    {
+        return $this->version;
+    }
+
+    /**
+     * Hotfix ID
+     * 
+     * @return int
+     */
+    public function hotfix() : int
+    {
+        return $this->hotfix;
     }
 }

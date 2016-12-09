@@ -10,6 +10,7 @@ class ChampionSpec extends ObjectBehavior
     function let(
         ChampionStatsInterface $stats
     ) {
+        $stats->toArray()->willReturn(['stats' => 100]);
         $this->beConstructedWith(1, "Test", "Test Character", "mp", "Fighter|Mage", $stats, "6.21.1");
     }
 
@@ -39,6 +40,11 @@ class ChampionSpec extends ObjectBehavior
         $this->title()->shouldReturn("Test Character");
     }
 
+    function it_has_a_resource_type()
+    {
+        $this->resourceType()->shouldReturn('mp');
+    }
+
     function it_has_a_client_version()
     {
         $this->version()->shouldReturn('6.21.1');
@@ -57,5 +63,19 @@ class ChampionSpec extends ObjectBehavior
     function it_has_stats()
     {
         $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+    }
+
+    function it_can_be_converted_to_array_for_storage(ChampionStatsInterface $stats)
+    {
+        $stats->toArray()->shouldBeCalled();
+        $this->toArray()->shouldReturn([
+            'id' => 1,
+            'name' => "Test",
+            'title' => "Test Character",
+            'resourceType' => "mp",
+            'tags' => "Fighter|Mage",
+            'version' => "6.21.1",
+            'stats' => 100
+        ]);
     }
 }
