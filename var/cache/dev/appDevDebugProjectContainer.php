@@ -155,11 +155,11 @@ class appDevDebugProjectContainer extends Container
      * This service is shared.
      * This method always returns the same instance of the service.
      *
-     * @return \LeagueOfData\Adapters\API\ApiAdapter A LeagueOfData\Adapters\API\ApiAdapter instance
+     * @return \LeagueOfData\Adapters\ApiAdapter A LeagueOfData\Adapters\ApiAdapter instance
      */
     protected function getApiadapterService()
     {
-        return $this->services['api-adapter'] = new \LeagueOfData\Adapters\API\ApiAdapter($this->get('logger'), 'c156f990-88f9-4f26-9a7f-286fdfe2d865');
+        return $this->services['api-adapter'] = new \LeagueOfData\Adapters\ApiAdapter($this->get('logger'), 'RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9');
     }
 
     /**
@@ -172,7 +172,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_AppService()
     {
-        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('GzCtDJsy78', 0, (__DIR__.'/pools'));
+        $this->services['cache.app'] = $instance = new \Symfony\Component\Cache\Adapter\FilesystemAdapter('Ev1TstFGXX', 0, (__DIR__.'/pools'));
 
         if ($this->has('monolog.logger.cache')) {
             $instance->setLogger($this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
@@ -204,7 +204,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_SystemService()
     {
-        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('m0R9LqW30W', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('hzvLml2VKS', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -222,8 +222,8 @@ class appDevDebugProjectContainer extends Container
         $b = new \Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer();
         $b->addPool($this->get('cache.app'));
         $b->addPool($this->get('cache.system'));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('7HtNfH369E', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $a));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('Qdh5c6uWID', 0, 'QAeBHKeG4YHVw15pxG3cOg', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('VVWO6t5IAc', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('BIohrkOqPs', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $a));
 
         return $this->services['cache_clearer'] = new \Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer(array(0 => $b));
     }
@@ -837,11 +837,11 @@ class appDevDebugProjectContainer extends Container
      * This service is shared.
      * This method always returns the same instance of the service.
      *
-     * @return \LeagueOfData\Adapters\SQL\SqlAdapter A LeagueOfData\Adapters\SQL\SqlAdapter instance
+     * @return \LeagueOfData\Adapters\SqlAdapter A LeagueOfData\Adapters\SqlAdapter instance
      */
     protected function getSqladapterService()
     {
-        return $this->services['sql-adapter'] = new \LeagueOfData\Adapters\SQL\SqlAdapter($this->get('logger'), $this->get('doctrine.dbal.default_connection'));
+        return $this->services['sql-adapter'] = new \LeagueOfData\Adapters\SqlAdapter($this->get('logger'), $this->get('doctrine.dbal.default_connection'));
     }
 
     /**
@@ -1412,7 +1412,7 @@ class appDevDebugProjectContainer extends Container
             'kernel.charset' => 'UTF-8',
             'kernel.container_class' => 'appDevDebugProjectContainer',
             'secret' => 'some_value_that_isnt_known_about',
-            'apikey' => 'c156f990-88f9-4f26-9a7f-286fdfe2d865',
+            'apikey' => 'RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9',
             'fragment.renderer.hinclude.global_template' => '',
             'fragment.path' => '/_fragment',
             'kernel.secret' => 'some_value_that_isnt_known_about',
