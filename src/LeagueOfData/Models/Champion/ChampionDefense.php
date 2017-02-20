@@ -1,9 +1,11 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Champion;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\ResourceTrait;
+use LeagueOfData\Models\Interfaces\ResourceInterface;
 use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
 
 /**
@@ -14,23 +16,17 @@ use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
  * 
  * @author caitlyn.osborne
  */
-final class ChampionDefense implements ChampionDefenseInterface, ImmutableInterface
+final class ChampionDefense implements ChampionDefenseInterface, ResourceInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
     }
+    use ResourceTrait;
 
     /** @var string Tag for defence type: Armor */
     const DEFENSE_ARMOR = 'armor';
     /** @var string Tag for defence type: Magic Resistance */
     const DEFENSE_MAGICRESIST = 'spellBlock';
-
-    /** @var string The type of defence this object represents */
-    private $type;
-    /** @var int The base amount of defence the champion starts with */
-    private $baseValue;
-    /** @var int The amount of defence the champion gains per level */
-    private $perLevel;
 
     /**
      * Creates a new Champion Defence from an existing state.
@@ -60,10 +56,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ImmutableInterf
     public function __construct(string $type, int $base, int $perLevel)
     {
         $this->constructImmutable();
-
-        $this->type = $type;
-        $this->baseValue = $base;
-        $this->perLevel = $perLevel;
+        $this->constructResource($type, $base, $perLevel);
     }
 
     /**
@@ -78,46 +71,5 @@ final class ChampionDefense implements ChampionDefenseInterface, ImmutableInterf
             $this->type => $this->baseValue,
             $this->type . 'PerLevel' => $this->perLevel
         ];
-    }
-
-    /**
-     * Defence type
-     * 
-     * @return string Defence type
-     */
-    public function type() : string
-    {
-        return $this->type;
-    }
-
-    /**
-     * Base defence value
-     * 
-     * @return int Base defence value
-     */
-    public function baseValue() : int
-    {
-        return $this->baseValue;
-    }
-
-    /**
-     * Base defence increase per level
-     * 
-     * @return int Base defence increase per level
-     */
-    public function increasePerLevel() : int
-    {
-        return $this->perLevel;
-    }
-
-    /**
-     * Calculate the amount of defence at a given level
-     * 
-     * @param int $level Level of the champion
-     * @return int Value of defence at the given level
-     */
-    public function valueAtLevel(int $level) : int
-    {
-        return $this->baseValue + $this->perLevel * $level;
     }
 }

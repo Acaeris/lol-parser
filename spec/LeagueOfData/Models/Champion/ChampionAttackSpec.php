@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\LeagueOfData\Models;
+namespace spec\LeagueOfData\Models\Champion;
 
 use PhpSpec\ObjectBehavior;
 
@@ -13,7 +13,7 @@ class ChampionAttackSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Models\ChampionAttack');
+        $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionAttack');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionAttackInterface');
     }
 

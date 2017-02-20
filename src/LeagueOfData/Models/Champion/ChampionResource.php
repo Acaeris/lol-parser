@@ -1,10 +1,12 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Champion;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
+use LeagueOfData\Models\ResourceTrait;
 use LeagueOfData\Models\Interfaces\ChampionResourceInterface;
+use LeagueOfData\Models\Interfaces\ResourceInterface;
 
 /**
  * Champion Resources.
@@ -18,23 +20,18 @@ use LeagueOfData\Models\Interfaces\ChampionResourceInterface;
  * 
  * @author caitlyn.osborne
  */
-final class ChampionResource implements ChampionResourceInterface, ImmutableInterface
+final class ChampionResource implements ChampionResourceInterface, ResourceInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
     }
+    use ResourceTrait;
 
     /** @var string Tag for Resource Type: Health */
     const RESOURCE_HEALTH = 'hp';
     /** @var string Tag for Resource Type: Mana */
     const RESOURCE_MANA = 'mp';
 
-    /** @var string The type of resource this object represents */
-    private $type;
-    /** @var int The base amount of that resource the champion starts with */
-    private $baseValue;
-    /** @var int The amount the maximum resource increases per level */
-    private $perLevel;
     /** @var int The base regeneration rate of this resource */
     private $regen;
     /** @var int The amount the regeneration rate increases per level */
@@ -72,10 +69,8 @@ final class ChampionResource implements ChampionResourceInterface, ImmutableInte
     public function __construct(string $type, int $baseValue, int $perLevel, int $regen, int $regenPerLevel)
     {
         $this->constructImmutable();
+        $this->constructResource($type, $baseValue, $perLevel);
 
-        $this->type = $type;
-        $this->baseValue = $baseValue;
-        $this->perLevel = $perLevel;
         $this->regen = $regen;
         $this->regenPerLevel = $regenPerLevel;
     }
@@ -94,47 +89,6 @@ final class ChampionResource implements ChampionResourceInterface, ImmutableInte
             $this->type . 'Regen' => $this->regen,
             $this->type . 'RegenPerLevel' => $this->regenPerLevel
         ];
-    }
-
-    /**
-     * Resource Type
-     * 
-     * @return string Resource type
-     */
-    public function type() : string
-    {
-        return $this->type;
-    }
-
-    /**
-     * Base resource value
-     * 
-     * @return int Base resource value
-     */
-    public function baseValue() : int
-    {
-        return $this->baseValue;
-    }
-
-    /**
-     * Base resource increase per level
-     * 
-     * @return int Base resource increase per level
-     */
-    public function increasePerLevel() : int
-    {
-        return $this->perLevel;
-    }
-
-    /**
-     * Calculate the max resource value at a given level
-     * 
-     * @param int $level Level of the champion
-     * @return int Value of max resource at the given level
-     */
-    public function valueAtLevel(int $level) : int
-    {
-        return $this->baseValue + $this->perLevel * $level;
     }
 
     /**

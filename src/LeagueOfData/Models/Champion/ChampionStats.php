@@ -1,6 +1,6 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Champion;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;

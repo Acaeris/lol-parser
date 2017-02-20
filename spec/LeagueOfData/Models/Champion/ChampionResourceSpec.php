@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\LeagueOfData\Models;
+namespace spec\LeagueOfData\Models\Champion;
 
 use PhpSpec\ObjectBehavior;
 
@@ -13,12 +13,18 @@ class ChampionResourceSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Models\ChampionResource');
+        $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionResource');
+        $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionResourceInterface');
     }
 
     function it_is_immutable()
     {
-        $this->shouldHaveType('LeagueOfData\Library\Immutable\ImmutableInterface');
+        $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
+    }
+
+    function it_is_a_resource()
+    {
+        $this->shouldImplement('LeagueOfData\Models\Interfaces\ResourceInterface');
     }
 
     function it_can_output_a_type_of_resource()
