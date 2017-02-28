@@ -1,6 +1,6 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Spell;
 
 use LeagueOfData\Models\Interfaces\SpellInterface;
 use LeagueOfData\Library\Immutable\ImmutableInterface;
@@ -11,34 +11,34 @@ final class Spell implements SpellInterface, ImmutableInterface
     use ImmutableTrait {
         __construct as constructImmutable;
     }
-    
+
     /**
      * @var int Spell ID
      */
     private $id;
 
     /**
-     * @var string Spell Name 
+     * @var string Spell Name
      */
     private $name;
 
     /**
-     * @var string Spell description 
+     * @var string Spell description
      */
     private $description;
 
     /**
-     * @var array Spell Cooldowns 
+     * @var array Spell Cooldowns
      */
     private $cooldowns;
- 
+
     /**
      * @var array Spell costs
      */
     private $costs;
 
     /**
-     * @var int Maximum rank of the spell 
+     * @var int Maximum rank of the spell
      */
     private $maxRank;
 
@@ -57,7 +57,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell ID
-     * 
+     *
      * @return int Internal ID of the spell. Used to link iterations of a spell.
      */
     public function id() : int
@@ -67,7 +67,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell Name
-     * 
+     *
      * @return string Name of the spell
      */
     public function name() : string
@@ -77,7 +77,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell description
-     * 
+     *
      * @return string Spell description
      */
     public function description() : string
@@ -87,7 +87,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Max rank of the spell
-     * 
+     *
      * @return int Max Rank
      */
     public function maxRank() : int
@@ -97,7 +97,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell cooldowns
-     * 
+     *
      * @return array List of cooldowns ordered by rank
      */
     public function cooldowns() : array
@@ -107,7 +107,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell Cooldown by rank
-     * 
+     *
      * @param int $rank
      * @return int Spell cooldown
      * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
@@ -122,7 +122,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Spell costs
-     * 
+     *
      * @return array Spell costs
      */
     public function costs() : array
@@ -132,7 +132,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Cost by spell rank
-     * 
+     *
      * @param int $rank
      * @return int Spell cost
      * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
@@ -148,7 +148,7 @@ final class Spell implements SpellInterface, ImmutableInterface
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion data as an array
      */
     public function toArray() : array

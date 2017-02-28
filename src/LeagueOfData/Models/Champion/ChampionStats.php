@@ -6,12 +6,12 @@ use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
 use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
 use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
-use LeagueOfData\Models\Interfaces\ChampionResourceInterface;
+use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 
 /**
  * Champion Details
- * 
+ *
  * @author caitlyn.osborne
  */
 final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
@@ -21,22 +21,22 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     }
 
     /**
-     * @var ChamptionResourceInterface Health details
+     * @var ChampionRegenResourceInterface Health details
      */
     private $health;
 
     /**
-     * @var ChampionResourceInterface Resource details (e.g. Mana, Rage, Energy)
+     * @var ChampionRegenResourceInterface Resource details (e.g. Mana, Rage, Energy)
      */
     private $resource;
 
     /**
-     * @var ChampionAttackInterface Attack details 
+     * @var ChampionAttackInterface Attack details
      */
     private $attack;
 
     /**
-     * @var ChampionDefenseInterface Armor details 
+     * @var ChampionDefenseInterface Armor details
      */
     private $armor;
 
@@ -46,44 +46,44 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     private $magicResist;
 
     /**
-     * @var int Movement Speed
+     * @var float Movement Speed
      */
     private $moveSpeed;
 
     /**
      * Factory Constructor
-     * 
+     *
      * @param array $champion
      * @return ChampionStatsInterface
      */
     public static function fromState(array $champion) : ChampionStatsInterface
     {
-        $health = ChampionResource::fromState(ChampionResource::RESOURCE_HEALTH, $champion);
-        $resource = ChampionResource::fromState(ChampionResource::RESOURCE_MANA, $champion);
+        $health = ChampionRegenResource::fromState(ChampionRegenResource::RESOURCE_HEALTH, $champion);
+        $resource = ChampionRegenResource::fromState(ChampionRegenResource::RESOURCE_MANA, $champion);
         $attack = ChampionAttack::fromState($champion);
         $armor = ChampionDefense::fromState(ChampionDefense::DEFENSE_ARMOR, $champion);
         $magicResist = ChampionDefense::fromState(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
-        
+
         return new self($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
     }
 
     /**
      * Main Constructor
-     * 
-     * @param ChampionResourceInterface $health
-     * @param ChampionResourceInterface $mana
+     *
+     * @param ChampionRegenResourceInterface $health
+     * @param ChampionRegenResourceInterface $mana
      * @param ChampionAttackInterface $attack
      * @param ChampionDefenseInterface $armor
      * @param ChampionDefenseInterface $magicResist
-     * @param int $moveSpeed
+     * @param float $moveSpeed
      */
     public function __construct(
-        ChampionResourceInterface $health,
-        ChampionResourceInterface $mana,
+        ChampionRegenResourceInterface $health,
+        ChampionRegenResourceInterface $mana,
         ChampionAttackInterface $attack,
         ChampionDefenseInterface $armor,
         ChampionDefenseInterface $magicResist,
-        int $moveSpeed
+        float $moveSpeed
     ) {
         $this->constructImmutable();
 
@@ -97,18 +97,18 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 
     /**
      * Champion movement speed
-     * 
-     * @return int
+     *
+     * @return float
      */
-    public function moveSpeed() : int
+    public function moveSpeed() : float
     {
-        return $this->moveSpeed;
+        return round($this->moveSpeed, 2);
     }
 
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion resource data as an array
      */
     public function toArray() : array
@@ -119,27 +119,27 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 
     /**
      * Champion Health
-     * 
-     * @return ChampionResourceInterface
+     *
+     * @return ChampionRegenResourceInterface
      */
-    public function health() : ChampionResourceInterface
+    public function health() : ChampionRegenResourceInterface
     {
         return $this->health;
     }
 
     /**
      * Champion Resource (e.g. Mana, Rage, Energy, etc.)
-     * 
-     * @return ChampionResourceInterface
+     *
+     * @return ChampionRegenResourceInterface
      */
-    public function resource() : ChampionResourceInterface
+    public function resource() : ChampionRegenResourceInterface
     {
         return $this->resource;
     }
 
     /**
      * Champion Attack
-     * 
+     *
      * @return ChampionAttackInterface
      */
     public function attack() : ChampionAttackInterface
@@ -149,7 +149,7 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 
     /**
      * Champion Armor
-     * 
+     *
      * @return ChampionDefenseInterface
      */
     public function armor() : ChampionDefenseInterface
@@ -159,7 +159,7 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 
     /**
      * Champion Magic Resist
-     * 
+     *
      * @return ChampionDefenseInterface
      */
     public function magicResist() : ChampionDefenseInterface

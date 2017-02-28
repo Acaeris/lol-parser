@@ -1,11 +1,12 @@
 <?php
 
-namespace LeagueOfData\Models;
+namespace LeagueOfData\Models\Spell;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
 use LeagueOfData\Models\Interfaces\SpellResourceInterface;
 use LeagueOfData\Models\Interfaces\ResourceInterface;
+use LeagueOfData\Models\ResourceTrait;
 
 /**
  * Spell Resources.
@@ -16,7 +17,7 @@ use LeagueOfData\Models\Interfaces\ResourceInterface;
  * - Energy ('energy')
  * - Wind ('wind')
  * - Ammo ('ammo')
- * 
+ *
  * @author caitlyn.osborne
  */
 final class SpellResource implements SpellResourceInterface, ResourceInterface, ImmutableInterface
@@ -25,11 +26,11 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
         __construct as constructImmutable;
     }
     use ResourceTrait;
-    
+
     /**
      * Creates a new Spell Resource from an existing state.
      * Used as an alternative constructor as PHP does not support mutliple constructors.
-     * 
+     *
      * @param string $type Type of resource represented by this object
      * @param array $spell Data from an existing state (e.g. SQL result, Json or object converted to array)
      * @return SpellResourceInterface Resultant Spell Resource
@@ -45,7 +46,7 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
 
     /**
      * Construct a Spell Resource object
-     * 
+     *
      * @param string $type Type of resource represented by this object
      * @param int $baseValue The base amount of that resource the spell requires to case
      * @param int $perLevel The amount the resource cost increases per level
@@ -60,7 +61,7 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Spell resource data as an array
      */
     public function toArray() : array

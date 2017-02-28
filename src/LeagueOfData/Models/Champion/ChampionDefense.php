@@ -13,7 +13,7 @@ use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
  * Used to represent the defences of the champion.
  * - Armor ('armor')
  * - Magic Resistance ('spellBlock')
- * 
+ *
  * @author caitlyn.osborne
  */
 final class ChampionDefense implements ChampionDefenseInterface, ResourceInterface, ImmutableInterface
@@ -31,7 +31,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     /**
      * Creates a new Champion Defence from an existing state.
      * Use as an alternative constructor as PHP does not support multiple constructors.
-     * 
+     *
      * @param string $type Type of defence represented by this object
      * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
      * @return ChampionDefenseInterface Resultant Champion Defense
@@ -47,13 +47,13 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
 
     /**
      * Construct a Champion Defense object
-     * 
+     *
      * @param string $type Type of defence represented by this object
-     * @param int $base The base amount of defence the champion starts with
-     * @param int $perLevel The amount of defence the champion gains per level
+     * @param float $base The base amount of defence the champion starts with
+     * @param float $perLevel The amount of defence the champion gains per level
      * @todo Add validation of parameters.
      */
-    public function __construct(string $type, int $base, int $perLevel)
+    public function __construct(string $type, float $base, float $perLevel)
     {
         $this->constructImmutable();
         $this->constructResource($type, $base, $perLevel);
@@ -62,7 +62,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion defence data as an array
      */
     public function toArray() : array

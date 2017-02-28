@@ -14,7 +14,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     }
 
     /**
-     * @var int Champion ID 
+     * @var int Champion ID
      */
     private $id;
 
@@ -29,7 +29,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $title;
 
     /**
-     * @var string Client Version 
+     * @var string Client Version
      */
     private $version;
 
@@ -39,7 +39,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $stats;
 
     /**
-     * @var array Champion type tags 
+     * @var array Champion type tags
      */
     private $tags;
 
@@ -51,7 +51,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * Creates a new Champion Defence from an existing state.
      * Use as an alternative constructor as PHP does not support multiple constructors.
-     * 
+     *
      * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
      * @return ChampionInterface Resultant Champion
      */
@@ -70,7 +70,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Construct a Champion object
-     * 
+     *
      * @param int $id Champion ID
      * @param string $name Champion Name
      * @param string $title Champion Title
@@ -84,7 +84,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         string $name,
         string $title,
         string $resourceType,
-        string $tags,
+        array $tags,
         ChampionStatsInterface $stats,
         string $version
     ) {
@@ -102,7 +102,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion data as an array
      */
     public function toArray() : array
@@ -119,7 +119,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Champion ID
-     * 
+     *
      * @return int
      */
     public function id() : int
@@ -129,7 +129,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Champion Name
-     * 
+     *
      * @return string
      */
     public function name() : string
@@ -139,7 +139,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Champion Title
-     * 
+     *
      * @return string
      */
     public function title() : string
@@ -149,7 +149,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Client Version
-     * 
+     *
      * @return string
      */
     public function version() : string
@@ -159,7 +159,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Champion Stats
-     * 
+     *
      * @return ChampionStatsInterface
      */
     public function stats() : ChampionStatsInterface
@@ -169,27 +169,27 @@ final class Champion implements ChampionInterface, ImmutableInterface
 
     /**
      * Champion tags as array
-     * 
+     *
      * @return array
      */
     public function tags() : array
-    {
-        return explode('|', $this->tags);
-    }
-
-    /**
-     * Champion tags as original format
-     * 
-     * @return string
-     */
-    public function tagsAsString() : string
     {
         return $this->tags;
     }
 
     /**
+     * Champion tags as original format
+     *
+     * @return string
+     */
+    public function tagsAsString() : string
+    {
+        return implode("|", $this->tags);
+    }
+
+    /**
      * Champion resource type
-     * 
+     *
      * @return string
      * @todo Remove and let the actual resource model handle this.
      */

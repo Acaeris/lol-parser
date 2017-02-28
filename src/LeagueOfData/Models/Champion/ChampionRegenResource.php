@@ -5,7 +5,7 @@ namespace LeagueOfData\Models\Champion;
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
 use LeagueOfData\Models\ResourceTrait;
-use LeagueOfData\Models\Interfaces\ChampionResourceInterface;
+use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
 use LeagueOfData\Models\Interfaces\ResourceInterface;
 
 /**
@@ -17,10 +17,10 @@ use LeagueOfData\Models\Interfaces\ResourceInterface;
  * - Energy ('energy')
  * - Wind ('wind')
  * - Ammo ('ammo')
- * 
+ *
  * @author caitlyn.osborne
  */
-final class ChampionResource implements ChampionResourceInterface, ResourceInterface, ImmutableInterface
+final class ChampionRegenResource implements ChampionRegenResourceInterface, ResourceInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -40,7 +40,7 @@ final class ChampionResource implements ChampionResourceInterface, ResourceInter
     /**
      * Creates a new Champion Resource from an existing state.
      * Used as an alternative constructor as PHP does not support mutliple constructors.
-     * 
+     *
      * @param string $type Type of resource represented by this object
      * @param array $champion Data from an existing state (e.g. SQL result, Json or object converted to array)
      * @return ChampionResourceInterface Resultant Champion Resource
@@ -58,15 +58,15 @@ final class ChampionResource implements ChampionResourceInterface, ResourceInter
 
     /**
      * Construct a Champion Resource object
-     * 
+     *
      * @param string $type Type of resource represented by this object
-     * @param int $baseValue The base amount of that resource the champion starts with 
-     * @param int $perLevel The amount the maximum resource increases per level
-     * @param int $regen The base regeneration rate of this resource
-     * @param int $regenPerLevel The amount the regeneration rate increases per level
+     * @param float $baseValue The base amount of that resource the champion starts with
+     * @param float $perLevel The amount the maximum resource increases per level
+     * @param float $regen The base regeneration rate of this resource
+     * @param float $regenPerLevel The amount the regeneration rate increases per level
      * @todo Add validation of parameters.
      */
-    public function __construct(string $type, int $baseValue, int $perLevel, int $regen, int $regenPerLevel)
+    public function __construct(string $type, float $baseValue, float $perLevel, float $regen, float $regenPerLevel)
     {
         $this->constructImmutable();
         $this->constructResource($type, $baseValue, $perLevel);
@@ -78,7 +78,7 @@ final class ChampionResource implements ChampionResourceInterface, ResourceInter
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion resource data as an array
      */
     public function toArray() : array
@@ -93,32 +93,32 @@ final class ChampionResource implements ChampionResourceInterface, ResourceInter
 
     /**
      * Base regeneration rate
-     * 
-     * @return int Base regeneration rate
+     *
+     * @return float Base regeneration rate
      */
-    public function regenBaseValue() : int
+    public function regenBaseValue() : float
     {
-        return $this->regen;
+        return round($this->regen, 3);
     }
 
     /**
      * Regeneration rate increase per level
-     * 
-     * @return int Regeneration rate increase per level
+     *
+     * @return float Regeneration rate increase per level
      */
-    public function regenIncreasePerLevel() : int
+    public function regenIncreasePerLevel() : float
     {
-        return $this->regenPerLevel;
+        return round($this->regenPerLevel, 3);
     }
 
     /**
      * Calculate the regeneration rate at given level
-     * 
+     *
      * @param int $level Level of the champion
-     * @return int Value of regeneration rate at the given level
+     * @return float Value of regeneration rate at the given level
      */
-    public function regenAtLevel(int $level) : int
+    public function regenAtLevel(int $level) : float
     {
-        return $this->regen + $this->regenPerLevel * $level;
+        return round($this->regen + $this->regenPerLevel * ($level - 1), 3);
     }
 }

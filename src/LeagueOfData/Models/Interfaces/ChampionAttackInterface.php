@@ -4,7 +4,7 @@ namespace LeagueOfData\Models\Interfaces;
 
 /**
  * Champion Attack Interface
- * 
+ *
  * @author caitlyn.osborne
  * @see LeagueOfData\Models\ChampionAttack
  */
@@ -13,81 +13,81 @@ interface ChampionAttackInterface
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Champion attack data as an array
      */
     public function toArray() : array;
 
     /**
      * Attack range
-     * 
-     * @return int Attack range
+     *
+     * @return float Attack range
      */
-    public function range() : int;
+    public function range() : float;
 
     /**
      * Base attack damage
-     * 
-     * @return int Base attack damage
+     *
+     * @return float Base attack damage
      */
-    public function baseDamage() : int;
+    public function baseDamage() : float;
 
     /**
      * Attack damage increase per level
-     * 
-     * @return int Attack damage increase per level
+     *
+     * @return float Attack damage increase per level
      */
-    public function damagePerLevel() : int;
+    public function damagePerLevel() : float;
 
     /**
      * Calculate attack damage at a given level
-     * 
+     *
      * @param int $level Level of the champion
-     * @return int Value of attack damage at the given level
+     * @return float Value of attack damage at the given level
      */
-    public function damageAtLevel(int $level) : int;
+    public function damageAtLevel(int $level) : float;
 
     /**
      * Base attack speed
-     * 
-     * @return int Base attack speed
+     *
+     * @return float Base attack speed
      */
-    public function attackSpeed() : int;
+    public function attackSpeed() : float;
 
     /**
      * Attack speed increase per level
-     * 
-     * @return int Attack speed increase per level
+     *
+     * @return float Attack speed increase per level
      */
-    public function attackSpeedPerLevel() : int;
+    public function attackSpeedPerLevel() : float;
 
     /**
      * Calculate the attack speed at a given level
-     * 
+     *
      * @param int $level Level of the champion
-     * @return int Value of the attack speed at the given level
+     * @return float Value of the attack speed at the given level
      */
-    public function attackSpeedAtLevel(int $level) : int;
+    public function attackSpeedAtLevel(int $level) : float;
 
     /**
      * Base critical hit chance
-     * 
-     * @return int Base critical hit chance
+     *
+     * @return float Base critical hit chance
      */
-    public function baseCritChance() : int;
+    public function baseCritChance() : float;
 
     /**
      * Critical hit chance increase per level
-     * 
-     * @return int Critical hit chance per level
+     *
+     * @return float Critical hit chance per level
      */
-    public function critChancePerLevel() : int;
+    public function critChancePerLevel() : float;
 
     /**
      * Calculate the critical hit chance at a given level
-     * 
+     *
      * @param int $level Level of the champion
-     * @return int Value of the critical hit chance at the given level
+     * @return float Value of the critical hit chance at the given level
      */
-    public function critChanceAtLevel(int $level) : int;
+    public function critChanceAtLevel(int $level) : float;
 }

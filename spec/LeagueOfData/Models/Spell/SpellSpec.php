@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\LeagueOfData\Models;
+namespace spec\LeagueOfData\Models\Spell;
 
 use PhpSpec\ObjectBehavior;
 
@@ -14,7 +14,7 @@ class SpellSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Models\Spell');
+        $this->shouldHaveType('LeagueOfData\Models\Spell\Spell');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\SpellInterface');
     }
 

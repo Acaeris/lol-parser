@@ -4,17 +4,21 @@ namespace spec\LeagueOfData\Models\Champion;
 
 use PhpSpec\ObjectBehavior;
 
-class ChampionResourceSpec extends ObjectBehavior
+class ChampionRegenResourceSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith('hp', 100, 5, 10, 1);
+        $health = 511.68;
+        $healthPerLevel = 76;
+        $healthRegen = 5.424;
+        $healthRegenPerLevel = 0.55;
+        $this->beConstructedWith('hp', $health, $healthPerLevel, 5.424, 0.55);
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionResource');
-        $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionResourceInterface');
+        $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionRegenResource');
+        $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
     }
 
     function it_is_immutable()
@@ -34,41 +38,41 @@ class ChampionResourceSpec extends ObjectBehavior
 
     function it_can_output_a_base_value()
     {
-        $this->baseValue()->shouldReturn(100);
+        $this->baseValue()->shouldReturn(511.68);
     }
 
     function it_can_output_a_value_per_level()
     {
-        $this->increasePerLevel()->shouldReturn(5);
+        $this->increasePerLevel()->shouldReturn(76.0);
     }
 
     function it_can_output_the_value_at_a_given_level()
     {
-        $this->valueAtLevel(5)->shouldReturn(125);
+        $this->valueAtLevel(5)->shouldReturn(815.68);
     }
 
     function it_can_output_a_regen_base_value()
     {
-        $this->regenBaseValue()->shouldReturn(10);
+        $this->regenBaseValue()->shouldReturn(5.424);
     }
 
     function it_can_output_a_regen_per_level_value()
     {
-        $this->regenIncreasePerLevel()->shouldReturn(1);
+        $this->regenIncreasePerLevel()->shouldReturn(0.55);
     }
 
     function it_can_output_a_regen_value_at_a_given_level()
     {
-        $this->regenAtLevel(5)->shouldReturn(15);
+        $this->regenAtLevel(5)->shouldReturn(7.624);
     }
 
     function it_can_output_the_data_as_an_array_for_storage()
     {
         $this->toArray()->shouldReturn([
-            'hp' => 100,
-            'hpPerLevel' => 5,
-            'hpRegen' => 10,
-            'hpRegenPerLevel' => 1
+            'hp' => 511.68,
+            'hpPerLevel' => 76.0,
+            'hpRegen' => 5.424,
+            'hpRegenPerLevel' => 0.55
         ]);
     }
 }

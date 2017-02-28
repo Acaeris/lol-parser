@@ -11,7 +11,7 @@ class ChampionSpec extends ObjectBehavior
         ChampionStatsInterface $stats
     ) {
         $stats->toArray()->willReturn(['stats' => 100]);
-        $this->beConstructedWith(1, "Test", "Test Character", "mp", "Fighter|Mage", $stats, "6.21.1");
+        $this->beConstructedWith(1, "Test", "Test Character", "mp", ["Fighter", "Mage"], $stats, "6.21.1");
     }
 
     function it_is_initializable()
@@ -55,7 +55,7 @@ class ChampionSpec extends ObjectBehavior
         $this->tags()->shouldReturn(['Fighter', 'Mage']);
     }
 
-    function it_can_return_tags_in_original_format()
+    function it_can_return_tags_as_simple_string()
     {
         $this->tagsAsString()->shouldReturn("Fighter|Mage");
     }
@@ -73,7 +73,7 @@ class ChampionSpec extends ObjectBehavior
             'name' => "Test",
             'title' => "Test Character",
             'resourceType' => "mp",
-            'tags' => "Fighter|Mage",
+            'tags' => ["Fighter", "Mage"],
             'version' => "6.21.1",
             'stats' => 100
         ]);
