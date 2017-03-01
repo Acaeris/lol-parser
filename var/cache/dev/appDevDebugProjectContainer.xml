@@ -160,6 +160,10 @@
       <argument type="service" id="api-adapter"/>
       <argument type="service" id="logger"/>
     </service>
+    <service id="realm-api" class="LeagueOfData\Service\Json\JsonRealms">
+      <argument type="service" id="api-adapter"/>
+      <argument type="service" id="logger"/>
+    </service>
     <service id="champion-db" class="LeagueOfData\Service\Sql\SqlChampions">
       <argument type="service" id="sql-adapter"/>
       <argument type="service" id="logger"/>
@@ -169,6 +173,10 @@
       <argument type="service" id="logger"/>
     </service>
     <service id="version-db" class="LeagueOfData\Service\Sql\SqlVersions">
+      <argument type="service" id="sql-adapter"/>
+      <argument type="service" id="logger"/>
+    </service>
+    <service id="realm-db" class="LeagueOfData\Service\Sql\SqlRealms">
       <argument type="service" id="sql-adapter"/>
       <argument type="service" id="logger"/>
     </service>
@@ -231,7 +239,7 @@
                   <tag name="cache.pool"/>
                   <argument>VVWO6t5IAc</argument>
                   <argument>0</argument>
-                  <argument>kUdji680hAKMfxKxcEGJc1</argument>
+                  <argument>SS1pGMEFCc-WERQSONDDje</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -244,7 +252,7 @@
                   <tag name="cache.pool"/>
                   <argument>BIohrkOqPs</argument>
                   <argument>0</argument>
-                  <argument>kUdji680hAKMfxKxcEGJc1</argument>
+                  <argument>SS1pGMEFCc-WERQSONDDje</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -562,7 +570,7 @@
       <tag name="cache.pool"/>
       <argument>hzvLml2VKS</argument>
       <argument>0</argument>
-      <argument>kUdji680hAKMfxKxcEGJc1</argument>
+      <argument>SS1pGMEFCc-WERQSONDDje</argument>
       <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>

@@ -4,13 +4,14 @@ namespace LeagueOfData\Adapters\Request;
 
 use LeagueOfData\Adapters\RequestInterface;
 
-final class VersionRequest implements RequestInterface
+final class RealmRequest implements RequestInterface
 {
     /* @var string API Request URL */
-    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/versions';
+    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/realms';
+    /* @var array Available Regions */
+    const REGIONS = ['euw', 'eune', 'na'];
     /* @var string Request Type */
-    const TYPE = 'version';
-
+    const TYPE = "realm";
     /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw' ];
     /* @var string Output Format */
@@ -22,7 +23,7 @@ final class VersionRequest implements RequestInterface
     /* @var array Where parameters of request */
     private $where;
 
-    public function __construct($where, $query = null, $data = null)
+    public function __construct(array $where, string $query = null, array $data = null)
     {
         $this->where = $where;
         $this->data = $data;
@@ -34,7 +35,7 @@ final class VersionRequest implements RequestInterface
      *
      * @var string Request Format
      */
-    public function requestFormat(string $format)
+    function requestFormat(string $format)
     {
         $this->format = $format;
     }
@@ -44,19 +45,9 @@ final class VersionRequest implements RequestInterface
      *
      * @var array Data used for request
      */
-    public function data() : array
+    function data() : array
     {
         return $this->data;
-    }
-
-    /**
-     * Type of request
-     *
-     * @return string Request Type
-     */
-    public function type() : string
-    {
-        return self::TYPE;
     }
 
     /**
@@ -64,7 +55,7 @@ final class VersionRequest implements RequestInterface
      *
      * @return string API url || SQL table
      */
-    public function query() : string
+    function query() : string
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
@@ -74,15 +65,17 @@ final class VersionRequest implements RequestInterface
     }
 
     /**
-     * Where parameters for request
+     * Type of request
      *
-     * @return array Request parameters
+     * @return string Request Type
      */
-    public function where() : array
+    function type() : string
     {
-        if ($this->format === RequestInterface::REQUEST_JSON) {
-            return array_merge($this->apiDefaults, $this->where);
-        }
-        return $this->where;
+        return self::TYPE;
+    }
+
+    function where() : array
+    {
+
     }
 }

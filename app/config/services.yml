@@ -17,6 +17,9 @@ services:
     version-api:
         class: LeagueOfData\Service\Json\JsonVersions
         arguments: ['@api-adapter', '@logger']
+    realm-api:
+        class: LeagueOfData\Service\Json\JsonRealms
+        arguments: ['@api-adapter', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions
         arguments: ['@sql-adapter', '@logger']
@@ -25,4 +28,7 @@ services:
         arguments: ['@sql-adapter', '@logger']
     version-db:
         class: LeagueOfData\Service\Sql\SqlVersions
+        arguments: ['@sql-adapter', '@logger']
+    realm-db:
+        class: LeagueOfData\Service\Sql\SqlRealms
         arguments: ['@sql-adapter', '@logger']

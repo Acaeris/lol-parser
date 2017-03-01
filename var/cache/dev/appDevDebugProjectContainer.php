@@ -75,6 +75,8 @@ class appDevDebugProjectContainer extends Container
             'monolog.processor.psr_log_message' => 'getMonolog_Processor_PsrLogMessageService',
             'property_accessor' => 'getPropertyAccessorService',
             'rabbitmq' => 'getRabbitmqService',
+            'realm-api' => 'getRealmapiService',
+            'realm-db' => 'getRealmdbService',
             'request_stack' => 'getRequestStackService',
             'response_listener' => 'getResponseListenerService',
             'service_container' => 'getServiceContainerService',
@@ -204,7 +206,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_SystemService()
     {
-        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('hzvLml2VKS', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('hzvLml2VKS', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -222,8 +224,8 @@ class appDevDebugProjectContainer extends Container
         $b = new \Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer();
         $b->addPool($this->get('cache.app'));
         $b->addPool($this->get('cache.system'));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('VVWO6t5IAc', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $a));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('BIohrkOqPs', 0, 'kUdji680hAKMfxKxcEGJc1', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('VVWO6t5IAc', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('BIohrkOqPs', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $a));
 
         return $this->services['cache_clearer'] = new \Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer(array(0 => $b));
     }
@@ -790,6 +792,32 @@ class appDevDebugProjectContainer extends Container
     protected function getRabbitmqService()
     {
         return $this->services['rabbitmq'] = new \LeagueOfData\Service\RabbitMQ($this->get('logger'));
+    }
+
+    /**
+     * Gets the 'realm-api' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Json\JsonRealms A LeagueOfData\Service\Json\JsonRealms instance
+     */
+    protected function getRealmapiService()
+    {
+        return $this->services['realm-api'] = new \LeagueOfData\Service\Json\JsonRealms($this->get('api-adapter'), $this->get('logger'));
+    }
+
+    /**
+     * Gets the 'realm-db' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \LeagueOfData\Service\Sql\SqlRealms A LeagueOfData\Service\Sql\SqlRealms instance
+     */
+    protected function getRealmdbService()
+    {
+        return $this->services['realm-db'] = new \LeagueOfData\Service\Sql\SqlRealms($this->get('sql-adapter'), $this->get('logger'));
     }
 
     /**
