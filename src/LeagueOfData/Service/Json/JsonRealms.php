@@ -11,6 +11,9 @@ use Psr\Log\LoggerInterface;
 
 final class JsonRealms implements RealmService
 {
+    /* @var array Available Regions */
+    const REGIONS = ['euw', 'eune', 'na'];
+
     private $source;
     private $log;
     private $realms;
@@ -28,11 +31,11 @@ final class JsonRealms implements RealmService
      */
     public function findAll() : array
     {
-        $request = new RealmRequest([]);
-        $response = $this->source->fetch($request);
         $this->realms = [];
-        foreach ($response as $realm) {
-            $this->realms[] = new Realm($realm['cdn'], $realm['v'], 'euw');
+        foreach (self::REGIONS as $region) {
+            $request = new RealmRequest(['region' => $region]);
+            $response = $this->source->fetch($request);
+            $this->realms[] = new Realm($realm['cdn'], $realm['v'], $region);
         }
         return $this->realms;
     }

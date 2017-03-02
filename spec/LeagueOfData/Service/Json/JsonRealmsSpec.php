@@ -6,14 +6,15 @@ use PhpSpec\ObjectBehavior;
 
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\RealmRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
 
 class JsonRealmsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
-        $request = new RealmRequest([]);
+        //$request = new RealmRequest([]);
         $adapter->fetch($request)->willReturn([[
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
             'v' => '7.4.3'

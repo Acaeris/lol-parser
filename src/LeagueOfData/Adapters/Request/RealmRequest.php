@@ -8,8 +8,6 @@ final class RealmRequest implements RequestInterface
 {
     /* @var string API Request URL */
     const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/realms';
-    /* @var array Available Regions */
-    const REGIONS = ['euw', 'eune', 'na'];
     /* @var string Request Type */
     const TYPE = "realm";
     /* @var array Default parameters for API query */
@@ -74,8 +72,16 @@ final class RealmRequest implements RequestInterface
         return self::TYPE;
     }
 
+    /**
+     * Where parameters for request
+     *
+     * @return array Request parameters
+     */
     function where() : array
     {
-
+        if ($this->format === RequestInterface::REQUEST_JSON) {
+            return array_merge($this->apiDefaults, $this->where);
+        }
+        return $this->where;
     }
 }

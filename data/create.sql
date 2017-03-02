@@ -1,3 +1,10 @@
+CREATE TABLE IF NOT EXISTS `realm` (
+    `cdn` varchar(128) NOT NULL,
+    `version` varchar(8) NOT NULL,
+    `region` varchar(8) NOT NULL,
+    PRIMARY KEY(`region`, `version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `version` (
   `fullVersion` varchar(16) NOT NULL,
   `season` int(11) DEFAULT NULL,

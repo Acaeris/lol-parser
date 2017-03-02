@@ -40,4 +40,9 @@ class RealmRequestSpec extends ObjectBehavior
         $this->requestFormat(RequestInterface::REQUEST_SQL);
         $this->query()->shouldReturn('Test Query');
     }
+
+    function it_can_process_the_request_parameters()
+    {
+        $this->where()->shouldReturn(['region' => 'na']);
+    }
 }

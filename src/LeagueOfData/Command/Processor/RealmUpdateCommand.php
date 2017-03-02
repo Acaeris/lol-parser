@@ -29,10 +29,8 @@ class RealmUpdateCommand extends ContainerAwareCommand
         $this->service = $this->getContainer()->get('realm-api');
         $this->db = $this->getContainer()->get('realm-db');
 
-        $this->log->info('Fetching Realm data');
-        $this->service->findAll();
-
-        $this->db->addAll($this->service->transfer());
+        $this->log->info('Updating Realm data');
+        $this->db->addAll($this->service->findAll());
         $this->db->store();
     }
 }
