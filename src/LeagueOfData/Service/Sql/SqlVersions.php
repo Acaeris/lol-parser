@@ -10,8 +10,11 @@ use Psr\Log\LoggerInterface;
 
 final class SqlVersions implements VersionService
 {
+    /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
     private $db;
+    /* @var Psr\Log\LoggerInterface Logger */
     private $log;
+    /* @var array Version objects */
     private $versions = [];
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
@@ -25,7 +28,12 @@ final class SqlVersions implements VersionService
         $this->versions[] = $version;
     }
 
-    public function addAll($versions)
+    /**
+     * Add all version objects to internal array
+     *
+     * @param array $versions Version objects
+     */
+    public function addAll(array $versions)
     {
         $this->versions = array_merge($this->versions, $versions);
     }

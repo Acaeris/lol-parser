@@ -14,8 +14,11 @@ final class JsonRealms implements RealmService
     /* @var array Available Regions */
     const REGIONS = ['euw', 'eune', 'na'];
 
+    /* @var LeagueOfData\Adapters\AdapterInterface API adapter */
     private $source;
+    /* @var Psr\Log\LoggerInterface Logger */
     private $log;
+    /* @var array Realm objects */
     private $realms;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
@@ -35,7 +38,7 @@ final class JsonRealms implements RealmService
         foreach (self::REGIONS as $region) {
             $request = new RealmRequest(['region' => $region]);
             $response = $this->source->fetch($request);
-            $this->realms[] = new Realm($realm['cdn'], $realm['v'], $region);
+            $this->realms[] = new Realm($response['cdn'], $response['v'], $region);
         }
         return $this->realms;
     }

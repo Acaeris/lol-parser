@@ -1,39 +1,32 @@
 <?php
 
-namespace spec\LeagueOfData\Service\Json;
+namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
-
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
+
 use LeagueOfData\Adapters\Request\RealmRequest;
+
 use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
 
-class JsonRealmsSpec extends ObjectBehavior
+class SqlRealmsSpec extends ObjectBehavior
 {
     function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request = new RealmRequest(['region' => 'euw']);
-        $adapter->fetch($request)->willReturn([
+        $request = new RealmRequest([], 'SELECT `cdn`, `region`, MAX(`version`) FROM realm GROUP BY `region`');
+        $adapter->fetch($request)->willReturn([[
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
-            'v' => '7.4.3'
-        ]);
-        $request = new RealmRequest(['region' => 'eune']);
-        $adapter->fetch($request)->willReturn([
-            'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
-            'v' => '7.4.3'
-        ]);
-        $request = new RealmRequest(['region' => 'na']);
-        $adapter->fetch($request)->willReturn([
-            'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
-            'v' => '7.4.3'
-        ]);
+            'version' => '7.4.3',
+            'region' => 'euw'
+        ]]);
         $this->beConstructedWith($adapter, $logger);
     }
 
     function it_should_be_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Service\Json\JsonRealms');
+        $this->shouldHaveType('LeagueOfData\Service\Sql\SqlRealms');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmService');
     }
 
