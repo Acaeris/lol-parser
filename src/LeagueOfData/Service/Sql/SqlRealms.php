@@ -15,7 +15,7 @@ class SqlRealms implements RealmService
     /* @var Psr\Log\LoggerInterface Logger */
     private $log;
     /* @var array Realm objects */
-    private $realms;
+    private $realms = [];
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $logger)
     {
@@ -46,5 +46,25 @@ class SqlRealms implements RealmService
      */
     public function addAll(array $realms) {
         $this->realms = array_merge($this->realms, $realms);
+    }
+
+    /**
+     * Store the version objects in the DB
+     */
+    public function store()
+    {
+        foreach ($this->realms as $realm) {
+            $request = new RealmRequest([
+                    'version' => $realm->version(),
+                    'region' => $realm->region()
+                ],
+                'SELECT version FROM realm WHERE version = :version AND region = :region',
+                $realm->toArray());
+            if ($this->db->fetch($request)) {
+                $this->db->update($request);
+            } else {
+                $this->db->insert($request);
+            }
+        }
     }
 }

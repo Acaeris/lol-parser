@@ -32,7 +32,7 @@ class RealmRequestSpec extends ObjectBehavior
     function it_returns_the_correct_query_for_a_json_request()
     {
         $this->requestFormat(RequestInterface::REQUEST_JSON);
-        $this->query()->shouldReturn('https://global.api.pvp.net/api/lol/static-data/na/v1.2/realms');
+        $this->query()->shouldReturn('https://global.api.pvp.net/api/lol/static-data/na/v1.2/realm');
     }
 
     function it_returns_the_correct_query_for_an_sql_request()

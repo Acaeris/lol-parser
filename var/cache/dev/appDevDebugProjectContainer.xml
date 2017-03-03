@@ -16,7 +16,7 @@
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">appDevDebugProjectContainer</parameter>
     <parameter key="secret">some_value_that_isnt_known_about</parameter>
-    <parameter key="apikey">RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9</parameter>
+    <parameter key="apikey">c156f990-88f9-4f26-9a7f-286fdfe2d865</parameter>
     <parameter key="fragment.renderer.hinclude.global_template"></parameter>
     <parameter key="fragment.path">/_fragment</parameter>
     <parameter key="kernel.secret">some_value_that_isnt_known_about</parameter>
@@ -139,7 +139,7 @@
   <services>
     <service id="api-adapter" class="LeagueOfData\Adapters\ApiAdapter">
       <argument type="service" id="logger"/>
-      <argument>RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9</argument>
+      <argument>c156f990-88f9-4f26-9a7f-286fdfe2d865</argument>
     </service>
     <service id="sql-adapter" class="LeagueOfData\Adapters\SqlAdapter">
       <argument type="service" id="logger"/>
@@ -239,7 +239,7 @@
                   <tag name="cache.pool"/>
                   <argument>VVWO6t5IAc</argument>
                   <argument>0</argument>
-                  <argument>SS1pGMEFCc-WERQSONDDje</argument>
+                  <argument>f08QNUHqOX1wlRTaIB-Dce</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -252,7 +252,7 @@
                   <tag name="cache.pool"/>
                   <argument>BIohrkOqPs</argument>
                   <argument>0</argument>
-                  <argument>SS1pGMEFCc-WERQSONDDje</argument>
+                  <argument>f08QNUHqOX1wlRTaIB-Dce</argument>
                   <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -570,7 +570,7 @@
       <tag name="cache.pool"/>
       <argument>hzvLml2VKS</argument>
       <argument>0</argument>
-      <argument>SS1pGMEFCc-WERQSONDDje</argument>
+      <argument>f08QNUHqOX1wlRTaIB-Dce</argument>
       <argument>/home/acaeris/Workspace/lol-parser/var/cache/dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>

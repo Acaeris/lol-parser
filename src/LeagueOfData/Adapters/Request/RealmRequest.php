@@ -7,7 +7,7 @@ use LeagueOfData\Adapters\RequestInterface;
 final class RealmRequest implements RequestInterface
 {
     /* @var string API Request URL */
-    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/realms';
+    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/realm';
     /* @var string Request Type */
     const TYPE = "realm";
     /* @var array Default parameters for API query */

@@ -72,4 +72,19 @@ final class Realm implements RealmInterface, ImmutableInterface
     {
         return $this->region;
     }
+
+    /**
+     * Correctly convert the object to an array.
+     * Use instead of PHP's type conversion
+     *
+     * @return array Realm data as an array
+     */
+    public function toArray() : array
+    {
+        return [
+            'region' => $this->region,
+            'version' => $this->version,
+            'cdn' => $this->cdn
+        ];
+    }
 }

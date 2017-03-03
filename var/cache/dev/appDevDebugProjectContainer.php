@@ -161,7 +161,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getApiadapterService()
     {
-        return $this->services['api-adapter'] = new \LeagueOfData\Adapters\ApiAdapter($this->get('logger'), 'RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9');
+        return $this->services['api-adapter'] = new \LeagueOfData\Adapters\ApiAdapter($this->get('logger'), 'c156f990-88f9-4f26-9a7f-286fdfe2d865');
     }
 
     /**
@@ -206,7 +206,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getCache_SystemService()
     {
-        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('hzvLml2VKS', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['cache.system'] = \Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('hzvLml2VKS', 0, 'f08QNUHqOX1wlRTaIB-Dce', (__DIR__.'/pools'), $this->get('monolog.logger.cache', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -224,8 +224,8 @@ class appDevDebugProjectContainer extends Container
         $b = new \Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer();
         $b->addPool($this->get('cache.app'));
         $b->addPool($this->get('cache.system'));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('VVWO6t5IAc', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $a));
-        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('BIohrkOqPs', 0, 'SS1pGMEFCc-WERQSONDDje', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('VVWO6t5IAc', 0, 'f08QNUHqOX1wlRTaIB-Dce', (__DIR__.'/pools'), $a));
+        $b->addPool(\Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache('BIohrkOqPs', 0, 'f08QNUHqOX1wlRTaIB-Dce', (__DIR__.'/pools'), $a));
 
         return $this->services['cache_clearer'] = new \Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer(array(0 => $b));
     }
@@ -1440,7 +1440,7 @@ class appDevDebugProjectContainer extends Container
             'kernel.charset' => 'UTF-8',
             'kernel.container_class' => 'appDevDebugProjectContainer',
             'secret' => 'some_value_that_isnt_known_about',
-            'apikey' => 'RGAPI-0d2f93a8-5087-4866-9c82-e6626308cab9',
+            'apikey' => 'c156f990-88f9-4f26-9a7f-286fdfe2d865',
             'fragment.renderer.hinclude.global_template' => '',
             'fragment.path' => '/_fragment',
             'kernel.secret' => 'some_value_that_isnt_known_about',

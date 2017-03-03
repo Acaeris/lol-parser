@@ -38,6 +38,9 @@ final class SqlVersions implements VersionService
         $this->versions = array_merge($this->versions, $versions);
     }
 
+    /**
+     * Store the version objects in the DB
+     */
     public function store()
     {
         foreach ($this->versions as $version) {
@@ -51,6 +54,11 @@ final class SqlVersions implements VersionService
         }
     }
 
+    /**
+     * Find all Version data
+     *
+     * @return array Version objects
+     */
     public function findAll()
     {
         $this->versions = [];

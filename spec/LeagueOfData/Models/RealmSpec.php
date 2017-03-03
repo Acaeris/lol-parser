@@ -43,4 +43,13 @@ class RealmSpec extends ObjectBehavior
     {
         $this->region()->shouldReturn('euw');
     }
+
+    function it_can_be_converted_to_array_for_storage()
+    {
+        $this->toArray()->shouldReturn([
+            'region' => 'euw',
+            'version' => '7.4.3',
+            'cdn' => 'http://ddragon.leagueoflegends.com/cdn'
+        ]);
+    }
 }

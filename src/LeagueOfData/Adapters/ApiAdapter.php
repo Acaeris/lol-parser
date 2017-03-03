@@ -14,7 +14,7 @@ class ApiAdapter implements AdapterInterface
     const API_SKIP = 2;
     const API_REPEAT = 3;
     const API_FAIL = 0;
-    
+
     private $log;
     private $client;
     private $apiKey;
@@ -28,7 +28,7 @@ class ApiAdapter implements AdapterInterface
 
     public function fetch(RequestInterface $request)
     {
-        $request->outputFormat(RequestInterface::REQUEST_JSON);
+        $request->requestFormat(RequestInterface::REQUEST_JSON);
         try {
             $response = $this->client->get($request->query(), [
                 'query' => array_merge($request->where(), ['api_key' => $this->apiKey]),
@@ -71,7 +71,7 @@ class ApiAdapter implements AdapterInterface
     private function checkResponse(ResponseInterface $response)
     {
         switch ($response->getStatusCode()) {
-            case 200: 
+            case 200:
                 return self::API_PROCEED;
             case 503:
                 $this->log->info("API unavailable. Waiting to retry.");
