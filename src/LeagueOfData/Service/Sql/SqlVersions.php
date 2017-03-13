@@ -62,7 +62,7 @@ final class SqlVersions implements VersionService
     public function findAll()
     {
         $this->versions = [];
-        $request = new VersionRequest([], 'SELECT * FROM version');
+        $request = new VersionRequest([], 'SELECT fullversion FROM version');
         $results = $this->db->fetch($request);
         if ($results !== false) {
             foreach ($results as $version) {

@@ -4,10 +4,7 @@ namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
-
 use LeagueOfData\Adapters\Request\RealmRequest;
-
 use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
 

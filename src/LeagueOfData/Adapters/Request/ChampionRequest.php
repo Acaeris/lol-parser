@@ -6,16 +6,22 @@ use LeagueOfData\Adapters\RequestInterface;
 
 final class ChampionRequest implements RequestInterface
 {
+    /* @var string API Request URL */
     const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/champion';
+    /* @var string Request Type */
     const TYPE = 'champion';
-
+    /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all' ];
+    /* @var string Output Format */
     private $format;
+    /* @var array Data to be used in request */
     private $data;
+    /* @var string Request query */
     private $query;
+    /* @var array Where parameters of request */
     private $where;
 
-    public function __construct($where, $query = null, $data = null)
+    public function __construct(array $where, string $query = null, array $data = null)
     {
         $this->validate($where);
         $this->where = $where;
@@ -23,22 +29,42 @@ final class ChampionRequest implements RequestInterface
         $this->query = $query;
     }
 
-    public function outputFormat($format)
-    {
-        $this->format = $format;
-    }
-
-    public function data()
+    /**
+     * Data used for request
+     *
+     * @var array Data used for request
+     */
+    public function data() : array
     {
         return $this->data;
     }
 
-    public function type()
+    /**
+     * Set format request will be in
+     *
+     * @var string Request Format
+     */
+    function requestFormat(string $format)
+    {
+        $this->format = $format;
+    }
+
+    /**
+     * Type of request
+     *
+     * @return string Request Type
+     */
+    public function type() : string
     {
         return self::TYPE;
     }
 
-    public function query()
+    /**
+     * Source of the request
+     *
+     * @return string API url || SQL table
+     */
+    public function query() : string
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
@@ -48,7 +74,12 @@ final class ChampionRequest implements RequestInterface
         return $this->query;
     }
 
-    public function where()
+    /**
+     * Where parameters for request
+     *
+     * @return array Request parameters
+     */
+    public function where() : array
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             return array_merge($this->apiDefaults, $this->where);
@@ -56,10 +87,11 @@ final class ChampionRequest implements RequestInterface
         return $this->where;
     }
 
-    private function validate($where) {
+    private function validate(array $where) {
         if (isset($where['id']) && !is_int($where['id'])) {
             throw new \Exception("Invalid ID supplied for Champion request");
         }
         // TODO: Add version validation
     }
+
 }

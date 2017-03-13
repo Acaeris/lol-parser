@@ -35,6 +35,11 @@ trait ResourceTrait
             'shortCode' => 'rage',
             'fullText' => 'Rage',
             'color' => 'orange'
+        ],
+        [
+            'shortCode' => 'spellBlock',
+            'fullText' => 'Magic Resistance',
+            'color' => 'light blue'
         ]
     ];
 

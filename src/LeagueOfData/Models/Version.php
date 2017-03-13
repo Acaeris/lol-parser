@@ -69,10 +69,7 @@ final class Version implements VersionInterface, ImmutableInterface
     public function toArray() : array
     {
         return [
-            'fullVersion' => $this->fullVersion,
-            'season' => $this->season,
-            'version' => $this->version,
-            'hotfix' => $this->hotfix
+            'fullversion' => $this->fullVersion
         ];
     }
 

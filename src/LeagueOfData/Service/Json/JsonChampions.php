@@ -2,11 +2,11 @@
 
 namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Models\Champion;
-use LeagueOfData\Models\ChampionStats;
-use LeagueOfData\Models\ChampionResource;
-use LeagueOfData\Models\ChampionAttack;
-use LeagueOfData\Models\ChampionDefense;
+use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Champion\ChampionStats;
+use LeagueOfData\Models\Champion\ChampionRegenResource;
+use LeagueOfData\Models\Champion\ChampionAttack;
+use LeagueOfData\Models\Champion\ChampionDefense;
 use LeagueOfData\Service\Interfaces\ChampionService;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
@@ -29,7 +29,13 @@ final class JsonChampions implements ChampionService
         $this->champions[] = $champion;
     }
 
-    public function findAll($version) {
+    /**
+     * Find all Realm data
+     *
+     * @return array Realm objects
+     */
+    public function findAll(string $version) : array
+    {
         $request = new ChampionRequest(['version' => $version]);
         $response = $this->source->fetch($request);
         $this->champions = [];
@@ -53,15 +59,15 @@ final class JsonChampions implements ChampionService
 
     private function create($champion, $version)
     {
-        $health = new ChampionResource(
-            ChampionResource::RESOURCE_HEALTH,
+        $health = new ChampionRegenResource(
+            ChampionRegenResource::RESOURCE_HEALTH,
             $champion->stats->hp,
             $champion->stats->hpperlevel,
             $champion->stats->hpregen,
             $champion->stats->hpregenperlevel
         );
-        $resource = new ChampionResource(
-            ChampionResource::RESOURCE_MANA,
+        $resource = new ChampionRegenResource(
+            ChampionRegenResource::RESOURCE_MANA,
             $champion->stats->mp,
             $champion->stats->mpperlevel,
             $champion->stats->mpregen,
@@ -93,7 +99,7 @@ final class JsonChampions implements ChampionService
                 $champion->name,
                 $champion->title,
                 $champion->partype,
-                implode('|', $champion->tags),
+                $champion->tags,
                 $stats,
                 $version
             );

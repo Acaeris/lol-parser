@@ -24,12 +24,7 @@ class VersionSpec extends ObjectBehavior
 
     function it_can_be_converted_to_array_for_storage()
     {
-        $this->toArray()->shouldReturn([
-            'fullVersion' => '6.21.1',
-            'season' => 6,
-            'version' => 21,
-            'hotfix' => 1
-        ]);
+        $this->toArray()->shouldReturn(['fullversion' => '6.21.1']);
     }
 
     function it_can_output_full_version()

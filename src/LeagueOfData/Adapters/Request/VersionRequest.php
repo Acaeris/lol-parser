@@ -22,7 +22,7 @@ final class VersionRequest implements RequestInterface
     /* @var array Where parameters of request */
     private $where;
 
-    public function __construct($where, $query = null, $data = null)
+    public function __construct(array $where, string $query = null, array $data = null)
     {
         $this->where = $where;
         $this->data = $data;
