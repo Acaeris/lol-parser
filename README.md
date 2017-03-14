@@ -1,0 +1,2 @@
+# lol-parser
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a4f7602c8c8947c3b71b3c4d979a06bf)](https://www.codacy.com/app/Acaeris/lol-parser?utm_source=github.com&utm_medium=referral&utm_content=Acaeris/lol-parser&utm_campaign=badger)
