@@ -24,9 +24,25 @@ final class VersionRequest implements RequestInterface
 
     public function __construct(array $where, string $query = null, array $data = null)
     {
+        $this->validate($where, $query, $data);
         $this->where = $where;
         $this->data = $data;
         $this->query = $query;
+    }
+
+    /**
+     * Validate request parameters
+     * 
+     * @var array $where Where parameters
+     * @var string|null $query Query string
+     * @var array|null $data Request data
+     */
+    public function validate(array $where, string $query = null, array $data = null)
+    {
+        if (isset($where['region']) && !in_array($where['region'], self::VALID_REGIONS)) {
+            throw new \InvalidArgumentException("Invalid Region supplied for Version request");
+        }
+        // TODO: add validation
     }
 
     /**

@@ -1,34 +1,106 @@
 <?php
 
-namespace LeagueOfData\Adapters\API;
+namespace LeagueOfData\Adapters\Request;
 
-use LeagueOfData\Adapters\API\Request;
+use LeagueOfData\Adapters\RequestInterface;
 
-final class MatchListRequest implements Request {
+final class MatchListRequest implements RequestInterface {
 
-    private $baseurl = 'https://euw.api.pvp.net/api/lol/{region}/v2.2/matchlist/by-summoner/';
-    private $call;
+    /* @var string API Request URL */
+    const API_URL = 'https://{region}.api.pvp.net/api/lol/{region}/v2.2/matchlist/by-summoner/';
+    /* @var string Request Type */
+    const TYPE = "match-list";
+    /* @var array Default parameters for API query */
+    private $apiDefaults = [ 'region' => 'euw' ];
+    /* @var string Output Format */
+    private $format;
+    /* @var array Data to be used in request */
+    private $data;
+    /* @var string Request query */
+    private $query;
+    /* @var array Where parameters of request */
+    private $where;
 
-    public function __construct() {
+    public function __construct(array $where, string $query = null, array $data = null)
+    {
+        $this->validate($where, $query, $data);
+        $this->where = $where;
+        $this->data = $data;
+        $this->query = $query;
     }
 
-    public function prepare($params) {
-        $this->validate($params);
-        $url = $this->baseurl . $params['id'];
-        $this->call = str_replace('{region}', $params['region'], $url);
-    }
-
-    private function validate($params) {
-        if (!isset($params['region'])) {
-            throw new \Exception('Region not specified for Match History API request');
+    /**
+     * Validate request parameters
+     * 
+     * @var array $where Where parameters
+     * @var string|null $query Query string
+     * @var array|null $data Request data
+     */
+    public function validate(array $where, string $query = null, array $data = null)
+    {
+        if (isset($where['id']) && !is_int($where['id'])) {
+            throw new \InvalidArgumentException("Invalid ID supplied for Summoner Match List request");
         }
-        if (!isset($params['id'])) {
-            throw new \Exception('No ID supplied for Match History API request');
+        if (isset($where['region']) && !in_array($where['region'], self::VALID_REGIONS)) {
+            throw new \InvalidArgumentException("Invalid Region supplied for Summoner Match List request");
         }
+        // TODO: Add version validation
     }
 
-    public function call() {
-        return $this->call;
+    /**
+     * Set format request will be in
+     *
+     * @var string $format Request Format
+     */
+    public function requestFormat(string $format)
+    {
+        $this->format = $format;
     }
 
+    /**
+     * Data used for request
+     *
+     * @return array Data used for request
+     */
+    public function data() : array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Source of the request
+     *
+     * @return string API url || SQL table
+     */
+    public function query() : string
+    {
+        if ($this->format === RequestInterface::REQUEST_JSON) {
+            $params = array_merge($this->apiDefaults, $this->where);
+            return str_replace('{region}', $params['region'], self::API_URL);
+        }
+        return $this->query;
+    }
+
+    /**
+     * Type of request
+     *
+     * @return string Request Type
+     */
+    public function type() : string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * Where parameters for request
+     *
+     * @return array Request parameters
+     */
+    public function where() : array
+    {
+        if ($this->format === RequestInterface::REQUEST_JSON) {
+            return array_merge($this->apiDefaults, $this->where);
+        }
+        return $this->where;
+    }
 }

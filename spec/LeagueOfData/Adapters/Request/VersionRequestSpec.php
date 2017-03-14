@@ -26,4 +26,16 @@ class VersionRequestSpec extends ObjectBehavior
     {
         $this->data()->shouldReturn(['Test Data']);
     }
+
+    function it_can_validate_a_correct_region_parameter()
+    {
+        $this->shouldNotThrow(new \InvalidArgumentException('Invalid Region supplied for Version request'))
+            ->during('validate', [['region' => 'na']]);
+    }
+
+    function it_can_validate_an_incorrect_region_parameter()
+    {
+        $this->shouldThrow(new \InvalidArgumentException('Invalid Region supplied for Version request'))
+            ->during('validate', [['region' => 'an']]);
+    }
 }
