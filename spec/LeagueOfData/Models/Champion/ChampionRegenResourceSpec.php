@@ -12,7 +12,7 @@ class ChampionRegenResourceSpec extends ObjectBehavior
         $healthPerLevel = 76;
         $healthRegen = 5.424;
         $healthRegenPerLevel = 0.55;
-        $this->beConstructedWith('hp', $health, $healthPerLevel, 5.424, 0.55);
+        $this->beConstructedWith('hp', $health, $healthPerLevel, $healthRegen, $healthRegenPerLevel);
     }
 
     function it_is_initializable()
