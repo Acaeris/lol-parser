@@ -22,7 +22,7 @@ interface SpellInterface
      * 
      * @return int
      */
-    public function id() : int;
+    public function getID() : int;
 
     /**
      * Spell Name

@@ -11,7 +11,7 @@ final class MatchHistory
         $this->data = $data;
     }
 
-    public function id()
+    public function getID()
     {
         return $this->data->matchId;
     }

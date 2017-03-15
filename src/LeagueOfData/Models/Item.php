@@ -26,8 +26,8 @@ final class Item
             'params' => [ $this->data['id'], $this->data['version'] ]
         ])) {
             $adapter->update('item', $this->data, [ 'id' => $this->data['id'], 'version' => $this->data['version'] ]);
-        } else {
-            $adapter->insert('item', $this->data);
+            return;
         }
+        $adapter->insert('item', $this->data);
     }
 }

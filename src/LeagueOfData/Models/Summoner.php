@@ -15,7 +15,7 @@ final class Summoner
         return $this->data->profileIconId;
     }
 
-    public function id() {
+    public function getID() {
         return $this->data->id;
     }
 

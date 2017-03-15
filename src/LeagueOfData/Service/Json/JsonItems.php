@@ -29,9 +29,9 @@ final class JsonItems implements ItemService
         return $items;
     }
 
-    public function find($id, $version)
+    public function find($itemID, $version)
     {
-        $response = $this->source->fetch('item', ['id' => $id, 'region' => 'euw', 'version' => $version]);
+        $response = $this->source->fetch('item', ['id' => $itemID, 'region' => 'euw', 'version' => $version]);
         return $this->create($response, $version);
     }
 

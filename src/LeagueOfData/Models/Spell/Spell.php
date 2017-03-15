@@ -15,7 +15,7 @@ final class Spell implements SpellInterface, ImmutableInterface
     /**
      * @var int Spell ID
      */
-    private $id;
+    private $spellID;
 
     /**
      * @var string Spell Name
@@ -42,12 +42,12 @@ final class Spell implements SpellInterface, ImmutableInterface
      */
     private $maxRank;
 
-    function __construct(int $id, string $name, string $description,
+    function __construct(int $spellID, string $name, string $description,
         int $maxRank, array $cooldowns, array $costs)
     {
         $this->constructImmutable();
 
-        $this->id = $id;
+        $this->spellID = $spellID;
         $this->name = $name;
         $this->description = $description;
         $this->maxRank = $maxRank;
@@ -60,9 +60,9 @@ final class Spell implements SpellInterface, ImmutableInterface
      *
      * @return int Internal ID of the spell. Used to link iterations of a spell.
      */
-    public function id() : int
+    public function getID() : int
     {
-        return $this->id;
+        return $this->spellID;
     }
 
     /**
@@ -154,7 +154,7 @@ final class Spell implements SpellInterface, ImmutableInterface
     public function toArray() : array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->spellID,
             'name' => $this->name,
             'description' => $this->description,
             'maxRank' => $this->maxRank,

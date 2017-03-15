@@ -19,16 +19,16 @@ class JsonSummoners implements SummonerService
     /**
      * Returns a Summoner Object from raw values.
      * 
-     * @param type $id
+     * @param type $summonerID
      * @param type $name
      * @param type $level
      * @param type $iconId
      * @param type $revisionDate
      * @return \LeagueOfData\Models\Json\JsonSummoner
      */
-    public function add($id, $name, $level, $iconId, $revisionDate) {
+    public function add($summonerID, $name, $level, $iconId, $revisionDate) {
         return new Summoner(json_decode("{"
-            . "'id': {$id},"
+            . "'id': {$summonerID},"
             . "'name': {$name},"
             . "'summonerLevel': {$level},"
             . "'profileIconId': {$iconId},"

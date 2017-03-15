@@ -25,7 +25,7 @@ class SpellSpec extends ObjectBehavior
 
     function it_has_an_id()
     {
-        $this->id()->shouldReturn(1);
+        $this->getID()->shouldReturn(1);
     }
 
     function it_has_a_name()
