@@ -66,7 +66,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
         $this->messageQueue->addProcessToQueue('update:item', '{
             "command" : "update:item",
             "release" : "' . $version->fullVersion() . '",
-            "force" : "' . $force . '"
+            "--force" : "' . $force . '"
         }');
     }
 }
