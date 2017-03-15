@@ -55,7 +55,7 @@ class SqlRealms implements RealmService
     {
         foreach ($this->realms as $realm) {
             $request = new RealmRequest([
-                    'version' => $realm->getVersion(),
+                    'version' => $realm->version(),
                     'region' => $realm->region()
                 ],
                 'SELECT version FROM realm WHERE version = :version AND region = :region',

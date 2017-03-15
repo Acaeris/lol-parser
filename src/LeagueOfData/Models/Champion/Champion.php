@@ -122,7 +122,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getID() : int
+    public function id() : int
     {
         return $this->id;
     }
@@ -132,7 +132,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getName() : string
+    public function name() : string
     {
         return $this->name;
     }
@@ -142,7 +142,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getTitle() : string
+    public function title() : string
     {
         return $this->title;
     }
@@ -152,7 +152,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getVersion() : string
+    public function version() : string
     {
         return $this->version;
     }
@@ -162,7 +162,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return ChampionStatsInterface
      */
-    public function getStats() : ChampionStatsInterface
+    public function stats() : ChampionStatsInterface
     {
         return $this->stats;
     }
@@ -172,7 +172,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return array
      */
-    public function getTags() : array
+    public function tags() : array
     {
         return $this->tags;
     }
@@ -182,7 +182,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getTagsAsString() : string
+    public function tagsAsString() : string
     {
         return implode("|", $this->tags);
     }
