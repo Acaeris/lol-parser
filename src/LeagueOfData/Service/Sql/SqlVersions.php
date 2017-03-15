@@ -49,7 +49,7 @@ final class SqlVersions implements VersionService
                 [
                     'fullVersion' => $version->fullVersion(),
                     'season' => $version->season(),
-                    'version' => $version->version(),
+                    'version' => $version->majorVersion(),
                     'hotfix' => $version->hotfix()
                 ]);
             if ($this->db->fetch($request)) {
