@@ -33,7 +33,7 @@ final class Version implements VersionInterface, ImmutableInterface
     private $hotfix;
 
     /**
-     * Creates a new Champion Defence from an existing state.
+     * Creates a new Version from an existing state.
      * Use as an alternative constructor as PHP does not support multiple constructors.
      * 
      * @param array $version Data from an existing state (e.g. SQL result, Json, or object converted to array)
