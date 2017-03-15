@@ -45,7 +45,13 @@ final class SqlVersions implements VersionService
     {
         foreach ($this->versions as $version) {
             $request = new VersionRequest([ 'fullversion' => $version->fullVersion() ],
-                'SELECT fullversion FROM version WHERE fullversion = :fullversion', $version->toArray());
+                'SELECT fullversion FROM version WHERE fullversion = :fullversion',
+                [
+                    'fullVersion' => $version->fullVersion(),
+                    'season' => $version->season(),
+                    'version' => $version->version(),
+                    'hotfix' => $version->hotfix()
+                ]);
             if ($this->db->fetch($request)) {
                 $this->db->update($request);
             } else {

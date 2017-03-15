@@ -10,14 +10,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface VersionInterface
 {
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     * 
-     * @return array Version data as an array
-     */
-    public function toArray() : array;
-
-    /**
      * Full version string
      * 
      * @return string

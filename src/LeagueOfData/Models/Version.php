@@ -33,18 +33,6 @@ final class Version implements VersionInterface, ImmutableInterface
     private $hotfix;
 
     /**
-     * Creates a new Version from an existing state.
-     * Use as an alternative constructor as PHP does not support multiple constructors.
-     * 
-     * @param array $version Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return VersionInterface Resultant Version object
-     */
-    public static function fromState(array $version) : VersionInterface
-    {
-        return new self($version['fullVersion']);
-    }
-
-    /**
      * Construct a version object
      * 
      * @param string $data Version
@@ -58,19 +46,6 @@ final class Version implements VersionInterface, ImmutableInterface
         $this->season = (int) $parts[0];
         $this->version = (int) $parts[1];
         $this->hotfix = (int) $parts[2];
-    }
-
-    /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     * 
-     * @return array Version data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            'fullversion' => $this->fullVersion
-        ];
     }
 
     /**

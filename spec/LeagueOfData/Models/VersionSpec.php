@@ -22,11 +22,6 @@ class VersionSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    function it_can_be_converted_to_array_for_storage()
-    {
-        $this->toArray()->shouldReturn(['fullversion' => '6.21.1']);
-    }
-
     function it_can_output_full_version()
     {
         $this->fullVersion()->shouldReturn("6.21.1");

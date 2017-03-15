@@ -10,11 +10,14 @@ use LeagueOfData\Models\Version;
 
 class VersionUpdateCommand extends ContainerAwareCommand
 {
-    private $db;
+    private $database;
     private $log;
     private $service;
-    private $mq;
+    private $messageQueue;
 
+    /**
+     * Configure Command
+     */
     protected function configure()
     {
         $this->setName('update:version')
@@ -22,33 +25,45 @@ class VersionUpdateCommand extends ContainerAwareCommand
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
+    /**
+     * Execute the command
+     * 
+     * @param InputInterface $input Input data
+     * @param OutputInterface $output Output data
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
         $this->service = $this->getContainer()->get('version-api');
-        $this->db = $this->getContainer()->get('version-db');
-        $this->mq = $this->getContainer()->get('rabbitmq');
+        $this->database = $this->getContainer()->get('version-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
         $this->log->info('Fetching version data');
         $versions = $this->service->findAll();
 
-        $this->db->addAll($this->service->transfer());
-        $this->db->store();
+        $this->database->addAll($this->service->transfer());
+        $this->database->store();
 
         foreach ($versions as $version) {
             $this->queueUpdates($version, $input->getOption('force'));
         }
     }
 
-    private function queueUpdates(Version $version, $force)
+    /**
+     * Queue new updates
+     * 
+     * @param Version $version Version to update for
+     * @param bool $force Force update of this version
+     */
+    private function queueUpdates(Version $version, bool $force)
     {
         $this->log->info("Queuing update for version " . $version->fullVersion());
-        $this->mq->addProcessToQueue('update:champion', '{
+        $this->messageQueue->addProcessToQueue('update:champion', '{
             "command" : "update:champion",
             "release" : "' . $version->fullVersion() . '",
             "--force" : "' . $force . '"
         }');
-        $this->mq->addProcessToQueue('update:item', '{
+        $this->messageQueue->addProcessToQueue('update:item', '{
             "command" : "update:item",
             "release" : "' . $version->fullVersion() . '",
             "force" : "' . $force . '"
