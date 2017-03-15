@@ -9,12 +9,12 @@ class SqlAdapter implements AdapterInterface
     /* @var Psr\Log\LoggerInterface Logger */
     private $log;
     /* @var object DB */
-    private $db;
+    private $database;
 
-    public function __construct(LoggerInterface $log, $db)
+    public function __construct(LoggerInterface $log, $database)
     {
         $this->log = $log;
-        $this->db = $db;
+        $this->database = $database;
     }
 
     /**
@@ -25,7 +25,7 @@ class SqlAdapter implements AdapterInterface
     public function insert(RequestInterface $request)
     {
         $request->requestFormat(RequestInterface::REQUEST_SQL);
-        return $this->db->insert($request->type(), $request->data());
+        return $this->database->insert($request->type(), $request->data());
     }
 
     /**
@@ -36,7 +36,7 @@ class SqlAdapter implements AdapterInterface
     public function fetch(RequestInterface $request)
     {
         $request->requestFormat(RequestInterface::REQUEST_SQL);
-        return $this->db->fetchAll($request->query(), $request->where());
+        return $this->database->fetchAll($request->query(), $request->where());
     }
 
     /**
@@ -47,6 +47,6 @@ class SqlAdapter implements AdapterInterface
     public function update(RequestInterface $request)
     {
         $request->requestFormat(RequestInterface::REQUEST_SQL);
-        return $this->db->update($request->type(), $request->data(), $request->where());
+        return $this->database->update($request->type(), $request->data(), $request->where());
     }
 }

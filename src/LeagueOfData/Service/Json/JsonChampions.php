@@ -81,7 +81,7 @@ final class JsonChampions implements ChampionService
      * @param string $version
      * @return Champion
      */
-    private function create(array $champion, string $version) : Champion
+    private function create(\stdClass $champion, string $version) : Champion
     {
         $health = new ChampionRegenResource(
             ChampionRegenResource::RESOURCE_HEALTH,

@@ -112,7 +112,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
             'name' => $this->name,
             'title' => $this->title,
             'resourceType' => $this->resourceType,
-            'tags' => $this->tags,
+            'tags' => $this->tagsAsString(),
             'version' => $this->version
         ], $this->stats->toArray());
     }
