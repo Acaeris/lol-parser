@@ -24,15 +24,21 @@ final class JsonChampions implements ChampionService
         $this->log = $log;
     }
 
+    /**
+     * Add a champion to the collection
+     * 
+     * @param Champion $champion
+     */
     public function add(Champion $champion)
     {
         $this->champions[] = $champion;
     }
 
     /**
-     * Find all Realm data
+     * Find all Champion data by version
      *
-     * @return array Realm objects
+     * @param string $version Version number
+     * @return array Champion objects
      */
     public function findAll(string $version) : array
     {
@@ -45,19 +51,37 @@ final class JsonChampions implements ChampionService
         return $this->champions;
     }
 
-    public function find($id, $version)
+    /**
+     * Find a specific champion
+     * 
+     * @param int $championId
+     * @param string $version
+     * @return array Champion objects
+     */
+    public function find(int $championId, string $version) : array
     {
-        $request = new ChampionRequest(['id' => $id, 'region' => 'euw', 'version' => $version]);
+        $request = new ChampionRequest(['id' => $championId, 'region' => 'euw', 'version' => $version]);
         $response = $this->source->fetch($request);
         $this->champions = [ $this->create($response, $version) ];
         return $this->champions;
     }
 
-    public function store() {
+    /**
+     * Not implemented in JSON API calls
+     */
+    public function store()
+    {
         $this->log->error("Request to store data through JSON API not available.");
     }
 
-    private function create($champion, $version)
+    /**
+     * Create the champion object from array data
+     * 
+     * @param array $champion
+     * @param string $version
+     * @return Champion
+     */
+    private function create(array $champion, string $version) : Champion
     {
         $health = new ChampionRegenResource(
             ChampionRegenResource::RESOURCE_HEALTH,

@@ -13,7 +13,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 {
     private $log;
     private $service;
-    private $dbAdapter;
+    private $database;
     private $data = [];
 
     protected function configure()
@@ -29,9 +29,9 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
-        $this->dbAdapter = $this->getContainer()->get('champion-db');
+        $this->database = $this->getContainer()->get('champion-db');
 
-        if (count($this->dbAdapter->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
+        if (count($this->database->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
             $this->updateData($input);
             return;
         }
@@ -69,9 +69,9 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             $this->log->info("Storing champion data for version " . $input->getArgument('release'));
 
             foreach ($this->data as $champion) {
-                $this->dbAdapter->add($champion);
+                $this->database->add($champion);
             }
-            $this->dbAdapter->store();
+            $this->database->store();
         } catch (\Exception $e) {
             $this->recover($input, 'Unexpected API response: ', $e);
         } catch (ForeignKeyConstraintViolationException $e) {
