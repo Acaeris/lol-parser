@@ -28,7 +28,7 @@ final class SqlChampions implements ChampionService
     public function store()
     {
         foreach ($this->champions as $champion) {
-            $request = new ChampionRequest(['id' => $champion->id(), 'version' => $champion->version()],
+            $request = new ChampionRequest(['id' => $champion->getID(), 'version' => $champion->getVersion()],
                 'SELECT name FROM champion WHERE id = :id AND version = :version', $champion->toArray());
 
             if ($this->db->fetch($request)) {

@@ -22,47 +22,47 @@ interface ChampionInterface
      * 
      * @return int
      */
-    public function id() : int;
+    public function getID() : int;
 
     /**
      * Champion Name
      * 
      * @return string
      */
-    public function name() : string;
+    public function getName() : string;
 
     /**
      * Champion Title
      * 
      * @return string
      */
-    public function title() : string;
+    public function getTitle() : string;
 
     /**
      * Client Version
      * 
      * @return string
      */
-    public function version() : string;
+    public function getVersion() : string;
 
     /**
      * Champion Stats
      * 
      * @return ChampionStatsInterface
      */
-    public function stats() : ChampionStatsInterface;
+    public function getStats() : ChampionStatsInterface;
 
     /**
      * Champion tags as array
      * 
      * @return array
      */
-    public function tags() : array;
+    public function getTags() : array;
 
     /**
      * Champion tags as original format
      * 
      * @return string
      */
-    public function tagsAsString() : string;
+    public function getTagsAsString() : string;
 }
