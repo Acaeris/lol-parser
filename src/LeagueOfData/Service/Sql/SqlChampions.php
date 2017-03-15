@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Service\Interfaces\ChampionService;
-use LeagueOfData\Models\Champion;
+use LeagueOfData\Models\Champion\Champion;
 
 final class SqlChampions implements ChampionService
 {
@@ -41,9 +41,9 @@ final class SqlChampions implements ChampionService
 
             if ($this->database->fetch($request)) {
                 $this->database->update($request);
-            } else {
-                $this->database->insert($request);
+                return;
             }
+            $this->database->insert($request);
         }
     }
 

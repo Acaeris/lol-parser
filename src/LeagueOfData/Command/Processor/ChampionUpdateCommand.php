@@ -43,9 +43,9 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
         if (!empty($championId)) {
             $this->data = $this->service->find($championId, $version);
-        } else {
-            $this->data = $this->service->findAll($version);
+            return;
         }
+        $this->data = $this->service->findAll($version);
     }
 
     private function recover(InputInterface $input, $msg, \Exception $e = null)
