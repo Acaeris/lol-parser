@@ -73,7 +73,7 @@ class ChampionSpec extends ObjectBehavior
             'name' => "Test",
             'title' => "Test Character",
             'resourceType' => "mp",
-            'tags' => ["Fighter", "Mage"],
+            'tags' => "Fighter|Mage",
             'version' => "6.21.1",
             'stats' => 100
         ]);

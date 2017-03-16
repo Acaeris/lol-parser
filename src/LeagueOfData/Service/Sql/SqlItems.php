@@ -5,7 +5,7 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ItemService;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Models\Item;
+use LeagueOfData\Models\Item\Item;
 
 final class SqlItems implements ItemService
 {

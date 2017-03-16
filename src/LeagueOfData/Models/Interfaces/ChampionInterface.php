@@ -6,7 +6,7 @@ namespace LeagueOfData\Models\Interfaces;
  * Champion Interface
  * 
  * @author caitlyn.osborne
- * @see LeagueOfData\Models\Champion
+ * @see LeagueOfData\Models\Champion\Champion
  */
 interface ChampionInterface
 {

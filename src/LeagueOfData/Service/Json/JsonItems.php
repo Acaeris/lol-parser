@@ -3,7 +3,7 @@
 namespace LeagueOfData\Service\Json;
 
 use LeagueOfData\Service\Interfaces\ItemService;
-use LeagueOfData\Models\Item;
+use LeagueOfData\Models\Item\Item;
 use LeagueOfData\Adapters\AdapterInterface;
 
 final class JsonItems implements ItemService
