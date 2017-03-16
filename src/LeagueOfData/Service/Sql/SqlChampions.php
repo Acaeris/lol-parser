@@ -10,13 +10,13 @@ use LeagueOfData\Models\Champion\Champion;
 
 final class SqlChampions implements ChampionService
 {
-    private $database;
+    private $dbAdapter;
     private $log;
     private $champions;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
-        $this->database = $adapter;
+        $this->dbAdapter = $adapter;
         $this->log = $log;
     }
 
@@ -39,11 +39,11 @@ final class SqlChampions implements ChampionService
             $request = new ChampionRequest(['id' => $champion->getID(), 'version' => $champion->version()],
                 'SELECT name FROM champion WHERE id = :id AND version = :version', $champion->toArray());
 
-            if ($this->database->fetch($request)) {
-                $this->database->update($request);
+            if ($this->dbAdapter->fetch($request)) {
+                $this->dbAdapter->update($request);
                 return;
             }
-            $this->database->insert($request);
+            $this->dbAdapter->insert($request);
         }
     }
 
@@ -57,7 +57,7 @@ final class SqlChampions implements ChampionService
     {
         $this->champions = [];
         $request = new ChampionRequest(['version' => $version], 'SELECT * FROM champion WHERE version = :version');
-        $results = $this->database->fetch($request);
+        $results = $this->dbAdapter->fetch($request);
         if ($results !== false) {
             foreach ($results as $champion) {
                 $this->champions[] = Champion::fromState($champion);
@@ -77,7 +77,7 @@ final class SqlChampions implements ChampionService
     {
         $request = new ChampionRequest(['id' => $championId, 'version' => $version],
             'SELECT * FROM champion WHERE id = :id AND version = :version');
-        $result = $this->database->fetch($request);
+        $result = $this->dbAdapter->fetch($request);
         $this->champions = [ Champion::fromState($result) ];
         return $this->champions;
     }

@@ -14,7 +14,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     private $log;
     private $service;
     private $database;
-    private $data = [];
+    private $messageQueue;
 
     protected function configure()
     {
@@ -29,58 +29,60 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
+        $this->service = $this->getContainer()->get('champion-api');
         $this->database = $this->getContainer()->get('champion-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
         if (count($this->database->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
             $this->updateData($input);
             return;
         }
+
         $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
     }
 
-    private function fetch($championId, $version)
+    private function fetch(int $championId, string $version)
     {
         $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
+
         if (!empty($championId)) {
-            $this->data = $this->service->find($championId, $version);
+            $this->service->find($championId, $version);
             return;
         }
-        $this->data = $this->service->findAll($version);
+
+        $this->service->findAll($version);
     }
 
-    private function recover(InputInterface $input, $msg, \Exception $e = null)
+    private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:champion",
                 "release" : "' . $input->getArgument('release') . '"';
+
         if (!empty($input->getArgument('championId'))) {
             $params .= ', "championId" : "' . $input->getArgument('championId') . '"';
         }
-        $mq = $this->getContainer()->get('rabbitmq');
-        $mq->addProcessToQueue('update:champion', "{ {$params} }");
-        $this->log->error($msg, ['exception' => $e]);
+
+        $this->messageQueue->addProcessToQueue('update:champion', "{ {$params} }");
+        $this->log->error($msg, ['exception' => $exception]);
     }
 
     private function updateData(InputInterface $input)
     {
-        $this->service = $this->getContainer()->get('champion-api');
-
         try {
             $this->fetch($input->getArgument('championId'), $input->getArgument('release'));
             $this->log->info("Storing champion data for version " . $input->getArgument('release'));
 
-            foreach ($this->data as $champion) {
-                $this->database->add($champion);
-            }
+            $this->database->addAll($this->service->transfer());
             $this->database->store();
-        } catch (\Exception $e) {
-            $this->recover($input, 'Unexpected API response: ', $e);
-        } catch (ForeignKeyConstraintViolationException $e) {
-            preg_match("/CONSTRAINT `(\w+)`/", $e, $matches);
+        } catch (\Exception $exception) {
+            $this->recover($input, 'Unexpected API response: ', $exception);
+        } catch (ForeignKeyConstraintViolationException $exception) {
+            preg_match("/CONSTRAINT `(\w+)`/", $exception, $matches);
 
             if ($matches[1] == 'version') {
                 $this->log->info("Requesting refresh of version data");
-                $mq = $this->getContainer()->get('rabbitmq');
-                $mq->addProcessToQueue('update:version', '{ "command" : "update:version" }');
+                $this->messageQueue->addProcessToQueue('update:version',
+                        '{ "command" : "update:version" }');
             }
         }
     }

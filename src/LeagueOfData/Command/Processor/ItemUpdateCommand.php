@@ -13,8 +13,8 @@ class ItemUpdateCommand extends ContainerAwareCommand
 {
     private $log;
     private $service;
-    private $data = [];
-    private $db;
+    private $database;
+    private $messageQueue;
 
     protected function configure()
     {
@@ -29,57 +29,60 @@ class ItemUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
-        $this->db = $this->getContainer()->get('item-db');
+        $this->service = $this->getContainer()->get('item-api');
+        $this->database = $this->getContainer()->get('item-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        if (count($this->db->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
+        if (count($this->database->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
             $this->updateData($input);
-        } else {
-            $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+            return;
         }
+
+        $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
     }
 
-    private function fetch($itemId, $version)
+    private function fetch(int $itemId, string $version)
     {
         $this->log->info("Fetching items for version {$version}" . (isset($itemId) ? " [{$itemId}]" : ""));
+
         if (!empty($itemId)) {
-            $this->data = $this->service->find($itemId, $version);
-        } else {
-            $this->data = $this->service->findAll($version);
+            $this->service->find($itemId, $version);
+            return;
         }
+        
+        $this->service->findAll($version);
     }
 
-    private function recover(InputInterface $input, $msg, \Exception $e = null)
+    private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:item",
             "release" : "' . $input->getArgument('release') . '"';
+
         if (!empty($input->getArgument('itemId'))) {
             $params .= ', "itemId" : "' . $input->getArgument('itemId') . '"';
         }
-        $mq = $this->getContainer()->get('rabbitmq');
-        $mq->addProcessToQueue('update:item', "{ {$params} }");
-        $this->log->error($msg . ['exception' => $e]);
+
+        $this->messageQueue->addProcessToQueue('update:item', "{ {$params} }");
+        $this->log->error($msg . ['exception' => $exception]);
     }
 
     private function updateData(InputInterface $input)
     {
-        $this->service = $this->getContainer()->get('item-api');
-
         try {
             $this->fetch($input->getArgument('itemId'), $input->getArgument('release'));
             $this->log->info("Storing item data for version " . $input->getArgument('release'));
 
-            foreach ($this->data as $item) {
-                $item->store($this->getContainer()->get('sql-adapter'));
-            }
-        } catch (\Exception $e) {
-            $this->recover($input, 'Unexpected API response: ', $e);
-        } catch (ForeignKeyConstraintViolationException $e) {
-            preg_match("/CONSTRAINT `(\w+)`/", $e, $matches);
+            $this->database->addAll($this->service->transfer());
+            $this->database->store();
+        } catch (\Exception $exception) {
+            $this->recover($input, 'Unexpected API response: ', $exception);
+        } catch (ForeignKeyConstraintViolationException $exception) {
+            preg_match("/CONSTRAINT `(\w+)`/", $exception, $matches);
 
             if ($matches[1] == 'version') {
                 $this->log->info("Requesting refresh of version data");
-                $mq = $this->getContainer()->get('rabbitmq');
-                $mq->addProcessToQueue('update:version', '{ "command" : "update:version" }');
+                $this->messageQueue->addProcessToQueue('update:version',
+                    '{ "command" : "update:version" }');
             }
         }
     }

@@ -20,7 +20,12 @@ final class JsonVersions implements VersionService
         $this->log = $log;
     }
 
-    public function findAll()
+    /**
+     * Find all Version data
+     *
+     * @return array Version objects
+     */
+    public function findAll() : array
     {
         $request = new VersionRequest([]);
         $response = $this->source->fetch($request);
@@ -31,7 +36,12 @@ final class JsonVersions implements VersionService
         return $this->versions;
     }
 
-    public function transfer()
+    /**
+     * Collection of Version objects
+     * 
+     * @return array 
+     */
+    public function transfer() : array
     {
         return $this->versions;
     }

@@ -75,6 +75,16 @@ final class JsonChampions implements ChampionService
     }
 
     /**
+     * Collection of Champion objects
+     * 
+     * @return array 
+     */
+    public function transfer() : array
+    {
+        return $this->champions;
+    }
+
+    /**
      * Create the champion object from array data
      * 
      * @param array $champion

@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 final class SqlVersions implements VersionService
 {
     /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
-    private $db;
+    private $dbAdapter;
     /* @var Psr\Log\LoggerInterface Logger */
     private $log;
     /* @var array Version objects */
@@ -19,7 +19,7 @@ final class SqlVersions implements VersionService
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
-        $this->db = $adapter;
+        $this->dbAdapter = $adapter;
         $this->log = $log;
     }
 
@@ -52,10 +52,10 @@ final class SqlVersions implements VersionService
                     'version' => $version->majorVersion(),
                     'hotfix' => $version->hotfix()
                 ]);
-            if ($this->db->fetch($request)) {
-                $this->db->update($request);
+            if ($this->dbAdapter->fetch($request)) {
+                $this->dbAdapter->update($request);
             } else {
-                $this->db->insert($request);
+                $this->dbAdapter->insert($request);
             }
         }
     }
@@ -69,7 +69,7 @@ final class SqlVersions implements VersionService
     {
         $this->versions = [];
         $request = new VersionRequest([], 'SELECT fullversion FROM version');
-        $results = $this->db->fetch($request);
+        $results = $this->dbAdapter->fetch($request);
         if ($results !== false) {
             foreach ($results as $version) {
                 $this->versions[] = new Version($version);
