@@ -27,7 +27,11 @@ class Item implements ItemInterface, ImmutableInterface
     /* @var int Gold sale value */
     private $saleValue;
 
-    public function __construct(int $itemID, string $name, string $description, int $purchaseValue, int $saleValue)
+    /* @var string version */
+    private $version;
+
+    public function __construct(int $itemID, string $name, string $description, int $purchaseValue,
+        int $saleValue, string $version)
     {
         $this->constructImmutable();
 
@@ -36,6 +40,7 @@ class Item implements ItemInterface, ImmutableInterface
         $this->purchaseValue = $purchaseValue;
         $this->saleValue = $saleValue;
         $this->description = $description;
+        $this->version = $version;
     }
 
     /**
@@ -50,7 +55,8 @@ class Item implements ItemInterface, ImmutableInterface
             'name' => $this->name,
             'description' => $this->description,
             'purchaseValue' => $this->purchaseValue,
-            'saleValue' => $this->saleValue
+            'saleValue' => $this->saleValue,
+            'version' => $this->version
         ];
     }
 
@@ -102,5 +108,15 @@ class Item implements ItemInterface, ImmutableInterface
     public function goldFromSale() : int
     {
         return $this->saleValue;
+    }
+
+    /**
+     * Data version of item
+     * 
+     * @return string
+     */
+    public function version() : string
+    {
+        return $this->version;
     }
 }

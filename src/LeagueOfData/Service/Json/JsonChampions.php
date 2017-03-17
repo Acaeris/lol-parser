@@ -14,8 +14,11 @@ use Psr\Log\LoggerInterface;
 
 final class JsonChampions implements ChampionService
 {
+    /* @var AdapterInterface API adapter */
     private $source;
+    /* @var LoggerInterface logger */
     private $log;
+    /* @var array Champion Objects */
     private $champions;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)

@@ -11,11 +11,18 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class ItemUpdateCommand extends ContainerAwareCommand
 {
+    /* @var LoggerInterface Logger */
     private $log;
+    /* @var ItemService API Service */
     private $service;
+    /* @var ItemService DB Service */
     private $database;
+    /* @var object Messsage Queue Service */
     private $messageQueue;
 
+    /**
+     * Configure the command
+     */
     protected function configure()
     {
         $this->setName('update:item')
@@ -26,6 +33,13 @@ class ItemUpdateCommand extends ContainerAwareCommand
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
+    /**
+     * Execute the command
+     * 
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return null
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
@@ -39,18 +53,6 @@ class ItemUpdateCommand extends ContainerAwareCommand
         }
 
         $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
-    }
-
-    private function fetch(int $itemId, string $version)
-    {
-        $this->log->info("Fetching items for version {$version}" . (isset($itemId) ? " [{$itemId}]" : ""));
-
-        if (!empty($itemId)) {
-            $this->service->find($itemId, $version);
-            return;
-        }
-        
-        $this->service->findAll($version);
     }
 
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
@@ -69,7 +71,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->fetch($input->getArgument('itemId'), $input->getArgument('release'));
+            $this->service->fetch($input->getArgument('release'), $input->getArgument('itemId'));
             $this->log->info("Storing item data for version " . $input->getArgument('release'));
 
             $this->database->addAll($this->service->transfer());

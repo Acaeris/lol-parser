@@ -8,7 +8,7 @@ class ItemSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210);
+        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, '7.4.3');
     }
 
     function it_is_initializable()
@@ -47,6 +47,11 @@ class ItemSpec extends ObjectBehavior
         $this->goldFromSale()->shouldReturn(210);
     }
 
+    function it_has_a_version_number()
+    {
+        $this->version()->shouldReturn('7.4.3');
+    }
+
     function it_can_be_converted_to_array_for_storage()
     {
         $this->toArray()->shouldReturn([
@@ -54,7 +59,8 @@ class ItemSpec extends ObjectBehavior
             'name' => 'Infinity Edge',
             'description' => 'Test Description',
             'purchaseValue' => 300,
-            'saleValue' => 210
+            'saleValue' => 210,
+            'version' => '7.4.3'
         ]);
     }
 }

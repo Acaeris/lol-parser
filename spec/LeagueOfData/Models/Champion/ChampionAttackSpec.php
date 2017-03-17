@@ -15,9 +15,10 @@ class ChampionAttackSpec extends ObjectBehavior
         $attackSpeedPerLevel = 1.36;
         // Note: No champion currently has base crit or crit per level.
         // Implemented to support the values in future.
-        $critChange = 15;
+        $critChance = 15;
         $critPerLevel = 1;
-        $this->beConstructedWith($range, $damage, $damagePerLevel, $attackSpeed, $attackSpeedPerLevel, 15, 1);
+        $this->beConstructedWith($range, $damage, $damagePerLevel, $attackSpeed,
+            $attackSpeedPerLevel, $critChance, $critPerLevel);
     }
 
     function it_is_initializable()
