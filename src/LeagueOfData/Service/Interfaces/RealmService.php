@@ -9,5 +9,5 @@ interface RealmService
      *
      * @return array Realm objects
      */
-    function findAll() : array;
+    public function findAll() : array;
 }

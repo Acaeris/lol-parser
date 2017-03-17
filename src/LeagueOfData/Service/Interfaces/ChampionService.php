@@ -12,7 +12,7 @@ interface ChampionService {
      * @param string $version Version number
      * @return array Champion objects
      */
-    function findAll(string $version) : array;
+    public function findAll(string $version) : array;
 
     /**
      * Find a specific champion
@@ -21,12 +21,12 @@ interface ChampionService {
      * @param int $championId
      * @return array Champion objects
      */
-    function find(string $version, int $championId) : array;
+    public function find(string $version, int $championId) : array;
 
     /**
      * Store the champion objects in the database
      */
-    function store();
+    public function store();
 
     /**
      * Fetch Champions
@@ -35,12 +35,12 @@ interface ChampionService {
      * @param int $championId
      * @return array Champion Objects
      */
-    function fetch(string $version, int $championId = null) : array;
+    public function fetch(string $version, int $championId = null) : array;
 
     /**
      * Add a champion to the collection
      * 
      * @param Champion $champion
      */
-    function add(Champion $champion);
+    public function add(Champion $champion);
 }

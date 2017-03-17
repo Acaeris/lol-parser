@@ -31,7 +31,7 @@ final class RealmRequest implements RequestInterface
 
     /**
      * Validate request parameters
-     * 
+     *
      * @var array $where Where parameters
      * @var string|null $query Query string
      * @var array|null $data Request data

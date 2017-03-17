@@ -33,7 +33,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
     private $iconID;
 
     /**
-     * @var date Revision Date 
+     * @var date Revision Date
      */
     private $revisionDate;
 

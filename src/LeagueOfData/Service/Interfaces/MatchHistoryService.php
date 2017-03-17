@@ -3,6 +3,6 @@
 namespace LeagueOfData\Service\Interfaces;
 
 interface MatchHistoryService {
-    function add($id, $region);
-    function find($id);
+    public function add($id, $region);
+    public function find($id);
 }

@@ -7,8 +7,8 @@ namespace LeagueOfData\Models\Interfaces;
  *
  * @author caitlyn.osborne
  */
- interface RealmInterface
- {
+interface RealmInterface
+{
     /**
      * CDN content url for this realm
      *
@@ -37,4 +37,4 @@ namespace LeagueOfData\Models\Interfaces;
      * @return array Realm data as an array
      */
     public function toArray() : array;
- }
+}

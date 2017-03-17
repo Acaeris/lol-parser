@@ -3,7 +3,7 @@
 namespace LeagueOfData\Service\Interfaces;
 
 interface HistoryService {
-    function add($id, $timestamp, $type, $data);
-    function findByRequest($params);
-    function findByType($type);
+    public function add($id, $timestamp, $type, $data);
+    public function findByRequest($params);
+    public function findByType($type);
 }

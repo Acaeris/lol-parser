@@ -41,7 +41,7 @@ class ChampionRegenResourceSpec extends ObjectBehavior
         $this->baseValue()->shouldReturn(511.68);
     }
 
-    function it_can_output_a_value_per_level()
+    public function it_can_output_a_value_per_level()
     {
         $this->increasePerLevel()->shouldReturn(76.0);
     }

@@ -12,7 +12,7 @@ interface ItemService {
      * @param string $version Version number
      * @return array Item objects
      */
-    function findAll(string $version) : array;
+    public function findAll(string $version) : array;
 
     /**
      * Find a specific item
@@ -21,12 +21,12 @@ interface ItemService {
      * @param int $itemId
      * @return array Item objects
      */
-    function find(string $version, int $itemId) : array;
+    public function find(string $version, int $itemId) : array;
 
     /**
      * Store the item objects in the database
      */
-    function store();
+    public function store();
 
     /**
      * Fetch Items
@@ -35,12 +35,12 @@ interface ItemService {
      * @param int $itemId
      * @return array Item Objects
      */
-    function fetch(string $version, int $itemId = null) : array;
+    public function fetch(string $version, int $itemId = null) : array;
 
     /**
      * Add an item to the collection
      * 
      * @param Item $item
      */
-    function add(Item $item);
+    public function add(Item $item);
 }

@@ -2,5 +2,5 @@
 namespace LeagueOfData\Service\Interfaces;
 
 interface VersionService {
-    function findAll();
+    public function findAll();
 }

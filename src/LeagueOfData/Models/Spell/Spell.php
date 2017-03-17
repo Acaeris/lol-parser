@@ -42,7 +42,7 @@ final class Spell implements SpellInterface, ImmutableInterface
      */
     private $maxRank;
 
-    function __construct(int $spellID, string $name, string $description,
+    public function __construct(int $spellID, string $name, string $description,
         int $maxRank, array $cooldowns, array $costs)
     {
         $this->constructImmutable();

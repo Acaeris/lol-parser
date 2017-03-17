@@ -45,7 +45,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Array of Item data
-     * 
+     *
      * @return array
      */
     public function toArray(): array
@@ -62,7 +62,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Item ID
-     * 
+     *
      * @return int
      */
     public function getID() : int
@@ -72,7 +72,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Item Name
-     * 
+     *
      * @return string
      */
     public function name() : string
@@ -82,7 +82,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Item Description
-     * 
+     *
      * @return string
      */
     public function description() : string
@@ -92,7 +92,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Item purchase cost
-     * 
+     *
      * @return int
      */
     public function goldToBuy() : int
@@ -102,7 +102,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Item sale value
-     * 
+     *
      * @return int
      */
     public function goldFromSale() : int
@@ -112,7 +112,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Data version of item
-     * 
+     *
      * @return string
      */
     public function version() : string

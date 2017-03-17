@@ -34,7 +34,7 @@ final class Version implements VersionInterface, ImmutableInterface
 
     /**
      * Construct a version object
-     * 
+     *
      * @param string $data Version
      */
     public function __construct(string $data)
@@ -50,7 +50,7 @@ final class Version implements VersionInterface, ImmutableInterface
 
     /**
      * Full version string
-     * 
+     *
      * @return string
      */
     public function fullVersion() : string
@@ -60,7 +60,7 @@ final class Version implements VersionInterface, ImmutableInterface
 
     /**
      * Season number
-     * 
+     *
      * @return int
      */
     public function season() : int
@@ -70,7 +70,7 @@ final class Version implements VersionInterface, ImmutableInterface
 
     /**
      * Major version number
-     * 
+     *
      * @return int
      */
     public function majorVersion() : int
@@ -80,7 +80,7 @@ final class Version implements VersionInterface, ImmutableInterface
 
     /**
      * Hotfix ID
-     * 
+     *
      * @return int
      */
     public function hotfix() : int
