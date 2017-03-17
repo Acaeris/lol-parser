@@ -1,7 +1,26 @@
 <?php
 
+/**
+ * Interface for service requests
+ * 
+ * PHP Version 7
+ * 
+ * LICENSE: ...
+ * 
+ * @package LeagueOfData\Adapters
+ * @author  Caitlyn Osborne <acaeris@gamil.com>
+ * @link    http://lod.gg League Of Data
+ */
+
 namespace LeagueOfData\Adapters;
 
+/**
+ * Interface for service requests
+ * 
+ * @package LeagueOfData\Adapters
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://log.gg League Of Data
+ */
 interface RequestInterface
 {
     /* @var string JSON Format type */
@@ -14,7 +33,9 @@ interface RequestInterface
     /**
      * Set format request will be in
      *
-     * @var string $format Request Format
+     * @param string $format Request Format
+     * 
+     * @return null
      */
     public function requestFormat(string $format);
 
@@ -49,9 +70,11 @@ interface RequestInterface
     /**
      * Validate request parameters
      * 
-     * @var array $where Where parameters
-     * @var string|null $query Query string
-     * @var array|null $data Request data
+     * @param array       $where Where parameters
+     * @param string|null $query Query string
+     * @param array|null  $data  Request data
+     * 
+     * @return null
      */
     public function validate(array $where, string $query = null, array $data = null);
 }

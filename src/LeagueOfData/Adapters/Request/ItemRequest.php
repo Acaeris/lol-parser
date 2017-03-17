@@ -1,13 +1,32 @@
 <?php
 
+/**
+ * Request object for Item Services
+ * 
+ * PHP version 7
+ * 
+ * LICENSE ...
+ * 
+ * @package LeagueOfData\Adapters\Request
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 namespace LeagueOfData\Adapters\Request;
 
 use LeagueOfData\Adapters\RequestInterface;
 
+/**
+ * Request object for Item Services
+ * 
+ * @package LeagueOfData\Adapters\Request
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 final class ItemRequest implements RequestInterface
 {
     /* @var string API Request URL */
-    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/item';
+    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/'
+        . '{region}/v1.2/item';
     /* @var string Request Type */
     const TYPE = "item";
     /* @var array Default parameters for API query */
@@ -32,9 +51,11 @@ final class ItemRequest implements RequestInterface
     /**
      * Validate request parameters
      * 
-     * @var array $where Where parameters
-     * @var string|null $query Query string
-     * @var array|null $data Request data
+     * @param array       $where Where parameters
+     * @param string|null $query Query string
+     * @param array|null  $data  Request data
+     * 
+     * @return null
      */
     public function validate(array $where, string $query = null, array $data = null)
     {
@@ -50,7 +71,9 @@ final class ItemRequest implements RequestInterface
     /**
      * Set format request will be in
      *
-     * @var string $format Request Format
+     * @param string $format Request Format
+     * 
+     * @return null
      */
     public function requestFormat(string $format)
     {
