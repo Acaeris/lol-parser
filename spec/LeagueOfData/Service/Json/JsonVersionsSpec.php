@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 class JsonVersionsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new VersionRequest([]);
         $adapter->fetch($request)->willReturn([
@@ -22,18 +22,18 @@ class JsonVersionsSpec extends ObjectBehavior
         $this->beConstructedWith($adapter, $logger);
     }
 
-    function it_should_be_initializable()
+    public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonVersions');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionService');
     }
 
-    function it_should_find_all_version_data()
+    public function it_should_find_all_version_data()
     {
         $this->findAll()->shouldReturnArrayOfVersions();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
             'returnArrayOfVersions' => function($versions) {

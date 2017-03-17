@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 class JsonChampionsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new ChampionRequest(['version' => '7.4.3']);
         $adapter->fetch($request)->willReturn((object) [
@@ -114,33 +114,33 @@ class JsonChampionsSpec extends ObjectBehavior
         $this->beConstructedWith($adapter, $logger);
     }
 
-    function it_should_be_initializable()
+    public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampions');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionService');
     }
 
-    function it_should_find_all_champion_data()
+    public function it_should_find_all_champion_data()
     {
         $this->findAll('7.4.3')->shouldReturnArrayOfChampions();
     }
 
-    function it_should_find_a_specific_champion_by_id()
+    public function it_should_find_a_specific_champion_by_id()
     {
         $this->find('7.4.3', 266)->shouldReturnArrayOfChampions();
     }
 
-    function it_should_fetch_all_if_only_version_passed()
+    public function it_should_fetch_all_if_only_version_passed()
     {
         $this->fetch('7.4.3')->shouldReturnArrayOfChampions();
     }
 
-    function it_should_fetch_one_if_version_and_id_passed()
+    public function it_should_fetch_one_if_version_and_id_passed()
     {
         $this->fetch('7.4.3', 266)->shouldReturnArrayOfChampions();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
             'returnArrayOfChampions' => function($champions) {

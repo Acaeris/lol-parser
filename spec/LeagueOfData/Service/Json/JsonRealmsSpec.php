@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 class JsonRealmsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new RealmRequest(['region' => 'euw']);
         $adapter->fetch($request)->willReturn((object) [
@@ -31,18 +31,18 @@ class JsonRealmsSpec extends ObjectBehavior
         $this->beConstructedWith($adapter, $logger);
     }
 
-    function it_should_be_initializable()
+    public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonRealms');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmService');
     }
 
-    function it_should_find_all_realm_data()
+    public function it_should_find_all_realm_data()
     {
         $this->findAll()->shouldReturnArrayOfRealms();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
             'returnArrayOfRealms' => function($realms) {

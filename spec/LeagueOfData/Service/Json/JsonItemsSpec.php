@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 class JsonItemsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new ItemRequest(['version' => '7.4.3']);
         $adapter->fetch($request)->willReturn((object) [
@@ -49,33 +49,33 @@ class JsonItemsSpec extends ObjectBehavior
         $this->beConstructedWith($adapter, $logger);
     }
 
-    function it_should_be_initializable()
+    public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonItems');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemService');
     }
 
-    function it_should_find_all_item_data()
+    public function it_should_find_all_item_data()
     {
         $this->findAll('7.4.3')->shouldReturnArrayOfItems();
     }
 
-    function it_should_find_a_specific_item_by_id()
+    public function it_should_find_a_specific_item_by_id()
     {
         $this->find('7.4.3', 1001)->shouldReturnArrayOfItems();
     }
 
-    function it_should_fetch_all_if_only_version_passed()
+    public function it_should_fetch_all_if_only_version_passed()
     {
         $this->fetch('7.4.3')->shouldReturnArrayOfItems();
     }
 
-    function it_should_fetch_one_if_version_and_id_passed()
+    public function it_should_fetch_one_if_version_and_id_passed()
     {
         $this->fetch('7.4.3', 1001)->shouldReturnArrayOfItems();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
             'returnArrayOfItems' => function($items) {

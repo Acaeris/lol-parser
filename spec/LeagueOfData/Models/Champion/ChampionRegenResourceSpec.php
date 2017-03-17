@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 
 class ChampionRegenResourceSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $health = 511.68;
         $healthPerLevel = 76;
@@ -15,28 +15,28 @@ class ChampionRegenResourceSpec extends ObjectBehavior
         $this->beConstructedWith('hp', $health, $healthPerLevel, $healthRegen, $healthRegenPerLevel);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionRegenResource');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
     }
 
-    function it_is_immutable()
+    public function it_is_immutable()
     {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    function it_is_a_resource()
+    public function it_is_a_resource()
     {
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ResourceInterface');
     }
 
-    function it_can_output_a_type_of_resource()
+    public function it_can_output_a_type_of_resource()
     {
         $this->type()->shouldReturn("hp");
     }
 
-    function it_can_output_a_base_value()
+    public function it_can_output_a_base_value()
     {
         $this->baseValue()->shouldReturn(511.68);
     }
@@ -46,27 +46,27 @@ class ChampionRegenResourceSpec extends ObjectBehavior
         $this->increasePerLevel()->shouldReturn(76.0);
     }
 
-    function it_can_output_the_value_at_a_given_level()
+    public function it_can_output_the_value_at_a_given_level()
     {
         $this->valueAtLevel(5)->shouldReturn(815.68);
     }
 
-    function it_can_output_a_regen_base_value()
+    public function it_can_output_a_regen_base_value()
     {
         $this->regenBaseValue()->shouldReturn(5.424);
     }
 
-    function it_can_output_a_regen_per_level_value()
+    public function it_can_output_a_regen_per_level_value()
     {
         $this->regenIncreasePerLevel()->shouldReturn(0.55);
     }
 
-    function it_can_output_a_regen_value_at_a_given_level()
+    public function it_can_output_a_regen_value_at_a_given_level()
     {
         $this->regenAtLevel(5)->shouldReturn(7.624);
     }
 
-    function it_can_output_the_data_as_an_array_for_storage()
+    public function it_can_output_the_data_as_an_array_for_storage()
     {
         $this->toArray()->shouldReturn([
             'hp' => 511.68,

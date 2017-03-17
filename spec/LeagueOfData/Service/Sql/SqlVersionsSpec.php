@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 class SqlVersionsSpec extends ObjectBehavior
 {
-    function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new VersionRequest(['fullversion' => '7.4.3'],
             'SELECT fullversion FROM version WHERE fullversion = :fullversion', 
@@ -23,18 +23,18 @@ class SqlVersionsSpec extends ObjectBehavior
         $this->beConstructedWith($adapter, $logger);
     }
 
-    function it_should_be_initializable()
+    public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlVersions');
         $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionService');
     }
 
-    function it_should_find_all_version_data()
+    public function it_should_find_all_version_data()
     {
         $this->findAll()->shouldReturnArrayOfVersions();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
             'returnArrayOfVersions' => function($versions) {

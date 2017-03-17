@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 
 class RealmUpdateCommandSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Command\Processor\RealmUpdateCommand');
         $this->shouldHaveType('Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand');

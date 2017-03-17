@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 
 class RealmSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $cdn = 'http://ddragon.leagueoflegends.com/cdn';
         $version = '7.4.3';
@@ -18,33 +18,33 @@ class RealmSpec extends ObjectBehavior
         );
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Realm');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\RealmInterface');
     }
 
-    function it_is_immutable()
+    public function it_is_immutable()
     {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    function it_has_a_cdn_url()
+    public function it_has_a_cdn_url()
     {
         $this->sourceUrl()->shouldReturn('http://ddragon.leagueoflegends.com/cdn');
     }
 
-    function it_has_a_version_number()
+    public function it_has_a_version_number()
     {
         $this->version()->shouldReturn('7.4.3');
     }
 
-    function it_has_a_region()
+    public function it_has_a_region()
     {
         $this->region()->shouldReturn('euw');
     }
 
-    function it_can_be_converted_to_array_for_storage()
+    public function it_can_be_converted_to_array_for_storage()
     {
         $this->toArray()->shouldReturn([
             'region' => 'euw',
