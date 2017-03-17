@@ -25,7 +25,7 @@ final class JsonItems implements ItemService
 
     /**
      * Add an item to the collection
-     * 
+     *
      * @param Item $item
      */
     public function add(Item $item)
@@ -35,14 +35,14 @@ final class JsonItems implements ItemService
 
     /**
      * Fetch Items
-     * 
+     *
      * @param string $version
-     * @param int $itemId
+     * @param int    $itemId
      * @return array Item Objects
      */
     public function fetch(string $version, int $itemId = null) : array
     {
-        $this->log->info("Fetching items for version {$version}" . (isset($itemId) ? " [{$itemId}]" : ""));
+        $this->log->info("Fetching items for version {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
 
         if (!empty($itemId)) {
             return $this->find($version, $itemId);
@@ -71,9 +71,9 @@ final class JsonItems implements ItemService
 
     /**
      * Find a specific item
-     * 
+     *
      * @param string $version
-     * @param int $itemId
+     * @param int    $itemId
      * @return array Item objects
      */
     public function find(string $version, int $itemId) : array
@@ -94,8 +94,8 @@ final class JsonItems implements ItemService
 
     /**
      * Collection of Item objects
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function transfer() : array
     {
@@ -104,7 +104,7 @@ final class JsonItems implements ItemService
 
     /**
      * Create the item object from array data
-     * 
+     *
      * @param array $item
      * @param string $version
      * @return Item

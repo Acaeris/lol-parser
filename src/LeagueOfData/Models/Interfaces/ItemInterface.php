@@ -12,7 +12,7 @@ interface ItemInterface
 {
     /**
      * Array of Item data
-     * 
+     *
      * @return array
      */
     public function toArray() : array;

@@ -38,8 +38,8 @@ final class JsonVersions implements VersionService
 
     /**
      * Collection of Version objects
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function transfer() : array
     {

@@ -4,7 +4,15 @@ namespace LeagueOfData\Adapters\Request;
 
 use LeagueOfData\Adapters\RequestInterface;
 
-final class MatchListRequest implements RequestInterface {
+/**
+ * Request object for Match List Services
+ *
+ * @package LeagueOfData\Adapters\Request
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
+final class MatchListRequest implements RequestInterface
+{
 
     /* @var string API Request URL */
     const API_URL = 'https://{region}.api.pvp.net/api/lol/{region}/v2.2/matchlist/by-summoner/';
@@ -21,6 +29,13 @@ final class MatchListRequest implements RequestInterface {
     /* @var array Where parameters of request */
     private $where;
 
+    /**
+     * Construct Match List request
+     *
+     * @param array  $where
+     * @param string $query
+     * @param array  $data
+     */
     public function __construct(array $where, string $query = null, array $data = null)
     {
         $this->validate($where, $query, $data);
@@ -31,10 +46,10 @@ final class MatchListRequest implements RequestInterface {
 
     /**
      * Validate request parameters
-     * 
-     * @var array $where Where parameters
-     * @var string|null $query Query string
-     * @var array|null $data Request data
+     *
+     * @param array       $where Where parameters
+     * @param string|null $query Query string
+     * @param array|null  $data  Request data
      */
     public function validate(array $where, string $query = null, array $data = null)
     {
@@ -50,7 +65,7 @@ final class MatchListRequest implements RequestInterface {
     /**
      * Set format request will be in
      *
-     * @var string $format Request Format
+     * @param string $format Request Format
      */
     public function requestFormat(string $format)
     {
@@ -76,8 +91,10 @@ final class MatchListRequest implements RequestInterface {
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
+
             return str_replace('{region}', $params['region'], self::API_URL);
         }
+
         return $this->query;
     }
 
@@ -101,6 +118,7 @@ final class MatchListRequest implements RequestInterface {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             return array_merge($this->apiDefaults, $this->where);
         }
+
         return $this->where;
     }
 }

@@ -4,7 +4,8 @@ namespace LeagueOfData\Service\Interfaces;
 
 use LeagueOfData\Models\Champion\Champion;
 
-interface ChampionService {
+interface ChampionService
+{
 
     /**
      * Find all Champion data
@@ -16,9 +17,9 @@ interface ChampionService {
 
     /**
      * Find a specific champion
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion objects
      */
     public function find(string $version, int $championId) : array;
@@ -30,16 +31,16 @@ interface ChampionService {
 
     /**
      * Fetch Champions
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion Objects
      */
     public function fetch(string $version, int $championId = null) : array;
 
     /**
      * Add a champion to the collection
-     * 
+     *
      * @param Champion $champion
      */
     public function add(Champion $champion);

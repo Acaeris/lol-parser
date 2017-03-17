@@ -44,14 +44,16 @@ final class SqlVersions implements VersionService
     public function store()
     {
         foreach ($this->versions as $version) {
-            $request = new VersionRequest([ 'fullversion' => $version->fullVersion() ],
+            $request = new VersionRequest(
+                [ 'fullversion' => $version->fullVersion() ],
                 'SELECT fullversion FROM version WHERE fullversion = :fullversion',
                 [
                     'fullVersion' => $version->fullVersion(),
                     'season' => $version->season(),
                     'version' => $version->majorVersion(),
                     'hotfix' => $version->hotfix()
-                ]);
+                ]
+            );
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
             } else {

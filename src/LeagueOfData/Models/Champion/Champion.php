@@ -71,13 +71,13 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * Construct a Champion object
      *
-     * @param int $id Champion ID
-     * @param string $name Champion Name
-     * @param string $title Champion Title
-     * @param string $resourceType Champion Resource Type
-     * @param string $tags Class tags
-     * @param ChampionStatsInterface $stats Statistics
-     * @param string $version Full version number
+     * @param int                    $id           Champion ID
+     * @param string                 $name         Champion Name
+     * @param string                 $title        Champion Title
+     * @param string                 $resourceType Champion Resource Type
+     * @param string                 $tags         Class tags
+     * @param ChampionStatsInterface $stats        Statistics
+     * @param string                 $version      Full version number
      */
     public function __construct(
         int $id,

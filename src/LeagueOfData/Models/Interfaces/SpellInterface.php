@@ -56,7 +56,7 @@ interface SpellInterface
      * Spell Cooldown by Rank
      *
      * @param int $rank
-     * 
+     *
      * @return int
      * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
      */
@@ -73,7 +73,7 @@ interface SpellInterface
      * Spell cost by rank
      *
      * @param int $rank
-     * 
+     *
      * @return int
      * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
      */

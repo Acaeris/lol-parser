@@ -23,7 +23,7 @@ final class Version implements VersionInterface, ImmutableInterface
     private $season;
 
     /**
-     * @var int Major version number 
+     * @var int Major version number
      */
     private $version;
 

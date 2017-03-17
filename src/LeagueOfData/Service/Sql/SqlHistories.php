@@ -21,11 +21,11 @@ final class SqlHistories implements HistoryService
         return new SqlHistory($timestamp, $type, $data);
     }
 
-    public function findByRequest($params) {
-        
+    public function findByRequest($params)
+    {
     }
 
-    public function findByType($type) {
-        
+    public function findByType($type)
+    {
     }
 }

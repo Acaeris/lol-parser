@@ -28,14 +28,13 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->setName('update:item')
             ->setDescription('API processor command for item data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('itemId', InputArgument::OPTIONAL, 'Item ID to process data for.'
-                . ' (Will fetch all if not supplied)')
+            ->addArgument('itemId', InputArgument::OPTIONAL, 'Item ID to process data for.'.' (Will fetch all if not supplied)')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
     /**
      * Execute the command
-     * 
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return null
@@ -52,27 +51,27 @@ class ItemUpdateCommand extends ContainerAwareCommand
             return;
         }
 
-        $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+        $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
 
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:item",
-            "release" : "' . $input->getArgument('release') . '"';
+            "release" : "'.$input->getArgument('release').'"';
 
         if (!empty($input->getArgument('itemId'))) {
-            $params .= ', "itemId" : "' . $input->getArgument('itemId') . '"';
+            $params .= ', "itemId" : "'.$input->getArgument('itemId').'"';
         }
 
         $this->messageQueue->addProcessToQueue('update:item', "{ {$params} }");
-        $this->log->error($msg . ['exception' => $exception]);
+        $this->log->error($msg.['exception' => $exception]);
     }
 
     private function updateData(InputInterface $input)
     {
         try {
             $this->service->fetch($input->getArgument('release'), $input->getArgument('itemId'));
-            $this->log->info("Storing item data for version " . $input->getArgument('release'));
+            $this->log->info("Storing item data for version ".$input->getArgument('release'));
 
             $this->database->addAll($this->service->transfer());
             $this->database->store();
@@ -83,8 +82,10 @@ class ItemUpdateCommand extends ContainerAwareCommand
 
             if ($matches[1] == 'version') {
                 $this->log->info("Requesting refresh of version data");
-                $this->messageQueue->addProcessToQueue('update:version',
-                    '{ "command" : "update:version" }');
+                $this->messageQueue->addProcessToQueue(
+                    'update:version',
+                    '{ "command" : "update:version" }'
+                );
             }
         }
     }

@@ -10,15 +10,16 @@ class PlayerProcessor implements ProcessorInterface
 {
     private $log;
     
-    public function __construct(LoggerInterface $log) {
+    public function __construct(LoggerInterface $log)
+    {
         $this->log = $log;
     }
     
-    public function process($player) {
+    public function process($player)
+    {
         if (!$player instanceof Summoner) {
             $this->log->error('Incorrect object passed to process:player');
         }
-        $this->log->info('<info>Processing Player:</> ' . $player->name());
-
+        $this->log->info('<info>Processing Player:</> '.$player->name());
     }
 }

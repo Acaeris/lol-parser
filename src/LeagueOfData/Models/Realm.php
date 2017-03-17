@@ -30,9 +30,9 @@ final class Realm implements RealmInterface, ImmutableInterface
     /**
      * Construct a Realm object
      *
-     * @param string $cdn CDN url
+     * @param string $cdn     CDN url
      * @param string $version DataDragon version
-     * @param string $region Realm region
+     * @param string $region  Realm region
      */
     public function __construct(string $cdn, string $version, string $region)
     {

@@ -28,14 +28,13 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->setName('update:champion')
             ->setDescription('API processor command for champion data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('championId', InputArgument::OPTIONAL, 'Champion ID to process data for.'
-                . ' (Will fetch all if not supplied)')
+            ->addArgument('championId', InputArgument::OPTIONAL, 'Champion ID to process data for.'.' (Will fetch all if not supplied)')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
     /**
      * Execute the command
-     * 
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return null
@@ -49,21 +48,20 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
         if (count($this->database->findAll($input->getArgument('release'))) == 0
             || $input->getOption('force')) {
-
             $this->updateData($input);
             return;
         }
 
-        $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+        $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
 
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:champion",
-                "release" : "' . $input->getArgument('release') . '"';
+                "release" : "'.$input->getArgument('release').'"';
 
         if (!empty($input->getArgument('championId'))) {
-            $params .= ', "championId" : "' . $input->getArgument('championId') . '"';
+            $params .= ', "championId" : "'.$input->getArgument('championId').'"';
         }
 
         $this->messageQueue->addProcessToQueue('update:champion', "{ {$params} }");
@@ -74,7 +72,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     {
         try {
             $this->service->fetch($input->getArgument('release'), $input->getArgument('championId'));
-            $this->log->info("Storing champion data for version " . $input->getArgument('release'));
+            $this->log->info("Storing champion data for version ".$input->getArgument('release'));
 
             $this->database->addAll($this->service->transfer());
             $this->database->store();
@@ -85,8 +83,10 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
             if ($matches[1] == 'version') {
                 $this->log->info("Requesting refresh of version data");
-                $this->messageQueue->addProcessToQueue('update:version',
-                        '{ "command" : "update:version" }');
+                $this->messageQueue->addProcessToQueue(
+                    'update:version',
+                    '{ "command" : "update:version" }'
+                );
             }
         }
     }

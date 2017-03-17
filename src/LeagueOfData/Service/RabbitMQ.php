@@ -6,11 +6,13 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 
-final class RabbitMQ {
+final class RabbitMQ
+{
 
     private $log;
 
-    public function __construct(LoggerInterface $log) {
+    public function __construct(LoggerInterface $log)
+    {
         $this->log = $log;
     }
 
@@ -20,7 +22,7 @@ final class RabbitMQ {
         $channel = $connection->channel();
 
         $channel->queue_declare('processing', false, false, false, false);
-        $message = new AMQPMessage('{ "command" : "' . $command .'", "params" : ' . $params . ' }');
+        $message = new AMQPMessage('{ "command" : "'.$command.'", "params" : '.$params.' }');
         $channel->basic_publish($message, '', 'processing');
 
         $channel->close();

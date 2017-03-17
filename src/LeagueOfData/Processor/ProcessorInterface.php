@@ -2,6 +2,7 @@
 
 namespace LeagueOfData\Processor;
 
-interface ProcessorInterface {
+interface ProcessorInterface
+{
     public function process($id);
 }

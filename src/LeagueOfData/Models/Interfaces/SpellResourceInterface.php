@@ -7,6 +7,7 @@ namespace LeagueOfData\Models\Interfaces;
  *
  * @author caitlyn.osborne
  */
-interface SpellResourceInterface {
+interface SpellResourceInterface
+{
     
 }

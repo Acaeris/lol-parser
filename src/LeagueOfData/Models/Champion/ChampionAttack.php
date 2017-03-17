@@ -56,13 +56,13 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
     /**
      * Construct a Champion Attack object
      *
-     * @param float $range Attack range
-     * @param float $damage Base attack damage
+     * @param float $range          Attack range
+     * @param float $damage         Base attack damage
      * @param float $damagePerLevel Attack damage increase per level
-     * @param float $speedOffset Base Attack speed
-     * @param float $speedPerLevel Attack speed increase per level
-     * @param float $crit Base critical hit chance
-     * @param float $critPerLevel Critical hit chance increase per level
+     * @param float $speedOffset    Base Attack speed
+     * @param float $speedPerLevel  Attack speed increase per level
+     * @param float $crit           Base critical hit chance
+     * @param float $critPerLevel   Critical hit chance increase per level
      */
     public function __construct(
         float $range,

@@ -41,8 +41,8 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
      * Creates a new Champion Resource from an existing state.
      * Used as an alternative constructor as PHP does not support mutliple constructors.
      *
-     * @param string $type Type of resource represented by this object
-     * @param array $champion Data from an existing state (e.g. SQL result, Json or object converted to array)
+     * @param string $type     Type of resource represented by this object
+     * @param array  $champion Data from an existing state (e.g. SQL result, Json or object converted to array)
      * @return ChampionResourceInterface Resultant Champion Resource
      */
     public static function fromState(string $type, array $champion) : ChampionResourceInterface
@@ -50,20 +50,20 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
         return new self(
             $type,
             $champion[$type],
-            $champion[$type . 'PerLevel'],
-            $champion[$type . 'Regen'],
-            $champion[$type . 'RegenPerLevel']
+            $champion[$type.'PerLevel'],
+            $champion[$type.'Regen'],
+            $champion[$type.'RegenPerLevel']
         );
     }
 
     /**
      * Construct a Champion Resource object
      *
-     * @param string $type Type of resource represented by this object
-     * @param float $baseValue The base amount of that resource the champion starts with
-     * @param float $perLevel The amount the maximum resource increases per level
-     * @param float $regen The base regeneration rate of this resource
-     * @param float $regenPerLevel The amount the regeneration rate increases per level
+     * @param string $type          Type of resource represented by this object
+     * @param float  $baseValue     The base amount of that resource the champion starts with
+     * @param float  $perLevel      The amount the maximum resource increases per level
+     * @param float  $regen         The base regeneration rate of this resource
+     * @param float  $regenPerLevel The amount the regeneration rate increases per level
      * @todo Add validation of parameters.
      */
     public function __construct(string $type, float $baseValue, float $perLevel, float $regen, float $regenPerLevel)
@@ -85,9 +85,9 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     {
         return [
             $this->type => $this->baseValue,
-            $this->type . 'PerLevel' => $this->perLevel,
-            $this->type . 'Regen' => $this->regen,
-            $this->type . 'RegenPerLevel' => $this->regenPerLevel
+            $this->type.'PerLevel' => $this->perLevel,
+            $this->type.'Regen' => $this->regen,
+            $this->type.'RegenPerLevel' => $this->regenPerLevel
         ];
     }
 

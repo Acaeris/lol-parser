@@ -18,7 +18,7 @@ class JsonSummoners implements SummonerService
 
     /**
      * Returns a Summoner Object from raw values.
-     * 
+     *
      * @param type $summonerID
      * @param type $name
      * @param type $level
@@ -26,17 +26,14 @@ class JsonSummoners implements SummonerService
      * @param type $revisionDate
      * @return \LeagueOfData\Models\Json\JsonSummoner
      */
-    public function add($summonerID, $name, $level, $iconId, $revisionDate) {
-        return new Summoner(json_decode("{"
-            . "'id': {$summonerID},"
-            . "'name': {$name},"
-            . "'summonerLevel': {$level},"
-            . "'profileIconId': {$iconId},"
-            . "'revisionDate': {$revisionDate}
+    public function add($summonerID, $name, $level, $iconId, $revisionDate)
+    {
+        return new Summoner(json_decode("{"."'id': {$summonerID},"."'name': {$name},"."'summonerLevel': {$level},"."'profileIconId': {$iconId},"."'revisionDate': {$revisionDate}
             }"));
     }
 
-    public function find($ids) {
+    public function find($ids)
+    {
         $splitIds = array_chunk($ids, 40);
         $players = [];
         $request = new SummonerRequest();
@@ -48,5 +45,4 @@ class JsonSummoners implements SummonerService
         }
         return $players;
     }
-
 }

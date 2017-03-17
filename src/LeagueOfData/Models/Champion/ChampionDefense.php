@@ -32,8 +32,8 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
      * Creates a new Champion Defence from an existing state.
      * Use as an alternative constructor as PHP does not support multiple constructors.
      *
-     * @param string $type Type of defence represented by this object
-     * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
+     * @param string $type     Type of defence represented by this object
+     * @param array  $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
      * @return ChampionDefenseInterface Resultant Champion Defense
      */
     public static function fromState(string $type, array $champion) : ChampionDefenseInterface
@@ -41,16 +41,16 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
         return new self(
             $type,
             $champion[$type],
-            $champion[$type . 'PerLevel']
+            $champion[$type.'PerLevel']
         );
     }
 
     /**
      * Construct a Champion Defense object
      *
-     * @param string $type Type of defence represented by this object
-     * @param float $base The base amount of defence the champion starts with
-     * @param float $perLevel The amount of defence the champion gains per level
+     * @param string $type     Type of defence represented by this object
+     * @param float  $base     The base amount of defence the champion starts with
+     * @param float  $perLevel The amount of defence the champion gains per level
      * @todo Add validation of parameters.
      */
     public function __construct(string $type, float $base, float $perLevel)
@@ -69,7 +69,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     {
         return [
             $this->type => $this->baseValue,
-            $this->type . 'PerLevel' => $this->perLevel
+            $this->type.'PerLevel' => $this->perLevel
         ];
     }
 }

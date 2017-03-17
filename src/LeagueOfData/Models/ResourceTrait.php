@@ -59,7 +59,8 @@ trait ResourceTrait
         $this->perLevel = $perLevel;
     }
 
-    private function validateType(string $type) {
+    private function validateType(string $type)
+    {
         $found = false;
         foreach ($this->validResources as $resourceType) {
             if ($resourceType['shortCode'] === $type || $resourceType['fullText'] === $type) {
@@ -67,7 +68,7 @@ trait ResourceTrait
             }
         }
         if (!$found) {
-            throw new \InvalidArgumentException("Invalid resource type supplied: " . $type);
+            throw new \InvalidArgumentException("Invalid resource type supplied: ".$type);
         }
     }
 

@@ -23,7 +23,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
     private $name;
 
     /**
-     * @var int Summoner Level 
+     * @var int Summoner Level
      */
     private $level;
 
@@ -40,7 +40,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
     /**
      * Creates a new Summoner from an existing state.
      * Use as an alternative constructor as PHP does not support multiple constructors.
-     * 
+     *
      * @param array $summoner Data from an existing state (e.g. SQL result, Json, or object converted to array)
      * @return SummonerInterface Resultant Summoner object
      */
@@ -57,11 +57,11 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Create a summoner object
-     * 
-     * @param int $summonerID Summoner ID
-     * @param string $name Summoner Name
-     * @param int $level Summoner Level
-     * @param int $iconID Summoner Icon ID
+     *
+     * @param int    $summonerID   Summoner ID
+     * @param string $name         Summoner Name
+     * @param int    $level        Summoner Level
+     * @param int    $iconID       Summoner Icon ID
      * @param string $revisionDate Revision Date
      */
     public function __construct(int $summonerID, string $name, int $level, int $iconID, string $revisionDate)
@@ -77,7 +77,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Summoner ID
-     * 
+     *
      * @return int
      */
     public function getID() : int
@@ -87,7 +87,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Summoner Name
-     * 
+     *
      * @return string
      */
     public function getName() : string
@@ -97,7 +97,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Summoner Level
-     * 
+     *
      * @return int
      */
     public function getLevel() : int
@@ -107,7 +107,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Summoner Icon ID
-     * 
+     *
      * @return int
      */
     public function getIconID() : int
@@ -117,7 +117,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
 
     /**
      * Revision Date
-     * 
+     *
      * @return string
      */
     public function getRevisionDate() : string
@@ -128,7 +128,7 @@ final class Summoner implements SummonerInterface, ImmutableInterface
     /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
-     * 
+     *
      * @return array Summoner data as an array
      */
     public function toArray() : array
@@ -141,5 +141,4 @@ final class Summoner implements SummonerInterface, ImmutableInterface
             'revisionDate' => $this->revisionDate
         ];
     }
-
 }

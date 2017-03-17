@@ -1,6 +1,7 @@
 <?php
 namespace LeagueOfData\Service\Interfaces;
 
-interface VersionService {
+interface VersionService
+{
     public function findAll();
 }

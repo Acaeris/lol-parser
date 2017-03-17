@@ -29,7 +29,7 @@ final class QueueCommand extends ContainerAwareCommand
         $channel->queue_declare('processing', false, false, false, false);
         $channel->basic_consume('processing', '', false, true, false, false, array($this, 'process'));
 
-        while(count($channel->callbacks)) {
+        while (count($channel->callbacks)) {
             $this->log->info("Watching Queue... To exit press CTRL + C");
             $channel->wait();
         }

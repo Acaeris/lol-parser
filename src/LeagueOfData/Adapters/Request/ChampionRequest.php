@@ -4,6 +4,13 @@ namespace LeagueOfData\Adapters\Request;
 
 use LeagueOfData\Adapters\RequestInterface;
 
+/**
+ * Request object for Champion Services
+ *
+ * @package LeagueOfData\Adapters\Request
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 final class ChampionRequest implements RequestInterface
 {
     /* @var string API Request URL */
@@ -21,6 +28,13 @@ final class ChampionRequest implements RequestInterface
     /* @var array Where parameters of request */
     private $where;
 
+    /**
+     * Construct Champion request
+     *
+     * @param array  $where
+     * @param string $query
+     * @param array  $data
+     */
     public function __construct(array $where, string $query = null, array $data = null)
     {
         $this->validate($where, $query, $data);
@@ -31,12 +45,13 @@ final class ChampionRequest implements RequestInterface
 
     /**
      * Validate request parameters
-     * 
-     * @var array $where Where parameters
-     * @var string|null $query Query string
-     * @var array|null $data Request data
+     *
+     * @param array       $where Where parameters
+     * @param string|null $query Query string
+     * @param array|null  $data  Request data
      */
-    public function validate(array $where, string $query = null, array $data = null) {
+    public function validate(array $where, string $query = null, array $data = null)
+    {
         if (isset($where['id']) && !is_int($where['id'])) {
             throw new \InvalidArgumentException("Invalid ID supplied for Champion request");
         }
@@ -49,7 +64,7 @@ final class ChampionRequest implements RequestInterface
     /**
      * Data used for request
      *
-     * @var array Data used for request
+     * @return array Data used for request
      */
     public function data() : array
     {
@@ -59,9 +74,9 @@ final class ChampionRequest implements RequestInterface
     /**
      * Set format request will be in
      *
-     * @var string Request Format
+     * @param string $format Request Format
      */
-    function requestFormat(string $format)
+    public function requestFormat(string $format)
     {
         $this->format = $format;
     }
@@ -85,9 +100,10 @@ final class ChampionRequest implements RequestInterface
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
-            return str_replace('{region}', $params['region'], self::API_URL)
-                . (isset($params['id']) ? '/' . $params['id'] : '');
+
+            return str_replace('{region}', $params['region'], self::API_URL).(isset($params['id']) ? '/'.$params['id'] : '');
         }
+
         return $this->query;
     }
 
@@ -101,7 +117,7 @@ final class ChampionRequest implements RequestInterface
         if ($this->format === RequestInterface::REQUEST_JSON) {
             return array_merge($this->apiDefaults, $this->where);
         }
+
         return $this->where;
     }
-
 }

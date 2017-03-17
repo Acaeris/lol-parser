@@ -13,6 +13,6 @@ class MapName
         if (isset($this->_maps[$mapId])) {
             return $this->_maps[$mapId];
         }
-        return "Unknown Map ID: " . $mapId;
+        return "Unknown Map ID: ".$mapId;
     }
 }

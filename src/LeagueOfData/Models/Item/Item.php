@@ -30,9 +30,15 @@ class Item implements ItemInterface, ImmutableInterface
     /* @var string version */
     private $version;
 
-    public function __construct(int $itemID, string $name, string $description, int $purchaseValue,
-        int $saleValue, string $version)
-    {
+    public function __construct(
+        int $itemID,
+        string $name,
+        string $description,
+        int $purchaseValue,
+        int $saleValue,
+        string $version
+    ) {
+    
         $this->constructImmutable();
 
         $this->name = $name;

@@ -31,8 +31,8 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
      * Creates a new Spell Resource from an existing state.
      * Used as an alternative constructor as PHP does not support mutliple constructors.
      *
-     * @param string $type Type of resource represented by this object
-     * @param array $spell Data from an existing state (e.g. SQL result, Json or object converted to array)
+     * @param string $type  Type of resource represented by this object
+     * @param array  $spell Data from an existing state (e.g. SQL result, Json or object converted to array)
      * @return SpellResourceInterface Resultant Spell Resource
      */
     public static function fromState(string $type, array $spell) : SpellResourceInterface
@@ -40,16 +40,16 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
         return new self(
             $type,
             $spell[$type],
-            $spell[$type . 'PerLevel']
+            $spell[$type.'PerLevel']
         );
     }
 
     /**
      * Construct a Spell Resource object
      *
-     * @param string $type Type of resource represented by this object
-     * @param int $baseValue The base amount of that resource the spell requires to case
-     * @param int $perLevel The amount the resource cost increases per level
+     * @param string $type      Type of resource represented by this object
+     * @param int    $baseValue The base amount of that resource the spell requires to case
+     * @param int    $perLevel  The amount the resource cost increases per level
      * @todo Add validation of parameters.
      */
     public function __construct(string $type, int $baseValue, int $perLevel)
@@ -68,7 +68,7 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
     {
         return [
             $this->type => $this->baseValue,
-            $this->type . 'PerLevel' => $this->perLevel
+            $this->type.'PerLevel' => $this->perLevel
         ];
     }
 }

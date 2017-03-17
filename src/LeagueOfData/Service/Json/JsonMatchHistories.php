@@ -16,14 +16,13 @@ class JsonMatchHistories implements MatchHistoryService
         $this->source = $adapter;
     }
 
-    public function add($id, $region) {
-        return new MatchHistory(json_decode("{"
-            . "'matchId': {$id},"
-            . "'region': {$region}"
-            . "}"));
+    public function add($id, $region)
+    {
+        return new MatchHistory(json_decode("{"."'matchId': {$id},"."'region': {$region}"."}"));
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $request = new MatchListRequest();
         $response = $this->source->fetch($request->prepare(['id' => $id, 'region' => 'euw']));
         $matches = [];

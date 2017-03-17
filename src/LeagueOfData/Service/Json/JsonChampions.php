@@ -29,7 +29,7 @@ final class JsonChampions implements ChampionService
 
     /**
      * Add a champion to the collection
-     * 
+     *
      * @param Champion $champion
      */
     public function add(Champion $champion)
@@ -39,14 +39,14 @@ final class JsonChampions implements ChampionService
 
     /**
      * Fetch Champions
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion Objects
      */
     public function fetch(string $version, int $championId = null) : array
     {
-        $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
+        $this->log->info("Fetching champions for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
 
         if (isset($championId) && !empty($championId)) {
             return $this->find($version, $championId);
@@ -76,9 +76,9 @@ final class JsonChampions implements ChampionService
 
     /**
      * Find a specific champion
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion objects
      */
     public function find(string $version, int $championId) : array
@@ -99,8 +99,8 @@ final class JsonChampions implements ChampionService
 
     /**
      * Collection of Champion objects
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function transfer() : array
     {
@@ -109,7 +109,7 @@ final class JsonChampions implements ChampionService
 
     /**
      * Create the champion object from array data
-     * 
+     *
      * @param array $champion
      * @param string $version
      * @return Champion
@@ -152,13 +152,13 @@ final class JsonChampions implements ChampionService
         $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion->stats->movespeed);
         
         return new Champion(
-                $champion->id,
-                $champion->name,
-                $champion->title,
-                $champion->partype,
-                $champion->tags,
-                $stats,
-                $version
-            );
+            $champion->id,
+            $champion->name,
+            $champion->title,
+            $champion->partype,
+            $champion->tags,
+            $stats,
+            $version
+        );
     }
 }

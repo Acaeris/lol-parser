@@ -22,7 +22,7 @@ final class SqlChampions implements ChampionService
 
     /**
      * Add a champion to the collection
-     * 
+     *
      * @param Champion $champion
      */
     public function add(Champion $champion)
@@ -36,8 +36,11 @@ final class SqlChampions implements ChampionService
     public function store()
     {
         foreach ($this->champions as $champion) {
-            $request = new ChampionRequest(['id' => $champion->getID(), 'version' => $champion->version()],
-                'SELECT name FROM champion WHERE id = :id AND version = :version', $champion->toArray());
+            $request = new ChampionRequest(
+                ['id' => $champion->getID(), 'version' => $champion->version()],
+                'SELECT name FROM champion WHERE id = :id AND version = :version',
+                $champion->toArray()
+            );
 
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
@@ -49,14 +52,14 @@ final class SqlChampions implements ChampionService
 
     /**
      * Fetch Champions
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion Objects
      */
     public function fetch(string $version, int $championId = null) : array
     {
-        $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
+        $this->log->info("Fetching champions for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
 
         if (isset($championId) && !empty($championId)) {
             return $this->find($championId, $version);
@@ -86,15 +89,17 @@ final class SqlChampions implements ChampionService
 
     /**
      * Find a specific champion
-     * 
+     *
      * @param string $version
-     * @param int $championId
+     * @param int    $championId
      * @return array Champion objects
      */
     public function find(string $version, int $championId) : array
     {
-        $request = new ChampionRequest(['id' => $championId, 'version' => $version],
-            'SELECT * FROM champion WHERE id = :id AND version = :version');
+        $request = new ChampionRequest(
+            ['id' => $championId, 'version' => $version],
+            'SELECT * FROM champion WHERE id = :id AND version = :version'
+        );
         $result = $this->dbAdapter->fetch($request);
         $this->champions = [ Champion::fromState($result) ];
         return $this->champions;
@@ -102,7 +107,7 @@ final class SqlChampions implements ChampionService
 
     /**
      * Get collection of champions for transfer to a different process
-     * 
+     *
      * @return array Champion objects
      */
     public function transfer() : array

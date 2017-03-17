@@ -27,7 +27,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
 
     /**
      * Execute the command
-     * 
+     *
      * @param InputInterface $input Input data
      * @param OutputInterface $output Output data
      */
@@ -51,22 +51,22 @@ class VersionUpdateCommand extends ContainerAwareCommand
 
     /**
      * Queue new updates
-     * 
+     *
      * @param Version $version Version to update for
      * @param bool $force Force update of this version
      */
     private function queueUpdates(Version $version, bool $force)
     {
-        $this->log->info("Queuing update for version " . $version->fullVersion());
+        $this->log->info("Queuing update for version ".$version->fullVersion());
         $this->messageQueue->addProcessToQueue('update:champion', '{
             "command" : "update:champion",
-            "release" : "' . $version->fullVersion() . '",
-            "--force" : "' . $force . '"
+            "release" : "'.$version->fullVersion().'",
+            "--force" : "'.$force.'"
         }');
         $this->messageQueue->addProcessToQueue('update:item', '{
             "command" : "update:item",
-            "release" : "' . $version->fullVersion() . '",
-            "--force" : "' . $force . '"
+            "release" : "'.$version->fullVersion().'",
+            "--force" : "'.$force.'"
         }');
     }
 }

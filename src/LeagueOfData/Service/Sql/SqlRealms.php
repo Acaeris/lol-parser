@@ -44,7 +44,8 @@ class SqlRealms implements RealmService
      *
      * @param array Realm objects
      */
-    public function addAll(array $realms) {
+    public function addAll(array $realms)
+    {
         $this->realms = array_merge($this->realms, $realms);
     }
 
@@ -54,12 +55,14 @@ class SqlRealms implements RealmService
     public function store()
     {
         foreach ($this->realms as $realm) {
-            $request = new RealmRequest([
+            $request = new RealmRequest(
+                [
                     'version' => $realm->version(),
                     'region' => $realm->region()
                 ],
                 'SELECT version FROM realm WHERE version = :version AND region = :region',
-                $realm->toArray());
+                $realm->toArray()
+            );
             if ($this->db->fetch($request)) {
                 $this->db->update($request);
             } else {

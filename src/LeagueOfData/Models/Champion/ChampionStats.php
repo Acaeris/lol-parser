@@ -72,10 +72,10 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @param ChampionRegenResourceInterface $health
      * @param ChampionRegenResourceInterface $mana
-     * @param ChampionAttackInterface $attack
-     * @param ChampionDefenseInterface $armor
-     * @param ChampionDefenseInterface $magicResist
-     * @param float $moveSpeed
+     * @param ChampionAttackInterface        $attack
+     * @param ChampionDefenseInterface       $armor
+     * @param ChampionDefenseInterface       $magicResist
+     * @param float                          $moveSpeed
      */
     public function __construct(
         ChampionRegenResourceInterface $health,
@@ -113,8 +113,14 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      */
     public function toArray() : array
     {
-        return array_merge(['moveSpeed' => $this->moveSpeed], $this->health->toArray(), $this->resource->toArray(),
-            $this->attack->toArray(), $this->armor->toArray(), $this->magicResist->toArray());
+        return array_merge(
+            ['moveSpeed' => $this->moveSpeed],
+            $this->health->toArray(),
+            $this->resource->toArray(),
+            $this->attack->toArray(),
+            $this->armor->toArray(),
+            $this->magicResist->toArray()
+        );
     }
 
     /**
