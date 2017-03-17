@@ -48,6 +48,24 @@ final class SqlChampions implements ChampionService
     }
 
     /**
+     * Fetch Champions
+     * 
+     * @param string $version
+     * @param int $championId
+     * @return array Champion Objects
+     */
+    public function fetch(string $version, int $championId = null) : array
+    {
+        $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
+
+        if (isset($championId) && !empty($championId)) {
+            return $this->find($championId, $version);
+        }
+
+        return $this->findAll($version);
+    }
+
+    /**
      * Find all Champion data
      *
      * @param string $version Version number
@@ -69,11 +87,11 @@ final class SqlChampions implements ChampionService
     /**
      * Find a specific champion
      * 
-     * @param int $championId
      * @param string $version
+     * @param int $championId
      * @return array Champion objects
      */
-    public function find(int $championId, string $version) : array
+    public function find(string $version, int $championId) : array
     {
         $request = new ChampionRequest(['id' => $championId, 'version' => $version],
             'SELECT * FROM champion WHERE id = :id AND version = :version');

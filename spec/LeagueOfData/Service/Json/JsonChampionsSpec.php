@@ -79,6 +79,38 @@ class JsonChampionsSpec extends ObjectBehavior
             ],
             "version" => '7.4.3'
         ]);
+        $request = new ChampionRequest(['id' => 266, 'region' => 'euw', 'version' => '7.4.3']);
+        $adapter->fetch($request)->willReturn((object) [
+            "id" => 266,
+            "title" => "the Darkin Blade",
+            "name" => "Aatrox",
+            "key" => "Aatrox",
+            "partype" => "Blood Well",
+            "tags" => ['Fighter', 'Tank'],
+            "stats" => (object) [
+                "attackrange" => 150,
+                "mpperlevel" => 45,
+                "mp" => 105.6,
+                "attackdamage" => 60.376,
+                "hp" => 537.8,
+                "hpperlevel" => 85,
+                "attackdamageperlevel" => 3.2,
+                "armor" => 24.384,
+                "mpregenperlevel" => 0,
+                "hpregen" => 6.59,
+                "critperlevel" => 0,
+                "spellblockperlevel" => 1.25,
+                "mpregen" => 0,
+                "attackspeedperlevel" => 3,
+                "spellblock" => 32.1,
+                "movespeed" => 345,
+                "attackspeedoffset" => -0.04,
+                "crit" => 0,
+                "hpregenperlevel" => 0.5,
+                "armorperlevel" => 3.8
+            ],
+            "version" => '7.4.3'
+        ]);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -88,9 +120,24 @@ class JsonChampionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionService');
     }
 
-    function it_should_find_all_realm_data()
+    function it_should_find_all_champion_data()
     {
         $this->findAll('7.4.3')->shouldReturnArrayOfChampions();
+    }
+
+    function it_should_find_a_specific_champion_by_id()
+    {
+        $this->find('7.4.3', 266)->shouldReturnArrayOfChampions();
+    }
+
+    function it_should_fetch_all_if_only_version_passed()
+    {
+        $this->fetch('7.4.3')->shouldReturnArrayOfChampions();
+    }
+
+    function it_should_fetch_one_if_version_and_id_passed()
+    {
+        $this->fetch('7.4.3', 266)->shouldReturnArrayOfChampions();
     }
 
     function getMatchers()

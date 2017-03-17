@@ -17,16 +17,25 @@ interface ChampionService {
     /**
      * Find a specific champion
      * 
-     * @param int $championId
      * @param string $version
+     * @param int $championId
      * @return array Champion objects
      */
-    function find(int $championId, string $version) : array;
+    function find(string $version, int $championId) : array;
 
     /**
      * Store the champion objects in the database
      */
     function store();
+
+    /**
+     * Fetch Champions
+     * 
+     * @param string $version
+     * @param int $championId
+     * @return array Champion Objects
+     */
+    function fetch(string $version, int $championId = null) : array;
 
     /**
      * Add a champion to the collection

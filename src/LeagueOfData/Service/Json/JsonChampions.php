@@ -35,6 +35,24 @@ final class JsonChampions implements ChampionService
     }
 
     /**
+     * Fetch Champions
+     * 
+     * @param string $version
+     * @param int $championId
+     * @return array Champion Objects
+     */
+    public function fetch(string $version, int $championId = null) : array
+    {
+        $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
+
+        if (isset($championId) && !empty($championId)) {
+            return $this->find($version, $championId);
+        }
+
+        return $this->findAll($version);
+    }
+
+    /**
      * Find all Champion data by version
      *
      * @param string $version Version number
@@ -45,20 +63,22 @@ final class JsonChampions implements ChampionService
         $request = new ChampionRequest(['version' => $version]);
         $response = $this->source->fetch($request);
         $this->champions = [];
+
         foreach ($response->data as $champion) {
             $this->champions[] = $this->create($champion, $response->version);
         }
+
         return $this->champions;
     }
 
     /**
      * Find a specific champion
      * 
-     * @param int $championId
      * @param string $version
+     * @param int $championId
      * @return array Champion objects
      */
-    public function find(int $championId, string $version) : array
+    public function find(string $version, int $championId) : array
     {
         $request = new ChampionRequest(['id' => $championId, 'region' => 'euw', 'version' => $version]);
         $response = $this->source->fetch($request);

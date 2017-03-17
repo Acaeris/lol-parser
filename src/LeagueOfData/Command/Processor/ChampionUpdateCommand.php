@@ -11,11 +11,18 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class ChampionUpdateCommand extends ContainerAwareCommand
 {
+    /* @var LoggerInterface Logger */
     private $log;
+    /* @var ChampionService API Service */
     private $service;
+    /* @var ChampionService DB Service */
     private $database;
+    /* @var object Messsage Queue Service */
     private $messageQueue;
 
+    /**
+     * Configure the command
+     */
     protected function configure()
     {
         $this->setName('update:champion')
@@ -26,6 +33,13 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
+    /**
+     * Execute the command
+     * 
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return null
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
@@ -33,24 +47,14 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('champion-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        if (count($this->database->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
+        if (count($this->database->findAll($input->getArgument('release'))) == 0
+            || $input->getOption('force')) {
+
             $this->updateData($input);
             return;
         }
 
         $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
-    }
-
-    private function fetch(int $championId, string $version)
-    {
-        $this->log->info("Fetching champions for version: {$version}" . (isset($championId) ? " [{$championId}]" : ""));
-
-        if (!empty($championId)) {
-            $this->service->find($championId, $version);
-            return;
-        }
-
-        $this->service->findAll($version);
     }
 
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
@@ -69,7 +73,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->fetch($input->getArgument('championId'), $input->getArgument('release'));
+            $this->service->fetch($input->getArgument('release'), $input->getArgument('championId'));
             $this->log->info("Storing champion data for version " . $input->getArgument('release'));
 
             $this->database->addAll($this->service->transfer());
