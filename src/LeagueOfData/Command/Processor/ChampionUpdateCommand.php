@@ -46,7 +46,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('champion-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        if (count($this->database->findAll($input->getArgument('release'))) == 0
+        if (count($this->database->fetch($input->getArgument('release'))) == 0
             || $input->getOption('force')) {
             $this->updateData($input);
             return;

@@ -34,7 +34,7 @@ class JsonRealmsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonRealms');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmService');
+        $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmServiceInterface');
     }
 
     public function it_should_find_all_realm_data()

@@ -13,7 +13,7 @@ class JsonChampionsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request = new ChampionRequest(['version' => '7.4.3']);
+        $request = new ChampionRequest(['version' => '7.4.3', 'region' => 'euw']);
         $adapter->fetch($request)->willReturn((object) [
             "data" => (object) [
                 "Aatrox" => (object) [
@@ -117,17 +117,7 @@ class JsonChampionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionService');
-    }
-
-    public function it_should_find_all_champion_data()
-    {
-        $this->findAll('7.4.3')->shouldReturnArrayOfChampions();
-    }
-
-    public function it_should_find_a_specific_champion_by_id()
-    {
-        $this->find('7.4.3', 266)->shouldReturnArrayOfChampions();
+        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionServiceInterface');
     }
 
     public function it_should_fetch_all_if_only_version_passed()

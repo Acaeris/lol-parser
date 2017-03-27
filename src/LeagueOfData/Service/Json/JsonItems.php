@@ -42,45 +42,29 @@ final class JsonItems implements ItemServiceInterface
      */
     public function fetch(string $version, int $itemId = null) : array
     {
-        $this->log->info("Fetching items for version {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
+        $this->log->info("Fetching items from API for version: {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
 
-        if (!empty($itemId)) {
-            return $this->find($version, $itemId);
+        $region = 'euw';
+        $params = [ 'version' => $version, 'region' => $region ];
+
+        if (isset($itemId) && !empty($itemId)) {
+            $params['id'] = $itemId;
         }
-        
-        return $this->findAll($version);
-    }
 
-    /**
-     * Find all Item data by version
-     *
-     * @param string $version Version number
-     * @return array Item objects
-     */
-    public function findAll(string $version) : array
-    {
-        $request = new ItemRequest(['version' => $version]);
+        $request = new ItemRequest($params);
         $response = $this->source->fetch($request);
         $this->items = [];
-        
-        foreach ($response->data as $item) {
-            $this->items[] = $this->create($item, $response->version);
-        }
-        return $this->items;
-    }
 
-    /**
-     * Find a specific item
-     *
-     * @param string $version
-     * @param int    $itemId
-     * @return array Item objects
-     */
-    public function find(string $version, int $itemId) : array
-    {
-        $request = new ItemRequest(['id' => $itemId, 'region' => 'euw', 'version' => $version]);
-        $response = $this->source->fetch($request);
-        $this->items = [ $this->create($response, $version) ];
+        if (!isset($response->data)) {
+            $temp = new \stdClass();
+            $temp->data = [ $response ];
+            $response = $temp;
+        }
+
+        foreach ($response->data as $item) {
+            $this->items[] = $this->create($item, $version);
+        }
+
         return $this->items;
     }
 
@@ -113,10 +97,10 @@ final class JsonItems implements ItemServiceInterface
     {
         return new Item(
             $item->id,
-            $item->name,
-            $item->description,
-            $item->gold->total,
-            $item->gold->sell,
+            (isset($item->name) ? $item->name : ''),
+            (isset($item->description) ? $item->description : ''),
+            (isset($item->gold->total) ? $item->gold->total : ''),
+            (isset($item->gold->sell) ? $item->gold->sell : ''),
             $version
         );
     }

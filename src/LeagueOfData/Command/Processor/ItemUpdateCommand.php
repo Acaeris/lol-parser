@@ -46,7 +46,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('item-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        if (count($this->database->findAll($input->getArgument('release'))) == 0 || $input->getOption('force')) {
+        if (count($this->database->fetch($input->getArgument('release'))) == 0 || $input->getOption('force')) {
             $this->updateData($input);
             return;
         }
@@ -64,7 +64,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
         }
 
         $this->messageQueue->addProcessToQueue('update:item', "{ {$params} }");
-        $this->log->error($msg.['exception' => $exception]);
+        $this->log->error($msg, ['exception' => $exception]);
     }
 
     private function updateData(InputInterface $input)

@@ -26,12 +26,12 @@ class SqlVersionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlVersions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionService');
+        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionServiceInterface');
     }
 
     public function it_should_find_all_version_data()
     {
-        $this->findAll()->shouldReturnArrayOfVersions();
+        $this->fetch(new VersionRequest([], 'SELECT fullversion FROM version'))->shouldReturnArrayOfVersions();
     }
 
     public function getMatchers()

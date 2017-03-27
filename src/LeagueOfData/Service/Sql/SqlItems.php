@@ -66,58 +66,14 @@ final class SqlItems implements ItemServiceInterface
                 'SELECT id FROM item WHERE id = :id',
                 $item->toArray()
             );
+
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
-            } else {
-                $this->dbAdapter->insert($request);
+                continue;
             }
+
+            $this->dbAdapter->insert($request);
         }
-    }
-
-    /**
-     * Find all Item data
-     *
-     * @param string $version Version to fetch for.
-     *
-     * @return array Item objects
-     */
-    public function findAll(string $version) : array
-    {
-        $this->items = [];
-        $results = $this->dbAdapter->fetch('item', [
-            'query' => 'SELECT * FROM item WHERE version = ?',
-            'params' => [$version],
-        ]);
-
-        if ($results === false) {
-            return [];
-        }
-
-        foreach ($results as $item) {
-            $this->items[] = new Item($item);
-        }
-
-        return $this->items;
-    }
-
-
-    /**
-     * Find a specific Item
-     *
-     * @param int    $id      Item ID
-     * @param string $version Version to fetch for
-     *
-     * @return array Item objects
-     */
-    public function find(int $id, string $version) : array
-    {
-        $result = $this->dbAdapter->fetch('item', [
-            'query' => 'SELECT * FROM item WHERE id = ? AND version = ?',
-            'params' => [$id, $version],
-        ]);
-        $this->items = [ new Item($result) ];
-
-        return $this->items;
     }
 
     /**
@@ -129,4 +85,45 @@ final class SqlItems implements ItemServiceInterface
     {
         return $this->items;
     }
+
+    /**
+     * Fetch Items
+     *
+     * @param string $version
+     * @param int    $itemId
+     *
+     * @return array Item Objects
+     */
+    public function fetch(string $version, int $itemId = null): array
+    {
+        $this->log->info("Fetching items from DB for version: {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
+
+        $request = new ItemRequest(
+            [ 'version' => $version ],
+            'SELECT * FROM item WHERE version = :version'
+        );
+
+        if (isset($itemId) && !empty($itemId)) {
+            $request = new ItemRequest(
+                [ 'id' => $itemId, 'version' => $version ],
+                'SELECT * FROM item WHERE id = :id AND version = :version'
+            );
+        }
+
+        $this->items = [];
+        $results = $this->dbAdapter->fetch($request);
+
+        if ($results !== false) {
+            if (!is_array($results)) {
+                $results = [ $results ];
+            }
+
+            foreach ($results as $item) {
+                $this->items[] = Item::fromState($item);
+            }
+        }
+
+        return $this->items;
+    }
+
 }

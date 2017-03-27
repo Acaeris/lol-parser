@@ -51,23 +51,6 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     private $moveSpeed;
 
     /**
-     * Factory Constructor
-     *
-     * @param array $champion
-     * @return ChampionStatsInterface
-     */
-    public static function fromState(array $champion) : ChampionStatsInterface
-    {
-        $health = ChampionRegenResource::fromState(ChampionRegenResource::RESOURCE_HEALTH, $champion);
-        $resource = ChampionRegenResource::fromState(ChampionRegenResource::RESOURCE_MANA, $champion);
-        $attack = ChampionAttack::fromState($champion);
-        $armor = ChampionDefense::fromState(ChampionDefense::DEFENSE_ARMOR, $champion);
-        $magicResist = ChampionDefense::fromState(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
-
-        return new self($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
-    }
-
-    /**
      * Main Constructor
      *
      * @param ChampionRegenResourceInterface $health

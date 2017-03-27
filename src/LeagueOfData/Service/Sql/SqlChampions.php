@@ -7,6 +7,10 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Champion\ChampionStats;
+use LeagueOfData\Models\Champion\ChampionRegenResource;
+use LeagueOfData\Models\Champion\ChampionAttack;
+use LeagueOfData\Models\Champion\ChampionDefense;
 
 /**
  * Champion object SQL factory.
@@ -46,6 +50,16 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
+     * Add all champion objects to internal array
+     *
+     * @param array $champions Champion objects
+     */
+    public function addAll(array $champions)
+    {
+        $this->champions = array_merge($this->champions, $champions);
+    }
+
+    /**
      * Store the champion objects in the database
      */
     public function store()
@@ -76,53 +90,32 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function fetch(string $version, int $championId = null) : array
     {
-        $this->log->info("Fetching champions for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
+        $this->log->info("Fetching champions from DB for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
+
+        $request = new ChampionRequest(
+            [ 'version' => $version ],
+            'SELECT * FROM champion WHERE version = :version'
+        );
 
         if (isset($championId) && !empty($championId)) {
-            return $this->find($championId, $version);
+            $request = new ChampionRequest(
+                [ 'id' => $championId, 'version' => $version ],
+                'SELECT * FROM champion WHERE id = :id AND version = :version'
+            );
         }
 
-        return $this->findAll($version);
-    }
-
-    /**
-     * Find all Champion data
-     *
-     * @param string $version Version number
-     *
-     * @return array Champion objects
-     */
-    public function findAll(string $version) : array
-    {
         $this->champions = [];
-        $request = new ChampionRequest(['version' => $version], 'SELECT * FROM champion WHERE version = :version');
         $results = $this->dbAdapter->fetch($request);
 
         if ($results !== false) {
+            if (!is_array($results)) {
+                $results = [ $results ];
+            }
+
             foreach ($results as $champion) {
-                $this->champions[] = Champion::fromState($champion);
+                $this->champions[] = $this->create($champion);
             }
         }
-
-        return $this->champions;
-    }
-
-    /**
-     * Find a specific champion
-     *
-     * @param string $version
-     * @param int    $championId
-     *
-     * @return array Champion objects
-     */
-    public function find(string $version, int $championId) : array
-    {
-        $request = new ChampionRequest(
-            ['id' => $championId, 'version' => $version],
-            'SELECT * FROM champion WHERE id = :id AND version = :version'
-        );
-        $result = $this->dbAdapter->fetch($request);
-        $this->champions = [ Champion::fromState($result) ];
 
         return $this->champions;
     }
@@ -135,5 +128,54 @@ final class SqlChampions implements ChampionServiceInterface
     public function transfer() : array
     {
         return $this->champions;
+    }
+
+    public function create(array $champion) : Champion
+    {
+        $health = new ChampionRegenResource(
+            ChampionRegenResource::RESOURCE_HEALTH,
+            $champion[ChampionRegenResource::RESOURCE_HEALTH],
+            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'PerLevel'],
+            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'Regen'],
+            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'RegenPerLevel']
+        );
+        $resource = new ChampionRegenResource(
+            ChampionRegenResource::RESOURCE_MANA,
+            $champion[ChampionRegenResource::RESOURCE_MANA],
+            $champion[ChampionRegenResource::RESOURCE_MANA . 'PerLevel'],
+            $champion[ChampionRegenResource::RESOURCE_MANA . 'Regen'],
+            $champion[ChampionRegenResource::RESOURCE_MANA . 'RegenPerLevel']
+        );
+        $attack = new ChampionAttack(
+            $champion['attackRange'],
+            $champion['attackDamage'],
+            $champion['attackDamagePerLevel'],
+            $champion['attackSpeedOffset'],
+            $champion['attackSpeedPerLevel'],
+            $champion['crit'],
+            $champion['critPerLevel']
+        );
+        $armor = new ChampionDefense(
+            ChampionDefense::DEFENSE_ARMOR,
+            $champion[ChampionDefense::DEFENSE_ARMOR],
+            $champion[ChampionDefense::DEFENSE_ARMOR.'PerLevel']
+        );
+        $magicResist = new ChampionDefense(
+            ChampionDefense::DEFENSE_MAGICRESIST,
+            $champion[ChampionDefense::DEFENSE_MAGICRESIST],
+            $champion[ChampionDefense::DEFENSE_MAGICRESIST.'PerLevel']
+        );
+
+        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
+        
+        return new Champion(
+            $champion['id'],
+            $champion['name'],
+            $champion['title'],
+            $champion['resourceType'],
+            explode('|', $champion['tags']),
+            $stats,
+            $champion['version']
+        );
     }
 }

@@ -10,6 +10,6 @@ namespace LeagueOfData\Service\Interfaces;
  */
 interface MatchHistoryServiceInterface
 {
-    public function add($id, $region);
-    public function find($id);
+    public function add($historyId, $region);
+    public function find($historyId);
 }

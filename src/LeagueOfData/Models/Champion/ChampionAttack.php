@@ -34,26 +34,6 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
     private $critPerLevel;
 
     /**
-     * Creates a new Champion Attack from an existing state.
-     * Use as an alternative constructor as PHP does not support multiple constructors.
-     *
-     * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return ChampionAttackInterface Resultant Champion Attack
-     */
-    public static function fromState(array $champion) : ChampionAttackInterface
-    {
-        return new self(
-            $champion['attackRange'],
-            $champion['attackDamage'],
-            $champion['attackDamagePerLevel'],
-            $champion['attackSpeedOffset'],
-            $champion['attackSpeedPerLevel'],
-            $champion['crit'],
-            $champion['critPerLevel']
-        );
-    }
-
-    /**
      * Construct a Champion Attack object
      *
      * @param float $range          Attack range

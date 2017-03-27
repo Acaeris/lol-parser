@@ -13,23 +13,14 @@ use LeagueOfData\Models\Champion\Champion;
 interface ChampionServiceInterface
 {
     /**
-     * Find all Champion data
-     *
-     * @param string $version Version number
-     *
-     * @return array Champion objects
-     */
-    public function findAll(string $version) : array;
-
-    /**
-     * Find a specific champion
+     * Fetch Champions
      *
      * @param string $version
      * @param int    $championId
      *
-     * @return array Champion objects
+     * @return array Champion Objects
      */
-    public function find(string $version, int $championId) : array;
+    public function fetch(string $version, int $championId = null) : array;
 
     /**
      * Store the champion objects in the database
@@ -42,4 +33,11 @@ interface ChampionServiceInterface
      * @param Champion $champion
      */
     public function add(Champion $champion);
+
+    /**
+     * Add all champion objects to internal array
+     *
+     * @param array $champions Champion objects
+     */
+    public function addAll(array $champions);
 }

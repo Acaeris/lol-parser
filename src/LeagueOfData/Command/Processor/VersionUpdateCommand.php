@@ -39,7 +39,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
         $this->log->info('Fetching version data');
-        $versions = $this->service->findAll();
+        $versions = $this->service->fetch();
 
         $this->database->addAll($this->service->transfer());
         $this->database->store();

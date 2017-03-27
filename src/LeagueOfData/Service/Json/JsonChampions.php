@@ -38,36 +38,48 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
-     * Find all Champion data by version
+     * Add all champion objects to internal array
      *
-     * @param string $version Version number
-     * @return array Champion objects
+     * @param array $champions Champion objects
      */
-    public function findAll(string $version) : array
+    public function addAll(array $champions)
     {
-        $request = new ChampionRequest(['version' => $version]);
-        $response = $this->source->fetch($request);
-        $this->champions = [];
-
-        foreach ($response->data as $champion) {
-            $this->champions[] = $this->create($champion, $response->version);
-        }
-
-        return $this->champions;
+        $this->champions = array_merge($this->champions, $champions);
     }
 
     /**
-     * Find a specific champion
+     * Fetch Champions
      *
      * @param string $version
      * @param int    $championId
-     * @return array Champion objects
+     *
+     * @return array Champion Objects
      */
-    public function find(string $version, int $championId) : array
+    public function fetch(string $version, int $championId = null) : array
     {
-        $request = new ChampionRequest(['id' => $championId, 'region' => 'euw', 'version' => $version]);
+        $this->log->info("Fetching champions from API for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
+
+        $region = 'euw';
+        $params = ['version' => $version, 'region' => $region];
+        
+        if (isset($championId) && !empty($championId)) {
+            $params['id'] = $championId;
+        }
+
+        $request = new ChampionRequest($params);
         $response = $this->source->fetch($request);
-        $this->champions = [ $this->create($response, $version) ];
+        $this->champions = [];
+        
+        if (!isset($response->data)) {
+            $temp = new \stdClass();
+            $temp->data = [ $response ];
+            $response = $temp;
+        }
+
+        foreach ($response->data as $champion) {
+            $this->champions[] = $this->create($champion, $version);
+        }
+
         return $this->champions;
     }
 

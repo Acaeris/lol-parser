@@ -25,12 +25,12 @@ class JsonVersionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonVersions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionService');
+        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionServiceInterface');
     }
 
     public function it_should_find_all_version_data()
     {
-        $this->findAll()->shouldReturnArrayOfVersions();
+        $this->fetch()->shouldReturnArrayOfVersions();
     }
 
     public function getMatchers()

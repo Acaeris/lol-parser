@@ -12,7 +12,7 @@ class JsonItemsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request = new ItemRequest(['version' => '7.4.3']);
+        $request = new ItemRequest(['version' => '7.4.3', 'region' => 'euw']);
         $adapter->fetch($request)->willReturn((object) [
             "data" => (object) [
                 "1001" => (object) [
@@ -52,17 +52,7 @@ class JsonItemsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonItems');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemService');
-    }
-
-    public function it_should_find_all_item_data()
-    {
-        $this->findAll('7.4.3')->shouldReturnArrayOfItems();
-    }
-
-    public function it_should_find_a_specific_item_by_id()
-    {
-        $this->find('7.4.3', 1001)->shouldReturnArrayOfItems();
+        $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemServiceInterface');
     }
 
     public function it_should_fetch_all_if_only_version_passed()

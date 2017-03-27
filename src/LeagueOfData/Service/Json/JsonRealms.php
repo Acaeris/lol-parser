@@ -2,14 +2,14 @@
 
 namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Service\Interfaces\RealmService;
+use LeagueOfData\Service\Interfaces\RealmServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\RealmRequest;
 
 use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
 
-final class JsonRealms implements RealmService
+final class JsonRealms implements RealmServiceInterface
 {
     /* @var array Available Regions */
     const REGIONS = ['euw', 'eune', 'na'];

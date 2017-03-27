@@ -29,23 +29,6 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     const DEFENSE_MAGICRESIST = 'spellBlock';
 
     /**
-     * Creates a new Champion Defence from an existing state.
-     * Use as an alternative constructor as PHP does not support multiple constructors.
-     *
-     * @param string $type     Type of defence represented by this object
-     * @param array  $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return ChampionDefenseInterface Resultant Champion Defense
-     */
-    public static function fromState(string $type, array $champion) : ChampionDefenseInterface
-    {
-        return new self(
-            $type,
-            $champion[$type],
-            $champion[$type.'PerLevel']
-        );
-    }
-
-    /**
      * Construct a Champion Defense object
      *
      * @param string $type     Type of defence represented by this object

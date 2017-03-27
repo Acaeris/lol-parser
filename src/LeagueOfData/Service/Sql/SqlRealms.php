@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Service\Sql;
 
-use LeagueOfData\Service\Interfaces\RealmService;
+use LeagueOfData\Service\Interfaces\RealmServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\RealmRequest;
 use LeagueOfData\Models\Realm;
@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-class SqlRealms implements RealmService
+class SqlRealms implements RealmServiceInterface
 {
     /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
     private $db;

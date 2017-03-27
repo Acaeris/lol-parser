@@ -38,25 +38,6 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     private $regenPerLevel;
 
     /**
-     * Creates a new Champion Resource from an existing state.
-     * Used as an alternative constructor as PHP does not support mutliple constructors.
-     *
-     * @param string $type     Type of resource represented by this object
-     * @param array  $champion Data from an existing state (e.g. SQL result, Json or object converted to array)
-     * @return ChampionResourceInterface Resultant Champion Resource
-     */
-    public static function fromState(string $type, array $champion) : ChampionResourceInterface
-    {
-        return new self(
-            $type,
-            $champion[$type],
-            $champion[$type.'PerLevel'],
-            $champion[$type.'Regen'],
-            $champion[$type.'RegenPerLevel']
-        );
-    }
-
-    /**
      * Construct a Champion Resource object
      *
      * @param string $type          Type of resource represented by this object

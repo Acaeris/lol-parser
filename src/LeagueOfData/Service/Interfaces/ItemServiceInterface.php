@@ -12,23 +12,15 @@ use LeagueOfData\Models\Item\Item;
  */
 interface ItemServiceInterface
 {
-
     /**
-     * Find all Item data
-     *
-     * @param string $version Version number
-     * @return array Item objects
-     */
-    public function findAll(string $version) : array;
-
-    /**
-     * Find a specific item
+     * Fetch Items
      *
      * @param string $version
      * @param int    $itemId
-     * @return array Item objects
+     *
+     * @return array Item Objects
      */
-    public function find(string $version, int $itemId) : array;
+    public function fetch(string $version, int $itemId = null) : array;
 
     /**
      * Store the item objects in the database

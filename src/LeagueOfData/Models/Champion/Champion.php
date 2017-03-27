@@ -49,26 +49,6 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $resourceType;
 
     /**
-     * Creates a new Champion Defence from an existing state.
-     * Use as an alternative constructor as PHP does not support multiple constructors.
-     *
-     * @param array $champion Data from an existing state (e.g. SQL result, Json, or object converted to array)
-     * @return ChampionInterface Resultant Champion
-     */
-    public static function fromState(array $champion): ChampionInterface
-    {
-        return new self(
-            $champion['id'],
-            $champion['name'],
-            $champion['title'],
-            $champion['resourceType'],
-            $champion['tags'],
-            ChampionStats::fromState($champion),
-            $champion['version']
-        );
-    }
-
-    /**
      * Construct a Champion object
      *
      * @param int                    $id           Champion ID

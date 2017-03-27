@@ -80,11 +80,11 @@ final class SqlVersions implements VersionServiceInterface
     }
 
     /**
-     * Find all Version data
+     * Fetch Version data
      *
      * @return array Version objects
      */
-    public function findAll() : array
+    public function fetch() : array
     {
         $this->versions = [];
         $request = new VersionRequest([], 'SELECT fullversion FROM version');

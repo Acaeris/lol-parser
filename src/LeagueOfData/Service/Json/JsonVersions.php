@@ -8,15 +8,30 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\VersionRequest;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Version object JSON factory.
+ * @package LeagueOfData\Service|Sql
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 final class JsonVersions implements VersionServiceInterface
 {
-    private $source;
+    /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
+    private $dbAdapter;
+    /* @var Psr\Log\LoggerInterface Logger */
     private $log;
-    private $versions;
+    /* @var array Version objects */
+    private $versions = [];
 
+    /**
+     * Set up version service
+     * 
+     * @param AdapterInterface $adapter
+     * @param LoggerInterface $log
+     */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
-        $this->source = $adapter;
+        $this->dbAdapter = $adapter;
         $this->log = $log;
     }
 
@@ -25,14 +40,16 @@ final class JsonVersions implements VersionServiceInterface
      *
      * @return array Version objects
      */
-    public function findAll() : array
+    public function fetch() : array
     {
         $request = new VersionRequest([]);
-        $response = $this->source->fetch($request);
+        $response = $this->dbAdapter->fetch($request);
         $this->versions = [];
+
         foreach ($response as $version) {
             $this->versions[] = new Version($version);
         }
+
         return $this->versions;
     }
 
@@ -45,4 +62,30 @@ final class JsonVersions implements VersionServiceInterface
     {
         return $this->versions;
     }
+
+    /**
+     * Add a version object to internal array
+     *
+     * @param Version $version
+     */
+    public function add(Version $version) {
+        $this->versions[] = $version;
+    }
+
+    /**
+     * Add all version objects to internal array
+     *
+     * @param array $versions Version objects
+     */
+    public function addAll(array $versions) {
+        $this->versions = array_merge($this->versions, $versions);
+    }
+
+    /**
+     * Store the version objects in the DB
+     */
+    public function store() {
+        $this->log->error("Attempting to store data via API. Not available.");
+    }
+
 }

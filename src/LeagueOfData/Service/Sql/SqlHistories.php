@@ -114,11 +114,13 @@ final class SqlHistories implements HistoryService
                 'SELECT id FROM history WHERE id = :id',
                 $entry->toArray()
             );
+
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
-            } else {
-                $this->dbAdapter->insert($request);
+                continue;
             }
+            
+            $this->dbAdapter->insert($request);
         }
     }
 }

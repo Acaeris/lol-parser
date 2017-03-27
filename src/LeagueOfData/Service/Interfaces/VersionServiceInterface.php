@@ -1,6 +1,8 @@
 <?php
 namespace LeagueOfData\Service\Interfaces;
 
+use LeagueOfData\Models\Version;
+
 /**
  * Version Service interface
  * @package LeagueOfData\Service|Interfaces
@@ -33,7 +35,7 @@ interface VersionServiceInterface
      *
      * @return array Version objects
      */
-    public function findAll() : array;
+    public function fetch() : array;
 
     /**
      * Transfer objects out to another service

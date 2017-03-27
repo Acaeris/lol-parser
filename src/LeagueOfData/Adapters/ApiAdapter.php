@@ -75,7 +75,7 @@ class ApiAdapter implements AdapterInterface
             case self::API_REPEAT:
                 sleep(1);
 
-                return $this->request($request);
+                return $this->fetch($request);
             case self::API_FAIL:
                 exit;
             case self::API_SKIP:
