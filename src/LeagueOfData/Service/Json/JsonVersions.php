@@ -3,12 +3,12 @@
 namespace LeagueOfData\Service\Json;
 
 use LeagueOfData\Models\Version;
-use LeagueOfData\Service\Interfaces\VersionService;
+use LeagueOfData\Service\Interfaces\VersionServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\VersionRequest;
 use Psr\Log\LoggerInterface;
 
-final class JsonVersions implements VersionService
+final class JsonVersions implements VersionServiceInterface
 {
     private $source;
     private $log;

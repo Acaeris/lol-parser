@@ -4,13 +4,19 @@ namespace LeagueOfData\Service\Interfaces;
 
 use LeagueOfData\Models\Champion\Champion;
 
-interface ChampionService
+/**
+ * Champion Service interface
+ * @package LeagueOfData\Service|Interfaces
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
+interface ChampionServiceInterface
 {
-
     /**
      * Find all Champion data
      *
      * @param string $version Version number
+     *
      * @return array Champion objects
      */
     public function findAll(string $version) : array;
@@ -20,6 +26,7 @@ interface ChampionService
      *
      * @param string $version
      * @param int    $championId
+     *
      * @return array Champion objects
      */
     public function find(string $version, int $championId) : array;
@@ -28,15 +35,6 @@ interface ChampionService
      * Store the champion objects in the database
      */
     public function store();
-
-    /**
-     * Fetch Champions
-     *
-     * @param string $version
-     * @param int    $championId
-     * @return array Champion Objects
-     */
-    public function fetch(string $version, int $championId = null) : array;
 
     /**
      * Add a champion to the collection

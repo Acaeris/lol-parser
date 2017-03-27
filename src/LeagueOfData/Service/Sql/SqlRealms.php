@@ -8,6 +8,12 @@ use LeagueOfData\Adapters\Request\RealmRequest;
 use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Realm object SQL factory.
+ * @package LeagueOfData\Service|Sql
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 class SqlRealms implements RealmService
 {
     /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
@@ -17,6 +23,12 @@ class SqlRealms implements RealmService
     /* @var array Realm objects */
     private $realms = [];
 
+    /**
+     * Setup Realm factory service
+     *
+     * @param AdapterInterface $adapter
+     * @param LoggerInterface  $logger
+     */
     public function __construct(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $this->db = $adapter;
@@ -33,16 +45,18 @@ class SqlRealms implements RealmService
         $this->realms = [];
         $request = new RealmRequest([], 'SELECT `cdn`, `region`, MAX(`version`) FROM realm GROUP BY `region`');
         $response = $this->db->fetch($request);
+
         foreach ($response as $realm) {
             $this->realms[] = new Realm($realm['cdn'], $realm['version'], $realm['region']);
         }
+
         return $this->realms;
     }
 
     /**
      * Add all realm objects to internal array
      *
-     * @param array Realm objects
+     * @param array $realms Realm objects
      */
     public function addAll(array $realms)
     {
@@ -58,7 +72,7 @@ class SqlRealms implements RealmService
             $request = new RealmRequest(
                 [
                     'version' => $realm->version(),
-                    'region' => $realm->region()
+                    'region' => $realm->region(),
                 ],
                 'SELECT version FROM realm WHERE version = :version AND region = :region',
                 $realm->toArray()

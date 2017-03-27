@@ -4,10 +4,10 @@ namespace LeagueOfData\Service\Json;
 
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\API\MatchListRequest;
-use LeagueOfData\Service\Interfaces\MatchHistoryService;
+use LeagueOfData\Service\Interfaces\MatchHistoryServiceInterface;
 use LeagueOfData\Models\MatchHistory;
 
-class JsonMatchHistories implements MatchHistoryService
+class JsonMatchHistories implements MatchHistoryServiceInterface
 {
     private $source;
 

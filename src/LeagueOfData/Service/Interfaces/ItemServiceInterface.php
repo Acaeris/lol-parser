@@ -4,7 +4,13 @@ namespace LeagueOfData\Service\Interfaces;
 
 use LeagueOfData\Models\Item\Item;
 
-interface ItemService
+/**
+ * Item Service interface
+ * @package LeagueOfData\Service|Interfaces
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
+interface ItemServiceInterface
 {
 
     /**
@@ -28,15 +34,6 @@ interface ItemService
      * Store the item objects in the database
      */
     public function store();
-
-    /**
-     * Fetch Items
-     *
-     * @param string $version
-     * @param int    $itemId
-     * @return array Item Objects
-     */
-    public function fetch(string $version, int $itemId = null) : array;
 
     /**
      * Add an item to the collection

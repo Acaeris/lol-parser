@@ -7,12 +7,12 @@ use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
 use LeagueOfData\Models\Champion\ChampionAttack;
 use LeagueOfData\Models\Champion\ChampionDefense;
-use LeagueOfData\Service\Interfaces\ChampionService;
+use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use Psr\Log\LoggerInterface;
 
-final class JsonChampions implements ChampionService
+final class JsonChampions implements ChampionServiceInterface
 {
     /* @var AdapterInterface API adapter */
     private $source;
@@ -35,24 +35,6 @@ final class JsonChampions implements ChampionService
     public function add(Champion $champion)
     {
         $this->champions[] = $champion;
-    }
-
-    /**
-     * Fetch Champions
-     *
-     * @param string $version
-     * @param int    $championId
-     * @return array Champion Objects
-     */
-    public function fetch(string $version, int $championId = null) : array
-    {
-        $this->log->info("Fetching champions for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
-
-        if (isset($championId) && !empty($championId)) {
-            return $this->find($version, $championId);
-        }
-
-        return $this->findAll($version);
     }
 
     /**

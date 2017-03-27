@@ -2,13 +2,13 @@
 
 namespace LeagueOfData\Service\Json;
 
-use LeagueOfData\Service\Interfaces\ItemService;
+use LeagueOfData\Service\Interfaces\ItemServiceInterface;
 use LeagueOfData\Adapters\Request\ItemRequest;
 use LeagueOfData\Models\Item\Item;
 use LeagueOfData\Adapters\AdapterInterface;
 use Psr\Log\LoggerInterface;
 
-final class JsonItems implements ItemService
+final class JsonItems implements ItemServiceInterface
 {
     /* @var AdapterInterface API adapter */
     private $source;
