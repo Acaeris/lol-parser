@@ -62,8 +62,8 @@ final class SqlItems implements ItemServiceInterface
     {
         foreach ($this->items as $item) {
             $request = new ItemRequest(
-                [ 'id' => $item->getID() ],
-                'SELECT id FROM item WHERE id = :id',
+                [ 'item_id' => $item->getID() ],
+                'item_id',
                 $item->toArray()
             );
 
@@ -96,20 +96,17 @@ final class SqlItems implements ItemServiceInterface
      */
     public function fetch(string $version, int $itemId = null): array
     {
-        $this->log->info("Fetching items from DB for version: {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
+        $this->log->info("Fetching items from DB for version: {$version}".(
+            isset($itemId) ? " [{$itemId}]" : ""
+        ));
 
-        $request = new ItemRequest(
-            [ 'version' => $version ],
-            'SELECT * FROM item WHERE version = :version'
-        );
+        $where = [ 'version' => $version ];
 
         if (isset($itemId) && !empty($itemId)) {
-            $request = new ItemRequest(
-                [ 'id' => $itemId, 'version' => $version ],
-                'SELECT * FROM item WHERE id = :id AND version = :version'
-            );
+            $where['item_id'] = $itemId;
         }
 
+        $request = new ItemRequest($where, '*');
         $this->items = [];
         $results = $this->dbAdapter->fetch($request);
 
@@ -119,10 +116,28 @@ final class SqlItems implements ItemServiceInterface
             }
 
             foreach ($results as $item) {
-                $this->items[] = Item::fromState($item);
+                $this->items[] = $this->create($item);
             }
         }
 
         return $this->items;
+    }
+
+    /**
+     * Build the Item object from the given data.
+     *
+     * @param array $item
+     * @return Item
+     */
+    private function create(array $item) : Item
+    {
+        return new Item(
+            $item['item_id'],
+            $item['item_name'],
+            $item['description'],
+            $item['purchase_value'],
+            $item['sale_value'],
+            $item['version']
+        );
     }
 }

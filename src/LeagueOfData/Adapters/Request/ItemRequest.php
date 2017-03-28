@@ -16,15 +16,19 @@ final class ItemRequest implements RequestInterface
     /* @var string API Request URL */
     const API_URL = 'https://global.api.pvp.net/api/lol/static-data/'.'{region}/v1.2/item';
     /* @var string Request Type */
-    const TYPE = "item";
+    const TYPE = "items";
     /* @var array Default parameters for API query */
-    private $apiDefaults = [ 'region' => 'euw', 'itemListData' => 'all' ];
+    private $apiDefaults = [
+        'region' => 'euw',
+        'itemListData' => 'all',
+        'itemData' => 'all',
+    ];
     /* @var string Output Format */
     private $format;
     /* @var array Data to be used in request */
     private $data;
-    /* @var string Request query */
-    private $query;
+    /* @var string Requested columns */
+    private $columns;
     /* @var array Where parameters of request */
     private $where;
 
@@ -32,27 +36,30 @@ final class ItemRequest implements RequestInterface
      * Construct Item Request
      *
      * @param array  $where
-     * @param string $query
+     * @param string $columns
      * @param array  $data
      */
-    public function __construct(array $where, string $query = null, array $data = null)
+    public function __construct(array $where, string $columns = null, array $data = null)
     {
-        $this->validate($where, $query, $data);
+        $this->validate($where, $columns, $data);
         $this->where = $where;
         $this->data = $data;
-        $this->query = $query;
+        $this->columns = $columns;
     }
 
     /**
      * Validate request parameters
      *
-     * @param array       $where Where parameters
-     * @param string|null $query Query string
-     * @param array|null  $data  Request data
+     * @param array       $where   Where parameters
+     * @param string|null $columns Requested columns
+     * @param array|null  $data    Request data
      */
-    public function validate(array $where, string $query = null, array $data = null)
+    public function validate(array $where, string $columns = null, array $data = null)
     {
         if (isset($where['id']) && !is_int($where['id'])) {
+            throw new \InvalidArgumentException("Invalid ID supplied for Item request");
+        }
+        if (isset($where['item_id']) && !is_int($where['item_id'])) {
             throw new \InvalidArgumentException("Invalid ID supplied for Item request");
         }
         if (isset($where['region']) && !in_array($where['region'], self::VALID_REGIONS)) {
@@ -91,10 +98,16 @@ final class ItemRequest implements RequestInterface
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
 
-            return str_replace('{region}', $params['region'], self::API_URL);
+            return str_replace('{region}', $params['region'], self::API_URL).(isset($params['id']) ? '/'.$params['id'] : '');
         }
 
-        return $this->query;
+        $parts = [];
+
+        foreach ($this->where as $key => $value) {
+            $parts[] = "{$key} = :{$key}";
+        }
+
+        return "SELECT ".$this->columns." FROM ".self::TYPE." WHERE ".implode(" AND ", $parts);
     }
 
     /**

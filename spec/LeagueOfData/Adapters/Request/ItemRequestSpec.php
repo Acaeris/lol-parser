@@ -9,7 +9,7 @@ class ItemRequestSpec extends ObjectBehavior
 {
     public function let()
     {
-        $this->beConstructedWith(['region' => 'na'], 'Test Query', ['Test Data']);
+        $this->beConstructedWith(['region' => 'na'], 'test_column', ['Test Data']);
     }
 
     public function it_should_be_initializable()
@@ -20,7 +20,7 @@ class ItemRequestSpec extends ObjectBehavior
 
     public function it_has_a_request_type()
     {
-        $this->type()->shouldReturn('item');
+        $this->type()->shouldReturn('items');
     }
 
     public function it_has_request_data()
@@ -37,7 +37,7 @@ class ItemRequestSpec extends ObjectBehavior
     public function it_returns_the_correct_query_for_an_sql_request()
     {
         $this->requestFormat(RequestInterface::REQUEST_SQL);
-        $this->query()->shouldReturn('Test Query');
+        $this->query()->shouldReturn('SELECT test_column FROM items WHERE region = :region');
     }
 
     public function it_can_process_the_request_parameters()

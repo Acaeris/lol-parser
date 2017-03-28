@@ -66,8 +66,8 @@ final class SqlChampions implements ChampionServiceInterface
     {
         foreach ($this->champions as $champion) {
             $request = new ChampionRequest(
-                ['id' => $champion->getID(), 'version' => $champion->version()],
-                'SELECT name FROM champion WHERE id = :id AND version = :version',
+                ['champion_id' => $champion->getID(), 'version' => $champion->version()],
+                'champion_name',
                 $champion->toArray()
             );
 
@@ -90,20 +90,17 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function fetch(string $version, int $championId = null) : array
     {
-        $this->log->info("Fetching champions from DB for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
+        $this->log->info("Fetching champions from DB for version: {$version}".(
+            isset($championId) ? " [{$championId}]" : ""
+        ));
 
-        $request = new ChampionRequest(
-            [ 'version' => $version ],
-            'SELECT * FROM champion WHERE version = :version'
-        );
+        $where = [ 'version' => $version ];
 
         if (isset($championId) && !empty($championId)) {
-            $request = new ChampionRequest(
-                [ 'id' => $championId, 'version' => $version ],
-                'SELECT * FROM champion WHERE id = :id AND version = :version'
-            );
+            $where['champion_id'] = $championId;
         }
 
+        $request = new ChampionRequest($where, '*');
         $this->champions = [];
         $results = $this->dbAdapter->fetch($request);
 
@@ -145,8 +142,8 @@ final class SqlChampions implements ChampionServiceInterface
         $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
 
         return new Champion(
-            $champion['id'],
-            $champion['name'],
+            $champion['champion_id'],
+            $champion['champion_name'],
             $champion['title'],
             $champion['resourceType'],
             explode('|', $champion['tags']),
