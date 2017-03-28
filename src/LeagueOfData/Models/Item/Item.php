@@ -57,11 +57,11 @@ class Item implements ItemInterface, ImmutableInterface
     public function toArray(): array
     {
         return [
-            'id' => $this->itemID,
-            'name' => $this->name,
+            'item_id' => $this->itemID,
+            'item_name' => $this->name,
             'description' => $this->description,
-            'purchaseValue' => $this->purchaseValue,
-            'saleValue' => $this->saleValue,
+            'purchase_value' => $this->purchaseValue,
+            'sale_value' => $this->saleValue,
             'version' => $this->version
         ];
     }

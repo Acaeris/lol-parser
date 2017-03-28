@@ -12,13 +12,11 @@ class SqlVersionsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request = new VersionRequest(['fullversion' => '7.4.3'],
-            'SELECT fullversion FROM version WHERE fullversion = :fullversion', 
-                [
-                    'fullversion' => '7.4.3'
-                ]);
+        $request = new VersionRequest(['full_version' => '7.4.3'],
+            'full_version', 
+            ['full_version' => '7.4.3']);
         $adapter->fetch($request)->willReturn(['7.4.3']);
-        $request = new VersionRequest([], 'SELECT fullversion FROM version');
+        $request = new VersionRequest([], 'full_version');
         $adapter->fetch($request)->willReturn(['7.4.3', '7.4.2']);
         $this->beConstructedWith($adapter, $logger);
     }
@@ -31,7 +29,7 @@ class SqlVersionsSpec extends ObjectBehavior
 
     public function it_should_find_all_version_data()
     {
-        $this->fetch(new VersionRequest([], 'SELECT fullversion FROM version'))->shouldReturnArrayOfVersions();
+        $this->fetch()->shouldReturnArrayOfVersions();
     }
 
     public function getMatchers()

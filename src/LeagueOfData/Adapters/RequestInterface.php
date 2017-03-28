@@ -34,8 +34,6 @@ interface RequestInterface
      * Set format request will be in
      *
      * @param string $format Request Format
-     *
-     * @return null
      */
     public function requestFormat(string $format);
 
@@ -73,8 +71,6 @@ interface RequestInterface
      * @param array       $where Where parameters
      * @param string|null $query Query string
      * @param array|null  $data  Request data
-     *
-     * @return null
      */
     public function validate(array $where, string $query = null, array $data = null);
 }

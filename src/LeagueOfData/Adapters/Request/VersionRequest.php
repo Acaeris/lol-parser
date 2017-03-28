@@ -16,7 +16,7 @@ final class VersionRequest implements RequestInterface
     /* @var string API Request URL */
     const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/versions';
     /* @var string Request Type */
-    const TYPE = 'version';
+    const TYPE = 'versions';
 
     /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw' ];
@@ -24,8 +24,8 @@ final class VersionRequest implements RequestInterface
     private $format;
     /* @var array Data to be used in request */
     private $data;
-    /* @var string Request query */
-    private $query;
+    /* @var string Requested columns */
+    private $columns;
     /* @var array Where parameters of request */
     private $where;
 
@@ -33,25 +33,25 @@ final class VersionRequest implements RequestInterface
      * Construct Version Request
      *
      * @param array  $where
-     * @param string $query
+     * @param string $columns
      * @param array  $data
      */
-    public function __construct(array $where, string $query = null, array $data = null)
+    public function __construct(array $where, string $columns = null, array $data = null)
     {
-        $this->validate($where, $query, $data);
+        $this->validate($where, $columns, $data);
         $this->where = $where;
         $this->data = $data;
-        $this->query = $query;
+        $this->columns = $columns;
     }
 
     /**
      * Validate request parameters
      *
-     * @param array       $where Where parameters
-     * @param string|null $query Query string
-     * @param array|null  $data  Request data
+     * @param array       $where   Where parameters
+     * @param string|null $columns Requested Columns
+     * @param array|null  $data    Request data
      */
-    public function validate(array $where, string $query = null, array $data = null)
+    public function validate(array $where, string $columns = null, array $data = null)
     {
         if (isset($where['region']) && !in_array($where['region'], self::VALID_REGIONS)) {
             throw new \InvalidArgumentException("Invalid Region supplied for Version request");
@@ -102,7 +102,15 @@ final class VersionRequest implements RequestInterface
             return str_replace('{region}', $params['region'], self::API_URL);
         }
 
-        return $this->query;
+        $parts = [];
+
+        while (list($key, ) = each($this->where)) {
+            $parts[] = "{$key} = :{$key}";
+        }
+
+        $where = count($parts) > 0 ? " WHERE " . implode(" AND ", $parts) : '';
+
+        return "SELECT {$this->columns} FROM ".self::TYPE.$where;
     }
 
     /**

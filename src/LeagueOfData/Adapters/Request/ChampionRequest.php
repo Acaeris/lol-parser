@@ -31,9 +31,9 @@ final class ChampionRequest implements RequestInterface
     /**
      * Construct Champion request
      *
-     * @param array  $where
-     * @param string $columns
-     * @param array  $data
+     * @param array       $where
+     * @param string|null $columns
+     * @param array|null  $data
      */
     public function __construct(array $where, string $columns = null, array $data = null)
     {
@@ -97,7 +97,7 @@ final class ChampionRequest implements RequestInterface
     /**
      * Source of the request
      *
-     * @return string API url || SQL table
+     * @return string API url || SQL query
      */
     public function query() : string
     {
@@ -109,11 +109,13 @@ final class ChampionRequest implements RequestInterface
 
         $parts = [];
 
-        foreach ($this->where as $key => $value) {
+        while (list($key, ) = each($this->where)) {
             $parts[] = "{$key} = :{$key}";
         }
 
-        return "SELECT ".$this->columns." FROM ".self::TYPE." WHERE ".implode(" AND ", $parts);
+        $where = count($parts) > 0 ? " WHERE " . implode(" AND ", $parts) : '';
+
+        return "SELECT {$this->columns} FROM ".self::TYPE.$where;
     }
 
     /**

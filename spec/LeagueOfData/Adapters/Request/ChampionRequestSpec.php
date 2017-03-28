@@ -48,13 +48,19 @@ class ChampionRequestSpec extends ObjectBehavior
     public function it_can_validate_a_correct_id_parameter()
     {
         $this->shouldNotThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
-            ->during('validate', [['id' => 1]]);
+            ->during('validate', [['id' => 1, 'champion_id' => 1]]);
     }
 
     public function it_can_validate_an_incorrect_id_parameter()
     {
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
             ->during('validate', [['id' => 'test']]);
+    }
+
+    public function it_can_validate_an_incorrect_champion_id_parameter()
+    {
+        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
+            ->during('validate', [['champion_id' => 'test']]);
     }
 
     public function it_can_validate_a_correct_region_parameter()

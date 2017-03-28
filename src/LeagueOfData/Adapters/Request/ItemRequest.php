@@ -103,11 +103,13 @@ final class ItemRequest implements RequestInterface
 
         $parts = [];
 
-        foreach ($this->where as $key => $value) {
+        while (list($key, ) = each($this->where)) {
             $parts[] = "{$key} = :{$key}";
         }
 
-        return "SELECT ".$this->columns." FROM ".self::TYPE." WHERE ".implode(" AND ", $parts);
+        $where = count($parts) > 0 ? " WHERE " . implode(" AND ", $parts) : '';
+
+        return "SELECT {$this->columns} FROM ".self::TYPE.$where;
     }
 
     /**

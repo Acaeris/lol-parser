@@ -16,7 +16,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * @var int Champion ID
      */
-    private $id;
+    private $championId;
 
     /**
      * @var string Champion Name
@@ -51,7 +51,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * Construct a Champion object
      *
-     * @param int                    $id           Champion ID
+     * @param int                    $championId   Champion ID
      * @param string                 $name         Champion Name
      * @param string                 $title        Champion Title
      * @param string                 $resourceType Champion Resource Type
@@ -60,7 +60,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      * @param string                 $version      Full version number
      */
     public function __construct(
-        int $id,
+        int $championId,
         string $name,
         string $title,
         string $resourceType,
@@ -70,7 +70,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     ) {
         $this->constructImmutable();
 
-        $this->id = $id;
+        $this->championId = $championId;
         $this->name = $name;
         $this->title = $title;
         $this->resourceType = $resourceType;
@@ -87,14 +87,14 @@ final class Champion implements ChampionInterface, ImmutableInterface
      */
     public function toArray() : array
     {
-        return array_merge([
-            'id' => $this->id,
-            'name' => $this->name,
+        return [
+            'champion_id' => $this->championId,
+            'champion_name' => $this->name,
             'title' => $this->title,
-            'resourceType' => $this->resourceType,
+            'resource_type' => $this->resourceType,
             'tags' => $this->tagsAsString(),
             'version' => $this->version
-        ], $this->stats->toArray());
+        ];
     }
 
     /**
@@ -104,7 +104,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      */
     public function getID() : int
     {
-        return $this->id;
+        return $this->championId;
     }
 
     /**

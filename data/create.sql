@@ -6,28 +6,28 @@ CREATE TABLE IF NOT EXISTS realms (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS versions (
-  fullVersion varchar(16) NOT NULL,
-  season int(11) DEFAULT NULL,
-  version int(11) DEFAULT NULL,
-  hotfix int(11) DEFAULT NULL,
-  PRIMARY KEY (fullVersion),
+  full_version varchar(16) NOT NULL,
+  season int DEFAULT NULL,
+  version int DEFAULT NULL,
+  hotfix int DEFAULT NULL,
+  PRIMARY KEY (full_version),
   KEY version (season,version,hotfix)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champions (
-  champion_id int(11) NOT NULL,
+  champion_id int NOT NULL,
   champion_name varchar(45) DEFAULT NULL,
   title varchar(45) DEFAULT NULL,
   tags varchar(45) DEFAULT NULL,
-  resourceType varchar(20) DEFAULT NULL,
+  resource_type varchar(20) DEFAULT NULL,
   version varchar(16) NOT NULL,
   PRIMARY KEY (champion_id, version),
-  KEY champ_name (champion_name),
-  KEY champ_version (version)
+  KEY champ_names (champion_name),
+  KEY champ_versions (version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champion_stats (
-  champion_id int(11) NOT NULL,
+  champion_id int NOT NULL,
   stat_name varchar(45) NOT NULL,
   stat_value float DEFAULT NULL,
   version varchar(16) NOT NULL,
@@ -36,20 +36,20 @@ CREATE TABLE IF NOT EXISTS champion_stats (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS items (
-  item_id int(11) NOT NULL,
+  item_id int NOT NULL,
   item_name varchar(45) DEFAULT NULL,
   description mediumtext DEFAULT NULL,
-  purchaseValue int(8) DEFAULT NULL,
-  saleValue int(8) DEFAULT NULL,
+  purchase_value int DEFAULT NULL,
+  sale_value int DEFAULT NULL,
   image varchar(45) DEFAULT NULL,
   version varchar(16) NOT NULL,
   PRIMARY KEY (item_id, version),
-  KEY itemName (item_name),
-  KEY itemVersion (version)
+  KEY item_names (item_name),
+  KEY item_versions (version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS item_stats (
-  item_id int(11) NOT NULL,
+  item_id int NOT NULL,
   stat_name varchar(45) NOT NULL,
   stat_value float DEFAULT NULL,
   version varchar(16) NOT NULL,

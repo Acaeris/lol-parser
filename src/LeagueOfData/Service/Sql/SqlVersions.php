@@ -62,14 +62,9 @@ final class SqlVersions implements VersionServiceInterface
     {
         foreach ($this->versions as $version) {
             $request = new VersionRequest(
-                [ 'fullversion' => $version->fullVersion() ],
-                'SELECT fullversion FROM version WHERE fullversion = :fullversion',
-                [
-                    'fullVersion' => $version->fullVersion(),
-                    'season' => $version->season(),
-                    'version' => $version->majorVersion(),
-                    'hotfix' => $version->hotfix(),
-                ]
+                [ 'full_version' => $version->fullVersion() ],
+                'full_version',
+                $version->toArray()
             );
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
@@ -87,7 +82,7 @@ final class SqlVersions implements VersionServiceInterface
     public function fetch() : array
     {
         $this->versions = [];
-        $request = new VersionRequest([], 'SELECT fullversion FROM version');
+        $request = new VersionRequest([], 'full_version');
         $results = $this->dbAdapter->fetch($request);
 
         if ($results !== false) {

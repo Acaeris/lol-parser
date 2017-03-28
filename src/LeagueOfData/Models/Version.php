@@ -87,4 +87,20 @@ final class Version implements VersionInterface, ImmutableInterface
     {
         return $this->hotfix;
     }
+
+    /**
+     * Correctly convert the object to an array.
+     * Use instead of PHP's type conversion
+     *
+     * @return array Version data as an array
+     */
+    public function toArray() : array
+    {
+        return [
+            'full_version' => $this->fullVersion,
+            'season' => $this->season,
+            'version' => $this->version,
+            'hotfix' => $this->hotfix,
+        ];
+    }
 }

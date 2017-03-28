@@ -19,7 +19,7 @@ class VersionRequestSpec extends ObjectBehavior
 
     public function it_has_a_request_type()
     {
-        $this->type()->shouldReturn('version');
+        $this->type()->shouldReturn('versions');
     }
 
     public function it_has_request_data()
