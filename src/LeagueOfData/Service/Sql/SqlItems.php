@@ -125,5 +125,4 @@ final class SqlItems implements ItemServiceInterface
 
         return $this->items;
     }
-
 }

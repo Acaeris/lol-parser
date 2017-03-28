@@ -25,9 +25,9 @@ final class JsonVersions implements VersionServiceInterface
 
     /**
      * Set up version service
-     * 
+     *
      * @param AdapterInterface $adapter
-     * @param LoggerInterface $log
+     * @param LoggerInterface  $log
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
@@ -68,7 +68,8 @@ final class JsonVersions implements VersionServiceInterface
      *
      * @param Version $version
      */
-    public function add(Version $version) {
+    public function add(Version $version)
+    {
         $this->versions[] = $version;
     }
 
@@ -77,15 +78,16 @@ final class JsonVersions implements VersionServiceInterface
      *
      * @param array $versions Version objects
      */
-    public function addAll(array $versions) {
+    public function addAll(array $versions)
+    {
         $this->versions = array_merge($this->versions, $versions);
     }
 
     /**
      * Store the version objects in the DB
      */
-    public function store() {
+    public function store()
+    {
         $this->log->error("Attempting to store data via API. Not available.");
     }
-
 }

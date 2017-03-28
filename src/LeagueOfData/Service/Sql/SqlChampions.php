@@ -121,7 +121,7 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
-     * Get collection of champions for transfer to a different process
+     * Get collection of champions for transfer to a different process.
      *
      * @return array Champion objects
      */
@@ -130,23 +130,71 @@ final class SqlChampions implements ChampionServiceInterface
         return $this->champions;
     }
 
-    public function create(array $champion) : Champion
+    /**
+     * Build the Champion object from the given data.
+     *
+     * @param array $champion
+     * @return Champion
+     */
+    private function create(array $champion) : Champion
     {
-        $health = new ChampionRegenResource(
-            ChampionRegenResource::RESOURCE_HEALTH,
-            $champion[ChampionRegenResource::RESOURCE_HEALTH],
-            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'PerLevel'],
-            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'Regen'],
-            $champion[ChampionRegenResource::RESOURCE_HEALTH . 'RegenPerLevel']
+        $health = $this->createResource(ChampionRegenResource::RESOURCE_HEALTH, $champion);
+        $resource = $this->createResource(ChampionRegenResource::RESOURCE_MANA, $champion);
+        $attack = $this->createAttack($champion);
+        $armor = $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion);
+        $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
+
+        return new Champion(
+            $champion['id'],
+            $champion['name'],
+            $champion['title'],
+            $champion['resourceType'],
+            explode('|', $champion['tags']),
+            new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']),
+            $champion['version']
         );
-        $resource = new ChampionRegenResource(
-            ChampionRegenResource::RESOURCE_MANA,
-            $champion[ChampionRegenResource::RESOURCE_MANA],
-            $champion[ChampionRegenResource::RESOURCE_MANA . 'PerLevel'],
-            $champion[ChampionRegenResource::RESOURCE_MANA . 'Regen'],
-            $champion[ChampionRegenResource::RESOURCE_MANA . 'RegenPerLevel']
+    }
+
+    /**
+     * Create Champion Resource object
+     * @param string $type
+     * @param array $champion
+     * @return ChampionRegenResource
+     */
+    private function createResource(string $type, array $champion) : ChampionRegenResource
+    {
+        return new ChampionRegenResource(
+            $type,
+            $champion[$type],
+            $champion[$type.'PerLevel'],
+            $champion[$type.'Regen'],
+            $champion[$type.'RegenPerLevel']
         );
-        $attack = new ChampionAttack(
+    }
+
+    /**
+     * Create Champion Defense object
+     * @param string $type
+     * @param array $champion
+     * @return ChampionDefense
+     */
+    private function createDefense(string $type, array $champion) : ChampionDefense
+    {
+        return new ChampionDefense(
+            $type,
+            $champion[$type],
+            $champion[$type.'PerLevel']
+        );
+    }
+
+    /**
+     * Create Champion Attack object
+     * @param array $champion
+     * @return ChampionAttack
+     */
+    private function createAttack(array $champion) : ChampionAttack
+    {
+        return new ChampionAttack(
             $champion['attackRange'],
             $champion['attackDamage'],
             $champion['attackDamagePerLevel'],
@@ -154,28 +202,6 @@ final class SqlChampions implements ChampionServiceInterface
             $champion['attackSpeedPerLevel'],
             $champion['crit'],
             $champion['critPerLevel']
-        );
-        $armor = new ChampionDefense(
-            ChampionDefense::DEFENSE_ARMOR,
-            $champion[ChampionDefense::DEFENSE_ARMOR],
-            $champion[ChampionDefense::DEFENSE_ARMOR.'PerLevel']
-        );
-        $magicResist = new ChampionDefense(
-            ChampionDefense::DEFENSE_MAGICRESIST,
-            $champion[ChampionDefense::DEFENSE_MAGICRESIST],
-            $champion[ChampionDefense::DEFENSE_MAGICRESIST.'PerLevel']
-        );
-
-        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion['moveSpeed']);
-        
-        return new Champion(
-            $champion['id'],
-            $champion['name'],
-            $champion['title'],
-            $champion['resourceType'],
-            explode('|', $champion['tags']),
-            $stats,
-            $champion['version']
         );
     }
 }

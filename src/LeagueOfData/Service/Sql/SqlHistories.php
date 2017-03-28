@@ -119,7 +119,7 @@ final class SqlHistories implements HistoryService
                 $this->dbAdapter->update($request);
                 continue;
             }
-            
+
             $this->dbAdapter->insert($request);
         }
     }

@@ -12,6 +12,12 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Champion object JSON factory.
+ * @package LeagueOfData\Service|Json
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 final class JsonChampions implements ChampionServiceInterface
 {
     /* @var AdapterInterface API adapter */
@@ -21,6 +27,12 @@ final class JsonChampions implements ChampionServiceInterface
     /* @var array Champion Objects */
     private $champions;
 
+    /**
+     * Setup champion factory service
+     *
+     * @param AdapterInterface $adapter
+     * @param LoggerInterface  $log
+     */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
         $this->source = $adapter;
@@ -61,7 +73,7 @@ final class JsonChampions implements ChampionServiceInterface
 
         $region = 'euw';
         $params = ['version' => $version, 'region' => $region];
-        
+
         if (isset($championId) && !empty($championId)) {
             $params['id'] = $championId;
         }
@@ -69,7 +81,7 @@ final class JsonChampions implements ChampionServiceInterface
         $request = new ChampionRequest($params);
         $response = $this->source->fetch($request);
         $this->champions = [];
-        
+
         if (!isset($response->data)) {
             $temp = new \stdClass();
             $temp->data = [ $response ];
@@ -104,27 +116,69 @@ final class JsonChampions implements ChampionServiceInterface
     /**
      * Create the champion object from array data
      *
-     * @param array $champion
+     * @param \stdClass $champion
      * @param string $version
      * @return Champion
      */
     private function create(\stdClass $champion, string $version) : Champion
     {
-        $health = new ChampionRegenResource(
-            ChampionRegenResource::RESOURCE_HEALTH,
+        $health = $this->createResource(ChampionRegenResource::RESOURCE_HEALTH, $champion);
+        $resource = $this->createResource(ChampionRegenResource::RESOURCE_MANA, $champion);
+        $attack = $this->createAttack($champion);
+        $armor = $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion);
+        $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
+
+        return new Champion(
+            $champion->id,
+            $champion->name,
+            $champion->title,
+            $champion->partype,
+            $champion->tags,
+            new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion->stats->movespeed),
+            $version
+        );
+    }
+
+    /**
+     * Create Champion Resource object
+     * @param string $type
+     * @param \stdClass $champion
+     * @return ChampionRegenResource
+     */
+    private function createResource(string $type, \stdClass $champion) : ChampionRegenResource
+    {
+        return new ChampionRegenResource(
+            $type,
             $champion->stats->hp,
             $champion->stats->hpperlevel,
             $champion->stats->hpregen,
             $champion->stats->hpregenperlevel
         );
-        $resource = new ChampionRegenResource(
-            ChampionRegenResource::RESOURCE_MANA,
-            $champion->stats->mp,
-            $champion->stats->mpperlevel,
-            $champion->stats->mpregen,
-            $champion->stats->mpregenperlevel
+    }
+
+    /**
+     * Create Champion Defense object
+     * @param string $type
+     * @param \stdClass $champion
+     * @return ChampionDefense
+     */
+    private function createDefense(string $type, \stdClass $champion) : ChampionDefense
+    {
+        return new ChampionDefense(
+            $type,
+            $champion->stats->armor,
+            $champion->stats->armorperlevel
         );
-        $attack = new ChampionAttack(
+    }
+
+    /**
+     * Create Champion Attack object
+     * @param \stdClass $champion
+     * @return ChampionAttack
+     */
+    private function createAttack(\stdClass $champion) : ChampionAttack
+    {
+        return new ChampionAttack(
             $champion->stats->attackrange,
             $champion->stats->attackdamage,
             $champion->stats->attackdamageperlevel,
@@ -132,27 +186,6 @@ final class JsonChampions implements ChampionServiceInterface
             $champion->stats->attackspeedperlevel,
             $champion->stats->crit,
             $champion->stats->critperlevel
-        );
-        $armor = new ChampionDefense(
-            ChampionDefense::DEFENSE_ARMOR,
-            $champion->stats->armor,
-            $champion->stats->armorperlevel
-        );
-        $magicResist = new ChampionDefense(
-            ChampionDefense::DEFENSE_MAGICRESIST,
-            $champion->stats->spellblock,
-            $champion->stats->spellblockperlevel
-        );
-        $stats = new ChampionStats($health, $resource, $attack, $armor, $magicResist, $champion->stats->movespeed);
-        
-        return new Champion(
-            $champion->id,
-            $champion->name,
-            $champion->title,
-            $champion->partype,
-            $champion->tags,
-            $stats,
-            $version
         );
     }
 }
