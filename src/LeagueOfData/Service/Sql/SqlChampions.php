@@ -12,6 +12,7 @@ use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
 use LeagueOfData\Models\Champion\ChampionAttack;
 use LeagueOfData\Models\Champion\ChampionDefense;
+use LeagueOfData\Models\ResourceTrait;
 
 /**
  * Champion object SQL factory.
@@ -84,34 +85,15 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
-     * Store the champion stats in the database
-     * @param Champion $champion
+     * Get collection of champions for transfer to a different process.
+     *
+     * @return array Champion objects
      */
-    private function storeStats(Champion $champion)
+    public function transfer() : array
     {
-        $stats = $champion->stats()->toArray();
-
-        foreach ($stats as $key => $value) {
-            $request = new ChampionStatsRequest(
-                ['champion_id' => $champion->getID(), 'version' => $champion->version(), 'stat_name' => $key],
-                'champion_id',
-                [
-                    'champion_id' => $champion->getID(),
-                    'stat_name' => $key,
-                    'stat_value' => $value,
-                    'version' => $champion->version(),
-                ]
-            );
-
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
-
-                return;
-            }
-            $this->dbAdapter->insert($request);
-        }
+        return $this->champions;
     }
-    
+
     /**
      * Fetch Champions
      *
@@ -179,13 +161,32 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
-     * Get collection of champions for transfer to a different process.
-     *
-     * @return array Champion objects
+     * Store the champion stats in the database
+     * @param Champion $champion
      */
-    public function transfer() : array
+    private function storeStats(Champion $champion)
     {
-        return $this->champions;
+        $stats = $champion->stats()->toArray();
+
+        foreach ($stats as $key => $value) {
+            $request = new ChampionStatsRequest(
+                ['champion_id' => $champion->getID(), 'version' => $champion->version(), 'stat_name' => $key],
+                'champion_id',
+                [
+                    'champion_id' => $champion->getID(),
+                    'stat_name' => $key,
+                    'stat_value' => $value,
+                    'version' => $champion->version(),
+                ]
+            );
+
+            if ($this->dbAdapter->fetch($request)) {
+                $this->dbAdapter->update($request);
+
+                return;
+            }
+            $this->dbAdapter->insert($request);
+        }
     }
 
     /**
@@ -221,12 +222,14 @@ final class SqlChampions implements ChampionServiceInterface
      */
     private function createResource(string $type, array $stats) : ChampionRegenResource
     {
+        $code = ResourceTrait::$validResources[strtolower($type)];
+
         return new ChampionRegenResource(
-            $type,
-            $stats[$type],
-            $stats[$type.'PerLevel'],
-            $stats[$type.'Regen'],
-            $stats[$type.'RegenPerLevel']
+            $code,
+            $stats[$code],
+            $stats[$code.'PerLevel'],
+            $stats[$code.'Regen'],
+            $stats[$code.'RegenPerLevel']
         );
     }
 

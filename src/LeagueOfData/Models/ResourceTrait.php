@@ -15,32 +15,28 @@ namespace LeagueOfData\Models;
  */
 trait ResourceTrait
 {
-    private $validResources = [
-        [
-            'shortCode' => 'hp',
-            'fullText' => 'Health',
-            'color' => 'red'
-        ],
-        [
-            'shortCode' => 'armor',
-            'fullText' => 'Armor',
-            'color' => 'grey'
-        ],
-        [
-            'shortCode' => 'mp',
-            'fullText' => 'Mana',
-            'color' => 'blue',
-        ],
-        [
-            'shortCode' => 'rage',
-            'fullText' => 'Rage',
-            'color' => 'orange'
-        ],
-        [
-            'shortCode' => 'spellBlock',
-            'fullText' => 'Magic Resistance',
-            'color' => 'light blue'
-        ]
+    public static $validResources = [
+        'hp' => 'hp',
+        'mp' => 'mp',
+        'mana' => 'mp',
+        'rage' => 'rage',
+        'heat' => 'heat',
+        'energy' => 'energy',
+        'wind' => 'wind',
+        'flow' => 'flow',
+        'gnarfury' => 'fury',
+        'fury' => 'fury',
+        'dragonfury' => 'fury',
+        'battlefury' => 'fury',
+        'blood well' => 'blood',
+        'bloodwell' => 'blood',
+        'crimson rush' => 'rush',
+        'ferocity' => 'ferocity',
+        'courage' => 'courage',
+        'shield' => 'shield',
+        'none' => 'na',
+        'armor' => 'armor',
+        'spellblock' => 'spellblock',
     ];
 
     /** @var string The type of resource this object represents */
@@ -50,20 +46,31 @@ trait ResourceTrait
     /** @var float The amount the maximum resource increases per level */
     private $perLevel;
 
+    /**
+     * Create the resource
+     * @param string $type
+     * @param float $baseValue
+     * @param float $perLevel
+     */
     public function constructResource(string $type, float $baseValue, float $perLevel)
     {
         $this->validateType($type);
 
-        $this->type = $type;
         $this->baseValue = $baseValue;
         $this->perLevel = $perLevel;
     }
 
+    /**
+     * Validate the type of resource
+     * @param string $type
+     * @throws \InvalidArgumentException
+     */
     private function validateType(string $type)
     {
         $found = false;
-        foreach ($this->validResources as $resourceType) {
-            if ($resourceType['shortCode'] === $type || $resourceType['fullText'] === $type) {
+        foreach (self::$validResources as $code => $index) {
+            if ($code === strtolower($type)) {
+                $this->type = $index;
                 $found = true;
             }
         }

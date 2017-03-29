@@ -82,14 +82,16 @@ final class JsonChampions implements ChampionServiceInterface
         $response = $this->source->fetch($request);
         $this->champions = [];
 
-        if (!isset($response->data)) {
-            $temp = new \stdClass();
-            $temp->data = [ $response ];
-            $response = $temp;
-        }
+        if ($response !== false) {
+            if (!isset($response->data)) {
+                $temp = new \stdClass();
+                $temp->data = [ $response ];
+                $response = $temp;
+            }
 
-        foreach ($response->data as $champion) {
-            $this->champions[] = $this->create($champion, $version);
+            foreach ($response->data as $champion) {
+                $this->champions[] = $this->create($champion, $version);
+            }
         }
 
         return $this->champions;
@@ -122,8 +124,8 @@ final class JsonChampions implements ChampionServiceInterface
      */
     private function create(\stdClass $champion, string $version) : Champion
     {
-        $health = $this->createResource(ChampionRegenResource::RESOURCE_HEALTH, $champion);
-        $resource = $this->createResource(ChampionRegenResource::RESOURCE_MANA, $champion);
+        $health = $this->createHealth($champion);
+        $resource = $this->createResource($champion->partype, $champion);
         $attack = $this->createAttack($champion);
         $armor = $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion);
         $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
@@ -140,6 +142,22 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
+     * Create Champion Health object
+     * @param \stdClass $champion
+     * @return ChampionRegenResource
+     */
+    private function createHealth(\stdClass $champion) : ChampionRegenResource
+    {
+        return new ChampionRegenResource(
+            ChampionRegenResource::RESOURCE_HEALTH,
+            $champion->stats->hp,
+            $champion->stats->hpperlevel,
+            $champion->stats->hpregen,
+            $champion->stats->hpregenperlevel
+        );
+    }
+
+    /**
      * Create Champion Resource object
      * @param string $type
      * @param \stdClass $champion
@@ -149,10 +167,10 @@ final class JsonChampions implements ChampionServiceInterface
     {
         return new ChampionRegenResource(
             $type,
-            $champion->stats->hp,
-            $champion->stats->hpperlevel,
-            $champion->stats->hpregen,
-            $champion->stats->hpregenperlevel
+            $champion->stats->mp,
+            $champion->stats->mpperlevel,
+            $champion->stats->mpregen,
+            $champion->stats->mpregenperlevel
         );
     }
 

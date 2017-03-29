@@ -55,14 +55,16 @@ final class JsonItems implements ItemServiceInterface
         $response = $this->source->fetch($request);
         $this->items = [];
 
-        if (!isset($response->data)) {
-            $temp = new \stdClass();
-            $temp->data = [ $response ];
-            $response = $temp;
-        }
+        if ($response !== false) {
+            if (!isset($response->data)) {
+                $temp = new \stdClass();
+                $temp->data = [ $response ];
+                $response = $temp;
+            }
 
-        foreach ($response->data as $item) {
-            $this->items[] = $this->create($item, $version);
+            foreach ($response->data as $item) {
+                $this->items[] = $this->create($item, $version);
+            }
         }
 
         return $this->items;

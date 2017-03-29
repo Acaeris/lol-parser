@@ -108,7 +108,7 @@ final class VersionRequest implements RequestInterface
             $parts[] = "{$key} = :{$key}";
         }
 
-        $where = count($parts) > 0 ? " WHERE " . implode(" AND ", $parts) : '';
+        $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
 
         return "SELECT {$this->columns} FROM ".self::TYPE.$where;
     }

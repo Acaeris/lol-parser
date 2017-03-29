@@ -8,7 +8,8 @@ use LeagueOfData\Adapters\RequestInterface;
  * Request object for Champion Stats
  *
  * @package LeagueOfData|Adapters\Request
- * @author 
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
  */
 class ChampionStatsRequest implements RequestInterface
 {
@@ -109,5 +110,4 @@ class ChampionStatsRequest implements RequestInterface
     {
         return $this->where;
     }
-
 }

@@ -104,7 +104,9 @@ final class ChampionRequest implements RequestInterface
         if ($this->format === RequestInterface::REQUEST_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
 
-            return str_replace('{region}', $params['region'], self::API_URL).(isset($params['id']) ? '/'.$params['id'] : '');
+            return str_replace('{region}', $params['region'], self::API_URL).(
+                isset($params['id']) ? '/'.$params['id'] : ''
+            );
         }
 
         $parts = [];
@@ -113,7 +115,7 @@ final class ChampionRequest implements RequestInterface
             $parts[] = "{$key} = :{$key}";
         }
 
-        $where = count($parts) > 0 ? " WHERE " . implode(" AND ", $parts) : '';
+        $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
 
         return "SELECT {$this->columns} FROM ".self::TYPE.$where;
     }
