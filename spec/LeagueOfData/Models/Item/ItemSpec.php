@@ -3,12 +3,15 @@
 namespace spec\LeagueOfData\Models\Item;
 
 use PhpSpec\ObjectBehavior;
+use LeagueOfData\Models\Interfaces\StatInterface;
 
 class ItemSpec extends ObjectBehavior
 {
-    public function let()
+    public function let(StatInterface $itemStat)
     {
-        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, '7.4.3');
+        $itemStat->key()->willReturn('moveSpeed');
+        $itemStat->value()->willReturn((float) 30);
+        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, [$itemStat], '7.4.3');
     }
 
     public function it_is_initializable()
@@ -52,14 +55,24 @@ class ItemSpec extends ObjectBehavior
         $this->version()->shouldReturn('7.4.3');
     }
 
+    public function it_has_item_stats()
+    {
+        $this->stats()->shouldReturn(['moveSpeed' => (float) 30]);
+    }
+
+    public function it_can_fetch_a_specific_stat()
+    {
+        $this->getStat('moveSpeed')->shouldReturn((float) 30);
+    }
+
     public function it_can_be_converted_to_array_for_storage()
     {
         $this->toArray()->shouldReturn([
-            'id' => 1,
-            'name' => 'Infinity Edge',
+            'item_id' => 1,
+            'item_name' => 'Infinity Edge',
             'description' => 'Test Description',
-            'purchaseValue' => 300,
-            'saleValue' => 210,
+            'purchase_value' => 300,
+            'sale_value' => 210,
             'version' => '7.4.3'
         ]);
     }

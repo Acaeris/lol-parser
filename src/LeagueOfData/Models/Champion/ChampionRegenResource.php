@@ -16,9 +16,10 @@ use LeagueOfData\Models\Interfaces\ResourceInterface;
  * - Rage ('rage')
  * - Energy ('energy')
  * - Wind ('wind')
- * - Ammo ('ammo')
  *
- * @author caitlyn.osborne
+ * @package LeagueOfData\Service|Sql
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
  */
 final class ChampionRegenResource implements ChampionRegenResourceInterface, ResourceInterface, ImmutableInterface
 {

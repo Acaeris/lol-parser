@@ -8,6 +8,7 @@ use LeagueOfData\Models\Interfaces\ItemInterface;
 
 class Item implements ItemInterface, ImmutableInterface
 {
+
     use ImmutableTrait {
         __construct as constructImmutable;
     }
@@ -27,6 +28,9 @@ class Item implements ItemInterface, ImmutableInterface
     /* @var int Gold sale value */
     private $saleValue;
 
+    /* @var array Item stats */
+    private $stats;
+
     /* @var string version */
     private $version;
 
@@ -36,6 +40,7 @@ class Item implements ItemInterface, ImmutableInterface
         string $description,
         int $purchaseValue,
         int $saleValue,
+        array $stats,
         string $version
     ) {
     
@@ -47,6 +52,7 @@ class Item implements ItemInterface, ImmutableInterface
         $this->saleValue = $saleValue;
         $this->description = $description;
         $this->version = $version;
+        $this->stats = $stats;
     }
 
     /**
@@ -124,5 +130,36 @@ class Item implements ItemInterface, ImmutableInterface
     public function version() : string
     {
         return $this->version;
+    }
+
+    /**
+     * Fetch the item stats
+     * @return array
+     */
+    public function stats() : array
+    {
+        $stats = [];
+
+        foreach ($this->stats as $stat) {
+            $stats[$stat->key()] = $stat->value();
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Fetch a specific stat
+     * @param string $key
+     * @return float
+     */
+    public function getStat(string $key) : float
+    {
+        foreach ($this->stats as $stat) {
+            if ($stat->key() === $key) {
+                return $stat->value();
+            }
+        }
+
+        return 0;
     }
 }

@@ -5,9 +5,16 @@ namespace LeagueOfData\Service\Json;
 use LeagueOfData\Service\Interfaces\ItemServiceInterface;
 use LeagueOfData\Adapters\Request\ItemRequest;
 use LeagueOfData\Models\Item\Item;
+use LeagueOfData\Models\Item\ItemStat;
 use LeagueOfData\Adapters\AdapterInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Item object JSON factory.
+ * @package LeagueOfData\Service|Json
+ * @author  Caitlyn Osborne <acaeris@gmail.com>
+ * @link    http://lod.gg League of Data
+ */
 final class JsonItems implements ItemServiceInterface
 {
     /* @var AdapterInterface API adapter */
@@ -17,6 +24,12 @@ final class JsonItems implements ItemServiceInterface
     /* @var array Item Objects */
     private $items;
 
+    /**
+     * Setup item factory service
+     *
+     * @param AdapterInterface $adapter
+     * @param LoggerInterface  $log
+     */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
         $this->source = $adapter;
@@ -30,7 +43,19 @@ final class JsonItems implements ItemServiceInterface
      */
     public function add(Item $item)
     {
-        $this->items[] = $item;
+        $this->items[$item->getID()] = $item;
+    }
+
+    /**
+     * Add all item objects to internal array
+     *
+     * @param array $items Item objects
+     */
+    public function addAll(array $items)
+    {
+        foreach ($items as $item) {
+            $this->items[$item->getID()] = $item;
+        }
     }
 
     /**
@@ -42,7 +67,9 @@ final class JsonItems implements ItemServiceInterface
      */
     public function fetch(string $version, int $itemId = null) : array
     {
-        $this->log->info("Fetching items from API for version: {$version}".(isset($itemId) ? " [{$itemId}]" : ""));
+        $this->log->info("Fetching items from API for version: {$version}".(
+            isset($itemId) ? " [{$itemId}]" : ""
+        ));
 
         $region = 'euw';
         $params = [ 'version' => $version, 'region' => $region ];
@@ -63,9 +90,11 @@ final class JsonItems implements ItemServiceInterface
             }
 
             foreach ($response->data as $item) {
-                $this->items[] = $this->create($item, $version);
+                $this->items[$item->id] = $this->create($item, $version);
             }
         }
+
+        $this->log->info(count($this->items)." items fetched from API");
 
         return $this->items;
     }
@@ -89,7 +118,7 @@ final class JsonItems implements ItemServiceInterface
     }
 
     /**
-     * Create the item object from array data
+     * Create the item object from JSON data
      *
      * @param array $item
      * @param string $version
@@ -97,13 +126,33 @@ final class JsonItems implements ItemServiceInterface
      */
     private function create(\stdClass $item, string $version) : Item
     {
+        $stats = $this->createStats($item);
+
         return new Item(
             $item->id,
             (isset($item->name) ? $item->name : ''),
             (isset($item->description) ? $item->description : ''),
             (isset($item->gold->total) ? $item->gold->total : ''),
             (isset($item->gold->sell) ? $item->gold->sell : ''),
+            $stats,
             $version
         );
+    }
+
+    /**
+     * Create the item stats objects from JSON data
+     *
+     * @param \stdClass $item
+     * @return array
+     */
+    private function createStats(\stdClass $item) : array
+    {
+        $stats = [];
+
+        foreach ($item->stats as $key => $value) {
+            $stats[] = new ItemStat($key, $value);
+        }
+
+        return $stats;
     }
 }

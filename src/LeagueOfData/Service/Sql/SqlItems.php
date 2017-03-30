@@ -6,7 +6,9 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ItemServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Models\Item\Item;
+use LeagueOfData\Models\Item\ItemStat;
 use LeagueOfData\Adapters\Request\ItemRequest;
+use LeagueOfData\Adapters\Request\ItemStatsRequest;
 
 /**
  * Item object SQL factory.
@@ -42,7 +44,7 @@ final class SqlItems implements ItemServiceInterface
      */
     public function add(Item $item)
     {
-        $this->items[] = $item;
+        $this->items[$item->getID()] = $item;
     }
 
     /**
@@ -52,7 +54,9 @@ final class SqlItems implements ItemServiceInterface
      */
     public function addAll(array $items)
     {
-        $this->items = array_merge($this->items, $items);
+        foreach ($items as $item) {
+            $this->items[$item->getID()] = $item;
+        }
     }
 
     /**
@@ -60,12 +64,16 @@ final class SqlItems implements ItemServiceInterface
      */
     public function store()
     {
+        $this->log->info("Storing ".count($this->items)." new/updated items");
+
         foreach ($this->items as $item) {
             $request = new ItemRequest(
                 [ 'item_id' => $item->getID() ],
                 'item_id',
                 $item->toArray()
             );
+
+            $this->storeStats($item);
 
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
@@ -105,7 +113,7 @@ final class SqlItems implements ItemServiceInterface
         if (isset($itemId) && !empty($itemId)) {
             $where['item_id'] = $itemId;
         }
-
+        
         $request = new ItemRequest($where, '*');
         $this->items = [];
         $results = $this->dbAdapter->fetch($request);
@@ -116,7 +124,10 @@ final class SqlItems implements ItemServiceInterface
             }
 
             foreach ($results as $item) {
-                $this->items[] = $this->create($item);
+                $this->items[$item['item_id']] = $this->create(
+                    $item,
+                    $this->fetchStats($item['item_id'], $item['version'])
+                );
             }
         }
 
@@ -124,12 +135,64 @@ final class SqlItems implements ItemServiceInterface
     }
 
     /**
+     * Fetch the stats for the given item
+     * @param int $itemId
+     * @param string $version
+     * @return array
+     */
+    private function fetchStats(int $itemId, string $version) : array
+    {
+        $request = new ItemStatsRequest(
+            ['item_id' => $itemId, 'version' => $version],
+            '*'
+        );
+        $stats = [];
+        $results = $this->dbAdapter->fetch($request);
+
+        if ($results !== false) {
+            foreach ($results as $stat) {
+                $stats[] = new ItemStat($stat['stat_name'], $stat['stat_value']);
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Store the item stats in the database
+     * @param Item $item
+     */
+    private function storeStats(Item $item)
+    {
+        foreach ($item->stats() as $key => $value) {
+            $request = new ItemStatsRequest(
+                ['item_id' => $item->getID(), 'version' => $item->version(), 'stat_name' => $key],
+                'item_id',
+                [
+                    'item_id' => $item->getID(),
+                    'stat_name' => $key,
+                    'stat_value' => $value,
+                    'version' => $item->version(),
+                ]
+            );
+
+            if ($this->dbAdapter->fetch($request)) {
+                $this->dbAdapter->update($request);
+
+                return;
+            }
+            $this->dbAdapter->insert($request);
+        }
+    }
+
+    /**
      * Build the Item object from the given data.
      *
      * @param array $item
+     * @param array $stats
      * @return Item
      */
-    private function create(array $item) : Item
+    private function create(array $item, array $stats) : Item
     {
         return new Item(
             $item['item_id'],
@@ -137,6 +200,7 @@ final class SqlItems implements ItemServiceInterface
             $item['description'],
             $item['purchase_value'],
             $item['sale_value'],
+            $stats,
             $item['version']
         );
     }

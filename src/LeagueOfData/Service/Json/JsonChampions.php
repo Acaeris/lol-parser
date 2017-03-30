@@ -46,7 +46,7 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function add(Champion $champion)
     {
-        $this->champions[] = $champion;
+        $this->champions[$champion->getID()] = $champion;
     }
 
     /**
@@ -56,7 +56,9 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function addAll(array $champions)
     {
-        $this->champions = array_merge($this->champions, $champions);
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getID()] = $champion;
+        }
     }
 
     /**
@@ -69,7 +71,9 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function fetch(string $version, int $championId = null) : array
     {
-        $this->log->info("Fetching champions from API for version: {$version}".(isset($championId) ? " [{$championId}]" : ""));
+        $this->log->info("Fetching champions from API for version: {$version}".(
+            isset($championId) ? " [{$championId}]" : ""
+        ));
 
         $region = 'euw';
         $params = ['version' => $version, 'region' => $region];
@@ -90,9 +94,11 @@ final class JsonChampions implements ChampionServiceInterface
             }
 
             foreach ($response->data as $champion) {
-                $this->champions[] = $this->create($champion, $version);
+                $this->champions[$champion->id] = $this->create($champion, $version);
             }
         }
+
+        $this->log->info(count($this->champions)." champions fetched from API");
 
         return $this->champions;
     }

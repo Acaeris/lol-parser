@@ -33,4 +33,11 @@ interface ItemServiceInterface
      * @param Item $item
      */
     public function add(Item $item);
+
+    /**
+     * Add all item objects to internal array
+     *
+     * @param array $items Item objects
+     */
+    public function addAll(array $items);
 }

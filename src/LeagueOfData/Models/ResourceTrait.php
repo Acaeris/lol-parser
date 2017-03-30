@@ -20,11 +20,11 @@ trait ResourceTrait
         'mp' => 'mp',
         'mana' => 'mp',
         'rage' => 'rage',
+        'gnarfury' => 'rage',
         'heat' => 'heat',
         'energy' => 'energy',
         'wind' => 'wind',
         'flow' => 'flow',
-        'gnarfury' => 'fury',
         'fury' => 'fury',
         'dragonfury' => 'fury',
         'battlefury' => 'fury',
@@ -36,7 +36,7 @@ trait ResourceTrait
         'shield' => 'shield',
         'none' => 'na',
         'armor' => 'armor',
-        'spellblock' => 'spellblock',
+        'spellblock' => 'spellBlock',
     ];
 
     /** @var string The type of resource this object represents */
@@ -69,7 +69,7 @@ trait ResourceTrait
     {
         $found = false;
         foreach (self::$validResources as $code => $index) {
-            if ($code === strtolower($type)) {
+            if ($code === strtolower($type) || $index === strtolower($type)) {
                 $this->type = $index;
                 $found = true;
             }

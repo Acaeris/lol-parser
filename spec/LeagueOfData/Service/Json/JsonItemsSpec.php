@@ -21,8 +21,11 @@ class JsonItemsSpec extends ObjectBehavior
                     "description" => "Test Description",
                     "gold" => (object) [
                         "total" => 300,
-                        "sell" => 210
-                    ]
+                        "sell" => 210,
+                    ],
+                    "stats" => (object) [
+                        "FlatMovementSpeedMod" => 25,
+                    ],
                 ],
                 "1002" => (object) [
                     "id" => 1002,
@@ -30,11 +33,14 @@ class JsonItemsSpec extends ObjectBehavior
                     "description" => "Test Description",
                     "gold" => (object) [
                         "total" => 300,
-                        "sell" => 210
-                    ]
-                ]
+                        "sell" => 210,
+                    ],
+                    "stats" => (object) [
+                        "TestStat" => 100,
+                    ],
+                ],
             ],
-            "version" => '7.4.3'
+            "version" => '7.4.3',
         ]);
         $request = new ItemRequest(['id' => 1001, 'region' => 'euw', 'version' => '7.4.3']);
         $adapter->fetch($request)->willReturn((object) [
@@ -43,8 +49,11 @@ class JsonItemsSpec extends ObjectBehavior
             "description" => "Test Description",
             "gold" => (object) [
                 "total" => 300,
-                "sell" => 210
-            ]
+                "sell" => 210,
+            ],
+            "stats" => (object) [
+                "FlatMovementSpeedMod" => 25,
+            ],
         ]);
         $this->beConstructedWith($adapter, $logger);
     }

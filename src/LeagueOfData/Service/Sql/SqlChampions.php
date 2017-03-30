@@ -48,7 +48,7 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function add(Champion $champion)
     {
-        $this->champions[] = $champion;
+        $this->champions[$champion->getID()] = $champion;
     }
 
     /**
@@ -58,7 +58,9 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function addAll(array $champions)
     {
-        $this->champions = array_merge($this->champions, $champions);
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getID()] = $champion;
+        }
     }
 
     /**
@@ -66,6 +68,8 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function store()
     {
+        $this->log->info("Storing ".count($this->champions)." new/updated champions");
+
         foreach ($this->champions as $champion) {
             $request = new ChampionRequest(
                 ['champion_id' => $champion->getID(), 'version' => $champion->version()],
@@ -73,14 +77,14 @@ final class SqlChampions implements ChampionServiceInterface
                 $champion->toArray()
             );
 
+            $this->storeStats($champion);
+
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
 
                 return;
             }
             $this->dbAdapter->insert($request);
-
-            $this->storeStats($champion);
         }
     }
 
@@ -124,7 +128,7 @@ final class SqlChampions implements ChampionServiceInterface
             }
 
             foreach ($results as $champion) {
-                $this->champions[] = $this->create(
+                $this->champions[$champion['champion_id']] = $this->create(
                     $champion,
                     $this->fetchStats($champion['champion_id'], $champion['version'])
                 );
@@ -142,8 +146,6 @@ final class SqlChampions implements ChampionServiceInterface
      */
     private function fetchStats(int $championId, string $version) : array
     {
-        $this->log->info("Fetching stats for champion id: {$championId}");
-
         $request = new ChampionStatsRequest(
             ['champion_id' => $championId, 'version' => $version],
             '*'
@@ -193,6 +195,7 @@ final class SqlChampions implements ChampionServiceInterface
      * Build the Champion object from the given data.
      *
      * @param array $champion
+     * @param array $stats
      * @return Champion
      */
     private function create(array $champion, array $stats) : Champion
@@ -226,10 +229,10 @@ final class SqlChampions implements ChampionServiceInterface
 
         return new ChampionRegenResource(
             $code,
-            $stats[$code],
-            $stats[$code.'PerLevel'],
-            $stats[$code.'Regen'],
-            $stats[$code.'RegenPerLevel']
+            isset($stats[$code]) ? $stats[$code] : 0,
+            isset($stats[$code.'PerLevel']) ? $stats[$code.'PerLevel'] : 0,
+            isset($stats[$code.'Regen']) ? $stats[$code.'Regen'] : 0,
+            isset($stats[$code.'RegenPerLevel']) ? $stats[$code.'RegenPerLevel'] : 0
         );
     }
 
@@ -243,8 +246,8 @@ final class SqlChampions implements ChampionServiceInterface
     {
         return new ChampionDefense(
             $type,
-            $stats[$type],
-            $stats[$type.'PerLevel']
+            isset($stats[$type]) ? $stats[$type] : 0,
+            isset($stats[$type.'PerLevel']) ? $stats[$type.'PerLevel'] : 0
         );
     }
 
