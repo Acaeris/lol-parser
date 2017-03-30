@@ -1,0 +1,8 @@
+.idea
+.git
+.dockerignore
+vendor
+scripts/deployment
+node_modules
+var
+app/bootstrap.php.cache

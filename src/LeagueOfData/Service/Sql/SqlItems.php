@@ -68,7 +68,7 @@ final class SqlItems implements ItemServiceInterface
 
         foreach ($this->items as $item) {
             $request = new ItemRequest(
-                [ 'item_id' => $item->getID() ],
+                [ 'item_id' => $item->getID(), 'version' => $item->version() ],
                 'item_id',
                 $item->toArray()
             );

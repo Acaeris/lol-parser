@@ -1,0 +1,3 @@
+parser:
+    resource: "@LeagueOfData/Controller/"
+    type:     annotation
