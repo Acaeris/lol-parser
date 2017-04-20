@@ -32,11 +32,32 @@ interface SpellInterface
     public function name() : string;
 
     /**
+     * Default spell key binding
+     * 
+     * @return string
+     */
+    public function keyBinding() : string;
+
+    /**
+     * Spell icon file name
+     * 
+     * @return string
+     */
+    public function fileName() : string;
+
+    /**
      * Spell description
      *
      * @return string
      */
     public function description() : string;
+
+    /**
+     * Tooltip text
+     * 
+     * @return string
+     */
+    public function tooltip() : string;
 
     /**
      * Max rank of the spell

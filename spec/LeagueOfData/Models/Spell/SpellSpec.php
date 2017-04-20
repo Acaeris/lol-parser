@@ -8,8 +8,17 @@ class SpellSpec extends ObjectBehavior
 {
     public function let()
     {
-        $this->beConstructedWith(1, 'Test Spell', 'The spell does a thing.', 5,
-            [10, 9, 8, 7, 6], [100, 90, 80, 70, 60]);
+        $this->beConstructedWith(
+            1,
+            'Test Spell',
+            'Q',
+            'test_spell',
+            'The spell does a thing.',
+            "Test Tooltip",
+            5,
+            [10, 9, 8, 7, 6],
+            [100, 90, 80, 70, 60]
+        );
     }
 
     public function it_is_initializable()
@@ -33,9 +42,24 @@ class SpellSpec extends ObjectBehavior
         $this->name()->shouldReturn('Test Spell');
     }
 
+    public function it_has_a_key_binding()
+    {
+        $this->keyBinding()->shouldReturn('Q');
+    }
+
+    public function it_has_a_file_name()
+    {
+        $this->fileName()->shouldReturn('test_spell');
+    }
+
     public function it_has_a_desccription()
     {
         $this->description()->shouldReturn('The spell does a thing.');
+    }
+
+    public function it_has_a_tooltip()
+    {
+        $this->tooltip()->shouldReturn("Test Tooltip");
     }
 
     public function it_has_cooldowns()
@@ -68,10 +92,12 @@ class SpellSpec extends ObjectBehavior
         $this->toArray()->shouldReturn([
             'id' => 1,
             'name' => 'Test Spell',
+            'key' => 'Q',
+            'file' => 'test_spell',
             'description' => 'The spell does a thing.',
-            'maxRank' => 5,
-            'cooldowns' => '10|9|8|7|6',
-            'costs' => '100|90|80|70|60'
+            'maxrank' => 5,
+            'cooldown' => [10, 9, 8, 7, 6],
+            'costs' => [100, 90, 80, 70, 60]
         ]);
     }
 }

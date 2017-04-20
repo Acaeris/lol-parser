@@ -23,9 +23,24 @@ final class Spell implements SpellInterface, ImmutableInterface
     private $name;
 
     /**
+     * @var string Default key binding
+     */
+    private $keyBinding;
+
+    /**
+     * @var string Spell icon file name 
+     */
+    private $fileName;
+
+    /**
      * @var string Spell description
      */
     private $description;
+
+    /**
+     * @var string Tooltip text
+     */
+    private $tooltip;
 
     /**
      * @var array Spell Cooldowns
@@ -45,7 +60,10 @@ final class Spell implements SpellInterface, ImmutableInterface
     public function __construct(
         int $spellID,
         string $name,
+        string $keyBinding,
+        string $fileName,
         string $description,
+        string $tooltip,
         int $maxRank,
         array $cooldowns,
         array $costs
@@ -55,7 +73,10 @@ final class Spell implements SpellInterface, ImmutableInterface
 
         $this->spellID = $spellID;
         $this->name = $name;
+        $this->keyBinding = $keyBinding;
+        $this->fileName = $fileName;
         $this->description = $description;
+        $this->tooltip = $tooltip;
         $this->maxRank = $maxRank;
         $this->cooldowns = $cooldowns;
         $this->costs = $costs;
@@ -82,6 +103,24 @@ final class Spell implements SpellInterface, ImmutableInterface
     }
 
     /**
+     * Default spell key binding
+     * 
+     * @return string
+     */
+    public function keyBinding() : string {
+        return $this->keyBinding;
+    }
+
+    /**
+     * Spell icon file name
+     * 
+     * @return string
+     */
+    public function fileName() : string {
+        return $this->fileName;
+    }
+
+    /**
      * Spell description
      *
      * @return string Spell description
@@ -89,6 +128,16 @@ final class Spell implements SpellInterface, ImmutableInterface
     public function description() : string
     {
         return $this->description;
+    }
+
+    /**
+     * Tooltip text
+     * 
+     * @return string
+     */
+    public function tooltip() : string
+    {
+        return $this->tooltip;
     }
 
     /**
@@ -162,10 +211,12 @@ final class Spell implements SpellInterface, ImmutableInterface
         return [
             'id' => $this->spellID,
             'name' => $this->name,
+            'key' => $this->keyBinding,
             'description' => $this->description,
-            'maxRank' => $this->maxRank,
-            'cooldowns' => implode("|", $this->cooldowns),
-            'costs' => implode("|", $this->costs)
+            'tooltip' => $this->tooltip,
+            'maxrank' => $this->maxRank,
+            'cooldown' => $this->cooldowns,
+            'costs' => $this->costs
         ];
     }
 }

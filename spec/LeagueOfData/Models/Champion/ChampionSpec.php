@@ -63,16 +63,4 @@ class ChampionSpec extends ObjectBehavior
     {
         $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
     }
-
-    public function it_can_be_converted_to_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'champion_id' => 1,
-            'champion_name' => "Test",
-            'title' => "Test Character",
-            'resource_type' => "mp",
-            'tags' => "Fighter|Mage",
-            'version' => "6.21.1"
-        ]);
-    }
 }

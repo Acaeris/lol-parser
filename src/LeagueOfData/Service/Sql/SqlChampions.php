@@ -74,7 +74,7 @@ final class SqlChampions implements ChampionServiceInterface
             $request = new ChampionRequest(
                 ['champion_id' => $champion->getID(), 'version' => $champion->version()],
                 'champion_name',
-                $champion->toArray()
+                $this->toSqlArray($champion)
             );
 
             $this->storeStats($champion);
@@ -86,6 +86,24 @@ final class SqlChampions implements ChampionServiceInterface
             }
             $this->dbAdapter->insert($request);
         }
+    }
+
+    /**
+     * Converts Champion object into SQL data array
+     *
+     * @param Champion $champion
+     * @return array
+     */
+    private function toSqlArray(Champion $champion) : array
+    {
+        return [
+            'champion_id' => $champion->getID(),
+            'champion_name' => $champion->name(),
+            'title' => $champion->title(),
+            'resource_type' => $champion->resourceType(),
+            'tags' => $champion->tagsAsString(),
+            'version' => $champion->version()
+        ];
     }
 
     /**

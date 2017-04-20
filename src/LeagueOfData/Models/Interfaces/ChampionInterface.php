@@ -11,13 +11,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface ChampionInterface
 {
     /**
-     * Array of Champion data
-     *
-     * @return array
-     */
-    public function toArray() : array;
-
-    /**
      * Champion ID
      *
      * @return int

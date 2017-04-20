@@ -80,24 +80,6 @@ final class Champion implements ChampionInterface, ImmutableInterface
     }
 
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            'champion_id' => $this->championId,
-            'champion_name' => $this->name,
-            'title' => $this->title,
-            'resource_type' => $this->resourceType,
-            'tags' => $this->tagsAsString(),
-            'version' => $this->version
-        ];
-    }
-
-    /**
      * Champion ID
      *
      * @return int
