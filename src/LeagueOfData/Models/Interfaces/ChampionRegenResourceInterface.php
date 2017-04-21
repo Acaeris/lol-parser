@@ -11,14 +11,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface ChampionRegenResourceInterface
 {
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion resource data as an array
-     */
-    public function toArray() : array;
-
-    /**
      * Base regeneration rate
      *
      * @return float Base regeneration rate

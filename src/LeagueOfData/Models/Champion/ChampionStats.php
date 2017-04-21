@@ -89,24 +89,6 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     }
 
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion resource data as an array
-     */
-    public function toArray() : array
-    {
-        return array_merge(
-            ['moveSpeed' => $this->moveSpeed],
-            $this->health->toArray(),
-            $this->resource->toArray(),
-            $this->attack->toArray(),
-            $this->armor->toArray(),
-            $this->magicResist->toArray()
-        );
-    }
-
-    /**
      * Champion Health
      *
      * @return ChampionRegenResourceInterface

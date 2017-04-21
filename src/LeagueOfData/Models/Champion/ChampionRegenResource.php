@@ -58,22 +58,6 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     }
 
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion resource data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            $this->type => $this->baseValue,
-            $this->type.'PerLevel' => $this->perLevel,
-            $this->type.'Regen' => $this->regen,
-            $this->type.'RegenPerLevel' => $this->regenPerLevel
-        ];
-    }
-
-    /**
      * Base regeneration rate
      *
      * @return float Base regeneration rate

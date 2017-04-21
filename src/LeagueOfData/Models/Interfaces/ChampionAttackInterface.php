@@ -11,14 +11,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface ChampionAttackInterface
 {
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion attack data as an array
-     */
-    public function toArray() : array;
-
-    /**
      * Attack range
      *
      * @return float Attack range

@@ -65,25 +65,6 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
     }
 
     /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion attack data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            'attackRange' => $this->range,
-            'attackDamage' => $this->damage,
-            'attackDamagePerLevel' => $this->damagePerLevel,
-            'attackSpeedOffset' => $this->speedOffset,
-            'attackSpeedPerLevel' => $this->speedPerLevel,
-            'crit' => $this->crit,
-            'critPerLevel' => $this->critPerLevel
-        ];
-    }
-
-    /**
      * Attack range
      *
      * @return float Attack range

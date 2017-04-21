@@ -74,7 +74,7 @@ final class SqlChampions implements ChampionServiceInterface
             $request = new ChampionRequest(
                 ['champion_id' => $champion->getID(), 'version' => $champion->version()],
                 'champion_name',
-                $this->toSqlArray($champion)
+                $this->convertChampionToArray($champion)
             );
 
             $this->storeStats($champion);
@@ -86,24 +86,6 @@ final class SqlChampions implements ChampionServiceInterface
             }
             $this->dbAdapter->insert($request);
         }
-    }
-
-    /**
-     * Converts Champion object into SQL data array
-     *
-     * @param Champion $champion
-     * @return array
-     */
-    private function toSqlArray(Champion $champion) : array
-    {
-        return [
-            'champion_id' => $champion->getID(),
-            'champion_name' => $champion->name(),
-            'title' => $champion->title(),
-            'resource_type' => $champion->resourceType(),
-            'tags' => $champion->tagsAsString(),
-            'version' => $champion->version()
-        ];
     }
 
     /**
@@ -157,6 +139,56 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
+     * Converts Champion object into SQL data array
+     *
+     * @param Champion $champion
+     * @return array
+     */
+    private function convertChampionToArray(Champion $champion) : array
+    {
+        return [
+            'champion_id' => $champion->getID(),
+            'champion_name' => $champion->name(),
+            'title' => $champion->title(),
+            'resource_type' => $champion->resourceType(),
+            'tags' => $champion->tagsAsString(),
+            'version' => $champion->version()
+        ];
+    }
+
+    /**
+     * Converts the champions stats for SQL insertion
+     *
+     * @param ChampionStats $stats
+     * @return array
+     */
+    private function convertStatsToArray(ChampionStats $stats) : array
+    {
+        return [
+            'moveSpeed' => $stats->moveSpeed,
+            'hp' => $stats->health()->baseValue(),
+            'hpPerLevel' => $stats->health()->increasePerLevel(),
+            'hpRegen' => $stats->health()->regenBaseValue(),
+            'hpRegenPerLevel' => $stats->health()->regenIncreasePerLevel(),
+            $stats->resource()->type() => $stats->resource()->baseValue(),
+            $stats->resource()->type().'PerLevel' => $stats->resource()->increasePerLevel(),
+            $stats->resource()->type().'Regen' => $stats->resource()->regenBaseValue(),
+            $stats->resource()->type().'RegenPerLevel' => $stats->resource()->regenIncreasePerLevel(),
+            'attackRange' => $stats->attack()->range(),
+            'attackDamage' => $stats->attack()->damage(),
+            'attackDamagePerLevel' => $stats->attack()->damagePerLevel(),
+            'attackSpeedOffset' => $stats->attack()->attackSpeed(),
+            'attackSpeedPerLevel' => $stats->attack()->attackSpeedPerLevel(),
+            'crit' => $stats->attack()->baseCritChance(),
+            'critPerLevel' => $stats->attack()->critChancePerLevel(),
+            'armor' => $stats->armor()->baseValue(),
+            'armorPerLevel' => $stats->armor()->increasePerLevel(),
+            'spellBlock' => $stats->magicResist()->baseValue(),
+            'spellBlockPerLevel' => $stats->magicResist()->increasePerLevel(),
+        ];
+    }
+
+    /**
      * Fetch the stats for the given champion
      * @param int $championId
      * @param string $version
@@ -186,7 +218,7 @@ final class SqlChampions implements ChampionServiceInterface
      */
     private function storeStats(Champion $champion)
     {
-        $stats = $champion->stats()->toArray();
+        $stats = $this->convertStatsToArray($champion->stats());
 
         foreach ($stats as $key => $value) {
             $request = new ChampionStatsRequest(

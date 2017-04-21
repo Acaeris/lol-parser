@@ -41,18 +41,4 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
         $this->constructImmutable();
         $this->constructResource($type, $base, $perLevel);
     }
-
-    /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion defence data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            $this->type => $this->baseValue,
-            $this->type.'PerLevel' => $this->perLevel
-        ];
-    }
 }
