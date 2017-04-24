@@ -53,6 +53,13 @@ interface SpellInterface
     public function tooltip() : string;
 
     /**
+     * Resource Type
+     *
+     * @return string
+     */
+    public function resourceType() : string;
+
+    /**
      * Max rank of the spell
      *
      * @return int Max Rank
@@ -75,6 +82,23 @@ interface SpellInterface
      * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
      */
     public function cooldownByRank(int $rank) : int;
+
+    /**
+     * Spells Ranges
+     *
+     * @return array
+     */
+    public function ranges() : array;
+
+    /**
+     * Range by Rank
+     *
+     * @param int $rank
+     *
+     * @return int
+     * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
+     */
+    public function rangeByRank(int $rank) : int;
 
     /**
      * Spells costs

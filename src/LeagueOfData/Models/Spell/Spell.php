@@ -8,6 +8,7 @@ use LeagueOfData\Library\Immutable\ImmutableTrait;
 
 final class Spell implements SpellInterface, ImmutableInterface
 {
+
     use ImmutableTrait {
         __construct as constructImmutable;
     }
@@ -43,9 +44,19 @@ final class Spell implements SpellInterface, ImmutableInterface
     private $tooltip;
 
     /**
+     * @var string Resource Type
+     */
+    private $resourceType;
+    
+    /**
      * @var array Spell Cooldowns
      */
     private $cooldowns;
+
+    /**
+     * @var array Spell Ranges
+     */
+    private $ranges;
 
     /**
      * @var array Spell costs
@@ -64,8 +75,10 @@ final class Spell implements SpellInterface, ImmutableInterface
         string $fileName,
         string $description,
         string $tooltip,
+        string $resourceType,
         int $maxRank,
         array $cooldowns,
+        array $ranges,
         array $costs
     ) {
     
@@ -77,8 +90,10 @@ final class Spell implements SpellInterface, ImmutableInterface
         $this->fileName = $fileName;
         $this->description = $description;
         $this->tooltip = $tooltip;
+        $this->resourceType = $resourceType;
         $this->maxRank = $maxRank;
         $this->cooldowns = $cooldowns;
+        $this->ranges = $ranges;
         $this->costs = $costs;
     }
 
@@ -143,6 +158,16 @@ final class Spell implements SpellInterface, ImmutableInterface
     }
 
     /**
+     * Resource Type
+     *
+     * @return string
+     */
+    public function resourceType() : string
+    {
+        return $this->resourceType;
+    }
+
+    /**
      * Max rank of the spell
      *
      * @return int Max Rank
@@ -175,6 +200,32 @@ final class Spell implements SpellInterface, ImmutableInterface
             throw new \InvalidArgumentException('Requested rank beyond the maximum for this spell');
         }
         return $this->cooldowns[$rank - 1];
+    }
+
+    /**
+     * Spells Ranges
+     *
+     * @return array
+     */
+    public function ranges() : array
+    {
+        return $this->ranges;
+    }
+
+    /**
+     * Range by Rank
+     *
+     * @param int $rank
+     *
+     * @return int
+     * @throws InvalidArgumentException if supplied rank is out of bounds for the spell.
+     */
+    public function rangeByRank(int $rank) : int
+    {
+        if ($rank > $this->maxRank) {
+            throw new \InvalidArgumentException('Requested rank beyond the maximum for this spell');
+        }
+        return $this->ranges[$rank - 1];
     }
 
     /**

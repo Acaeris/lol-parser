@@ -15,8 +15,10 @@ class SpellSpec extends ObjectBehavior
             'test_spell',
             'The spell does a thing.',
             "Test Tooltip",
+            "Mana",
             5,
             [10, 9, 8, 7, 6],
+            [100, 200, 300, 400, 500],
             [100, 90, 80, 70, 60]
         );
     }
@@ -61,6 +63,11 @@ class SpellSpec extends ObjectBehavior
         $this->tooltip()->shouldReturn("Test Tooltip");
     }
 
+    public function it_has_a_resource_type()
+    {
+        $this->resourceType()->shouldReturn("Mana");
+    }
+
     public function it_has_cooldowns()
     {
         $this->cooldowns()->shouldReturn([10, 9, 8, 7, 6]);
@@ -74,6 +81,21 @@ class SpellSpec extends ObjectBehavior
     public function it_checks_max_rank_when_asked_for_cooldown()
     {
         $this->shouldThrow(\InvalidArgumentException::class)->during('cooldownByRank', [6]);
+    }
+
+    public function it_has_ranges()
+    {
+        $this->ranges()->shouldReturn([100, 200, 300, 400, 500]);
+    }
+
+    public function it_can_return_a_range_for_a_given_rank()
+    {
+        $this->rangeByRank(3)->shouldReturn(300);
+    }
+
+    public function it_checks_max_rank_when_asked_for_range()
+    {
+        $this->shouldThrow(\InvalidArgumentException::class)->during('rangeByRank', [6]);
     }
 
     public function it_has_costs()
