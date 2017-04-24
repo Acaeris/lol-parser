@@ -19,20 +19,33 @@ class JsonSummoners implements SummonerService
     /**
      * Returns a Summoner Object from raw values.
      *
-     * @param type $summonerID
-     * @param type $name
-     * @param type $level
-     * @param type $iconId
-     * @param type $revisionDate
+     * @param int    $summonerID
+     * @param string $name
+     * @param int    $level
+     * @param int    $iconId
+     * @param string $revisionDate
+     *
      * @return \LeagueOfData\Models\Json\JsonSummoner
      */
-    public function add($summonerID, $name, $level, $iconId, $revisionDate)
+    public function add(int $summonerID, string $name, int $level, int $iconId, string $revisionDate) : Summoner
     {
-        return new Summoner(json_decode("{"."'id': {$summonerID},"."'name': {$name},"."'summonerLevel': {$level},"."'profileIconId': {$iconId},"."'revisionDate': {$revisionDate}
-            }"));
+        return new Summoner(json_decode("{"
+            . "'id': {$summonerID},"
+            . "'name': {$name},"
+            . "'summonerLevel': {$level},"
+            . "'profileIconId': {$iconId},"
+            . "'revisionDate': {$revisionDate}"
+            . "}"));
     }
 
-    public function find($ids)
+    /**
+     * Find by a list of ids
+     *
+     * @param int[] $ids
+     *
+     * @return Summoner[]
+     */
+    public function find(array $ids) : array
     {
         $splitIds = array_chunk($ids, 40);
         $players = [];

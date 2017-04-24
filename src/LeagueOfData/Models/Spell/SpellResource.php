@@ -4,7 +4,6 @@ namespace LeagueOfData\Models\Spell;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
-use LeagueOfData\Models\Interfaces\SpellResourceInterface;
 use LeagueOfData\Models\Interfaces\ResourceInterface;
 use LeagueOfData\Models\ResourceTrait;
 
@@ -20,29 +19,12 @@ use LeagueOfData\Models\ResourceTrait;
  *
  * @author caitlyn.osborne
  */
-final class SpellResource implements SpellResourceInterface, ResourceInterface, ImmutableInterface
+final class SpellResource implements ResourceInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
     }
     use ResourceTrait;
-
-    /**
-     * Creates a new Spell Resource from an existing state.
-     * Used as an alternative constructor as PHP does not support mutliple constructors.
-     *
-     * @param string $type  Type of resource represented by this object
-     * @param array  $spell Data from an existing state (e.g. SQL result, Json or object converted to array)
-     * @return SpellResourceInterface Resultant Spell Resource
-     */
-    public static function fromState(string $type, array $spell) : SpellResourceInterface
-    {
-        return new self(
-            $type,
-            $spell[$type],
-            $spell[$type.'PerLevel']
-        );
-    }
 
     /**
      * Construct a Spell Resource object
@@ -56,19 +38,5 @@ final class SpellResource implements SpellResourceInterface, ResourceInterface, 
     {
         $this->constructImmutable();
         $this->constructResource($type, $baseValue, $perLevel);
-    }
-
-    /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Spell resource data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            $this->type => $this->baseValue,
-            $this->type.'PerLevel' => $this->perLevel
-        ];
     }
 }

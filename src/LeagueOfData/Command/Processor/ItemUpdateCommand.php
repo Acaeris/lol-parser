@@ -28,7 +28,8 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->setName('update:item')
             ->setDescription('API processor command for item data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('itemId', InputArgument::OPTIONAL, 'Item ID to process data for.'.' (Will fetch all if not supplied)')
+            ->addArgument('itemId', InputArgument::OPTIONAL, 'Item ID to process data for.'
+                . ' (Will fetch all if not supplied)')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
@@ -48,7 +49,6 @@ class ItemUpdateCommand extends ContainerAwareCommand
 
         if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('itemId'))) == 0
             || $input->getOption('force')) {
-
             $this->log->info("Update required");
             $this->updateData($input);
             return;

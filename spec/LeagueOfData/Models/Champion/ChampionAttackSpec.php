@@ -81,17 +81,4 @@ class ChampionAttackSpec extends ObjectBehavior
     {
         $this->critChanceAtLevel(5)->shouldReturn(19.0);
     }
-
-    public function it_can_be_converted_to_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'attackRange' => 575.0,
-            'attackDamage' => 50.41,
-            'attackDamagePerLevel' => 2.625,
-            'attackSpeedOffset' => 0.08,
-            'attackSpeedPerLevel' => 1.36,
-            'crit' => 15.0,
-            'critPerLevel' => 1.0
-        ]);
-    }
 }

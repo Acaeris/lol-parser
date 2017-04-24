@@ -39,6 +39,22 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     public function __construct(string $type, float $base, float $perLevel)
     {
         $this->constructImmutable();
+        $this->isValidType($type);
         $this->constructResource($type, $base, $perLevel);
+    }
+
+    /**
+     * Check to make sure we are building a valid defense resource.
+     *
+     * @param string $type
+     * @return boolean
+     * @throws \InvalidArgumentException
+     */
+    private function isValidType(string $type) : bool
+    {
+        if ($type !==self::DEFENSE_ARMOR && $type !== self::DEFENSE_MAGICRESIST) {
+            throw new \InvalidArgumentException('Supplied type is not valid for a defense stat');
+        }
+        return true;
     }
 }

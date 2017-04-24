@@ -49,11 +49,9 @@ class ChampionDefenseSpec extends ObjectBehavior
         $this->valueAtLevel(5)->shouldReturn(35.22);
     }
 
-    public function it_can_be_converted_to_an_array_for_storage()
+    public function it_requires_an_appropriate_resource_type()
     {
-        $this->toArray()->shouldReturn([
-            'armor' => 19.22,
-            'armorPerLevel' => 4.0
-        ]);
+        $this->beConstructedWith('mana', 10, 1);
+        $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
     }
 }

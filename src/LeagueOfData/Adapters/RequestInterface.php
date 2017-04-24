@@ -1,25 +1,13 @@
 <?php
 
-/**
- * Interface for service requests
- *
- * PHP Version 7
- *
- * LICENSE: ...
- *
- * @package LeagueOfData\Adapters
- * @author  Caitlyn Osborne <acaeris@gamil.com>
- * @link    http://lod.gg League Of Data
- */
-
 namespace LeagueOfData\Adapters;
 
 /**
  * Interface for service requests
  *
- * @package LeagueOfData\Adapters
- * @author  Caitlyn Osborne <acaeris@gmail.com>
- * @link    http://log.gg League Of Data
+ * @package  LeagueOfData\Adapters
+ * @author   Caitlyn Osborne <acaeris@gmail.com>
+ * @link     http://log.gg League Of Data
  */
 interface RequestInterface
 {

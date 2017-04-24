@@ -28,7 +28,8 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->setName('update:champion')
             ->setDescription('API processor command for champion data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('championId', InputArgument::OPTIONAL, 'Champion ID to process data for.'.' (Will fetch all if not supplied)')
+            ->addArgument('championId', InputArgument::OPTIONAL, 'Champion ID to process data for.'
+                . ' (Will fetch all if not supplied)')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
@@ -48,7 +49,6 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
         if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('championId'))) == 0
             || $input->getOption('force')) {
-
             $this->log->info("Update required");
             $this->updateData($input);
             return;

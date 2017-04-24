@@ -45,12 +45,4 @@ class SpellResourceSpec extends ObjectBehavior
     {
         $this->valueAtLevel(5)->shouldReturn(80.0);
     }
-
-    public function it_can_output_the_data_as_an_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'mp' => 60.0,
-            'mpPerLevel' => 5.0
-        ]);
-    }
 }

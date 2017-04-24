@@ -24,7 +24,6 @@ class SpellSpec extends ObjectBehavior
     public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Spell\Spell');
-        $this->shouldImplement('LeagueOfData\Models\Interfaces\SpellInterface');
     }
 
     public function it_is_immutable()
@@ -52,7 +51,7 @@ class SpellSpec extends ObjectBehavior
         $this->fileName()->shouldReturn('test_spell');
     }
 
-    public function it_has_a_desccription()
+    public function it_has_a_description()
     {
         $this->description()->shouldReturn('The spell does a thing.');
     }
@@ -72,6 +71,11 @@ class SpellSpec extends ObjectBehavior
         $this->cooldownByRank(3)->shouldReturn(8);
     }
 
+    public function it_checks_max_rank_when_asked_for_cooldown()
+    {
+        $this->shouldThrow(\InvalidArgumentException::class)->during('cooldownByRank', [6]);
+    }
+
     public function it_has_costs()
     {
         $this->costs()->shouldReturn([100, 90, 80, 70, 60]);
@@ -82,22 +86,13 @@ class SpellSpec extends ObjectBehavior
         $this->costByRank(3)->shouldReturn(80);
     }
 
+    public function it_checks_max_rank_when_asked_for_costs()
+    {
+        $this->shouldThrow(\InvalidArgumentException::class)->during('costByRank', [6]);
+    }
+
     public function it_has_a_max_rank()
     {
         $this->maxRank()->shouldReturn(5);
-    }
-
-    public function it_can_be_converted_to_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'id' => 1,
-            'name' => 'Test Spell',
-            'key' => 'Q',
-            'file' => 'test_spell',
-            'description' => 'The spell does a thing.',
-            'maxrank' => 5,
-            'cooldown' => [10, 9, 8, 7, 6],
-            'costs' => [100, 90, 80, 70, 60]
-        ]);
     }
 }

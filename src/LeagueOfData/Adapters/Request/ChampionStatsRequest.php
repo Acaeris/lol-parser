@@ -7,9 +7,9 @@ use LeagueOfData\Adapters\RequestInterface;
 /**
  * Request object for Champion Stats
  *
- * @package LeagueOfData|Adapters\Request
- * @author  Caitlyn Osborne <acaeris@gmail.com>
- * @link    http://lod.gg League of Data
+ * @package  LeagueOfData|Adapters\Request
+ * @author   Caitlyn Osborne <acaeris@gmail.com>
+ * @link     http://lod.gg League of Data
  */
 class ChampionStatsRequest implements RequestInterface
 {
@@ -26,9 +26,10 @@ class ChampionStatsRequest implements RequestInterface
 
     /**
      * Construct Champion Stats request
-     * @param array       $where
-     * @param string|null $columns
-     * @param array|null  $data
+     *
+     * @param array       $where   Where statement
+     * @param string|null $columns Columns requested
+     * @param array|null  $data    Data to store
      */
     public function __construct(array $where, string $columns = null, array $data = null)
     {

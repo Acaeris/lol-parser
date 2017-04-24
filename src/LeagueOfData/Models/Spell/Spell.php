@@ -28,7 +28,7 @@ final class Spell implements SpellInterface, ImmutableInterface
     private $keyBinding;
 
     /**
-     * @var string Spell icon file name 
+     * @var string Spell icon file name
      */
     private $fileName;
 
@@ -104,19 +104,21 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Default spell key binding
-     * 
+     *
      * @return string
      */
-    public function keyBinding() : string {
+    public function keyBinding() : string
+    {
         return $this->keyBinding;
     }
 
     /**
      * Spell icon file name
-     * 
+     *
      * @return string
      */
-    public function fileName() : string {
+    public function fileName() : string
+    {
         return $this->fileName;
     }
 
@@ -132,7 +134,7 @@ final class Spell implements SpellInterface, ImmutableInterface
 
     /**
      * Tooltip text
-     * 
+     *
      * @return string
      */
     public function tooltip() : string
@@ -170,7 +172,7 @@ final class Spell implements SpellInterface, ImmutableInterface
     public function cooldownByRank(int $rank) : int
     {
         if ($rank > $this->maxRank) {
-            throw new \InvalidArgumentException('Rank unavailable');
+            throw new \InvalidArgumentException('Requested rank beyond the maximum for this spell');
         }
         return $this->cooldowns[$rank - 1];
     }
@@ -195,28 +197,8 @@ final class Spell implements SpellInterface, ImmutableInterface
     public function costByRank(int $rank) : int
     {
         if ($rank > $this->maxRank) {
-            throw new \InvalidArgumentException('Rank unavalable');
+            throw new \InvalidArgumentException('Requested rank beyond the maximum for this spell');
         }
         return $this->costs[$rank - 1];
-    }
-
-    /**
-     * Correctly convert the object to an array.
-     * Use instead of PHP's type conversion
-     *
-     * @return array Champion data as an array
-     */
-    public function toArray() : array
-    {
-        return [
-            'id' => $this->spellID,
-            'name' => $this->name,
-            'key' => $this->keyBinding,
-            'description' => $this->description,
-            'tooltip' => $this->tooltip,
-            'maxrank' => $this->maxRank,
-            'cooldown' => $this->cooldowns,
-            'costs' => $this->costs
-        ];
     }
 }

@@ -14,14 +14,14 @@ interface RealmInterface
      *
      * @return string CDN url
      */
-    function sourceUrl() : string;
+    public function sourceUrl() : string;
 
     /**
      * Data Dragon version number
      *
      * @return string version
      */
-    function version() : string;
+    public function version() : string;
 
     /**
      * Realm Region

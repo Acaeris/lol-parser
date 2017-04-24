@@ -65,14 +65,4 @@ class ChampionRegenResourceSpec extends ObjectBehavior
     {
         $this->regenAtLevel(5)->shouldReturn(7.624);
     }
-
-    public function it_can_output_the_data_as_an_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'hp' => 511.68,
-            'hpPerLevel' => 76.0,
-            'hpRegen' => 5.424,
-            'hpRegenPerLevel' => 0.55
-        ]);
-    }
 }

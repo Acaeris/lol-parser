@@ -4,7 +4,7 @@ namespace LeagueOfData\Helpers\Format;
 
 class QueueType
 {
-    private $_queues = [
+    private $queues = [
         'TEAM_BUILDER_DRAFT_RANKED_5x5' => 'Dynamic Queue Ranked Draft',
         'RANKED_SOLO_5x5' => 'Solo Queue Ranked Draft',
         'RANKED_TEAM_3x3' => 'Team Ranked Draft (TT)',
@@ -13,8 +13,8 @@ class QueueType
 
     public function format($type)
     {
-        if (isset($this->_queues[$type])) {
-            return $this->_queues[$type];
+        if (isset($this->queues[$type])) {
+            return $this->queues[$type];
         }
         return $type;
     }

@@ -11,13 +11,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface SpellInterface
 {
     /**
-     * Array of Spell data
-     *
-     * @return array
-     */
-    public function toArray() : array;
-
-    /**
      * Spell ID
      *
      * @return int
@@ -33,14 +26,14 @@ interface SpellInterface
 
     /**
      * Default spell key binding
-     * 
+     *
      * @return string
      */
     public function keyBinding() : string;
 
     /**
      * Spell icon file name
-     * 
+     *
      * @return string
      */
     public function fileName() : string;
@@ -54,7 +47,7 @@ interface SpellInterface
 
     /**
      * Tooltip text
-     * 
+     *
      * @return string
      */
     public function tooltip() : string;

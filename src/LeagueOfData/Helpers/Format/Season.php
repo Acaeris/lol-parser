@@ -4,7 +4,7 @@ namespace LeagueOfData\Helpers\Format;
 
 class Season
 {
-    private $_seasons = [
+    private $seasons = [
         'PRESEASON3' => 'Pre-season 3 (2013)',
         'SEASON3' => '3 (2013)',
         'PRESEASON2014' => 'Pre-season 2014',
@@ -17,8 +17,8 @@ class Season
 
     public function format($season)
     {
-        if (isset($this->_seasons[$season])) {
-            return $this->_seasons[$season];
+        if (isset($this->seasons[$season])) {
+            return $this->seasons[$season];
         }
         return $season;
     }

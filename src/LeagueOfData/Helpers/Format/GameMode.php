@@ -4,14 +4,14 @@ namespace LeagueOfData\Helpers\Format;
 
 class GameMode
 {
-    private $_modes = [
+    private $modes = [
         'CLASSIC' => "Classic"
     ];
 
     public function format($mode)
     {
-        if (isset($this->_modes[$mode])) {
-            return $this->_modes[$mode];
+        if (isset($this->modes[$mode])) {
+            return $this->modes[$mode];
         }
         return $mode;
     }
