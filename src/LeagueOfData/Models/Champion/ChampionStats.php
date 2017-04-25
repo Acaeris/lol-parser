@@ -14,59 +14,54 @@ use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
  *
  * @author caitlyn.osborne
  */
-final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
+class ChampionStats implements ChampionStatsInterface, ImmutableInterface
 {
     use ImmutableTrait {
         __construct as constructImmutable;
     }
 
-    /**
-     * @var ChampionRegenResourceInterface Health details
-     */
+    /** @var int Champion ID */
+    private $champion_id;
+    /** @var ChampionRegenResourceInterface Health details */
     private $health;
-
-    /**
-     * @var ChampionRegenResourceInterface Resource details (e.g. Mana, Rage, Energy)
-     */
+    /** @var ChampionRegenResourceInterface Resource details (e.g. Mana, Rage, Energy) */
     private $resource;
-
-    /**
-     * @var ChampionAttackInterface Attack details
-     */
+    /** @var ChampionAttackInterface Attack details */
     private $attack;
-
-    /**
-     * @var ChampionDefenseInterface Armor details
-     */
+    /** @var ChampionDefenseInterface Armor details */
     private $armor;
-
-    /**
-     * @var ChampionDefenseInterface Magic resistance details
-     */
+    /** @var ChampionDefenseInterface Magic resistance details */
     private $magicResist;
-
-    /**
-     * @var float Movement Speed
-     */
+    /** @var float Movement Speed */
     private $moveSpeed;
+    /** @var string Version */
+    private $version;
+    /** @var string Region */
+    private $region;
 
     /**
      * Main Constructor
      *
+     * @param int                            $champion_id
      * @param ChampionRegenResourceInterface $health
      * @param ChampionRegenResourceInterface $mana
      * @param ChampionAttackInterface        $attack
      * @param ChampionDefenseInterface       $armor
      * @param ChampionDefenseInterface       $magicResist
      * @param float                          $moveSpeed
+     * @param string                         $version
+     * @param string                         $region
      */
     public function __construct(
+        int $champion_id,
         ChampionRegenResourceInterface $health,
         ChampionRegenResourceInterface $mana,
         ChampionAttackInterface $attack,
         ChampionDefenseInterface $armor,
         ChampionDefenseInterface $magicResist,
-        float $moveSpeed
+        float $moveSpeed,
+        string $version,
+        string $region
     ) {
         $this->constructImmutable();
 
@@ -76,6 +71,19 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
         $this->armor = $armor;
         $this->magicResist = $magicResist;
         $this->moveSpeed = $moveSpeed;
+        $this->champion_id = $champion_id;
+        $this->version = $version;
+        $this->region = $region;
+    }
+
+    /**
+     * Champion ID
+     *
+     * @return int
+     */
+    public function getID() : int
+    {
+        return $this->champion_id;
     }
 
     /**
@@ -136,5 +144,25 @@ final class ChampionStats implements ChampionStatsInterface, ImmutableInterface
     public function magicResist() : ChampionDefenseInterface
     {
         return $this->magicResist;
+    }
+
+    /**
+     * Version
+     *
+     * @return string
+     */
+    public function version() : string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Region
+     *
+     * @return string
+     */
+    public function region() : string
+    {
+        return $this->region;
     }
 }

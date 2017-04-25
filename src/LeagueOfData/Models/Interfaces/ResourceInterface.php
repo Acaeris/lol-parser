@@ -11,13 +11,6 @@ namespace LeagueOfData\Models\Interfaces;
 interface ResourceInterface
 {
     /**
-     * Resource Type
-     *
-     * @return string Resource type
-     */
-    public function type() : string;
-
-    /**
      * Base resource value
      *
      * @return float Base resource value

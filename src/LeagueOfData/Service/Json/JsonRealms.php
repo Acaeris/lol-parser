@@ -38,7 +38,7 @@ final class JsonRealms implements RealmServiceInterface
         foreach (self::REGIONS as $region) {
             $request = new RealmRequest(['region' => $region]);
             $response = $this->source->fetch($request);
-            $this->realms[] = new Realm($response->cdn, $response->v, $region);
+            $this->realms[] = new Realm($response['cdn'], $response['v'], $region);
         }
         return $this->realms;
     }

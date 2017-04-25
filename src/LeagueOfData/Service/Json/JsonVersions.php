@@ -10,15 +10,16 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Version object JSON factory.
+ *
  * @package LeagueOfData\Service|Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 final class JsonVersions implements VersionServiceInterface
 {
-    /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
+    /* @var AdapterInterface DB adapter */
     private $dbAdapter;
-    /* @var Psr\Log\LoggerInterface Logger */
+    /* @var LoggerInterface Logger */
     private $log;
     /* @var array Version objects */
     private $versions = [];

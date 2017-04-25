@@ -49,6 +49,11 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $resourceType;
 
     /**
+     * @var string Region data is for 
+     */
+    private $region;
+
+    /**
      * Construct a Champion object
      *
      * @param int                    $championId   Champion ID
@@ -58,6 +63,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      * @param string                 $tags         Class tags
      * @param ChampionStatsInterface $stats        Statistics
      * @param string                 $version      Full version number
+     * @param string                 $region       Region data is for
      */
     public function __construct(
         int $championId,
@@ -66,7 +72,8 @@ final class Champion implements ChampionInterface, ImmutableInterface
         string $resourceType,
         array $tags,
         ChampionStatsInterface $stats,
-        string $version
+        string $version,
+        string $region
     ) {
         $this->constructImmutable();
 
@@ -77,6 +84,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         $this->version = $version;
         $this->stats = $stats;
         $this->tags = $tags;
+        $this->region = $region;
     }
 
     /**
@@ -158,5 +166,15 @@ final class Champion implements ChampionInterface, ImmutableInterface
     public function resourceType() : string
     {
         return $this->resourceType;
+    }
+
+    /**
+     * Region data is for
+     *
+     * @return string
+     */
+    public function region() : string
+    {
+        return $this->region;
     }
 }

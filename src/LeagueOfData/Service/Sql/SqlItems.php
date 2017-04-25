@@ -70,7 +70,7 @@ final class SqlItems implements ItemServiceInterface
             $request = new ItemRequest(
                 [ 'item_id' => $item->getID(), 'version' => $item->version() ],
                 'item_id',
-                $item->toArray()
+                $this->convertItemToArray($item)
             );
 
             $this->storeStats($item);
@@ -99,16 +99,17 @@ final class SqlItems implements ItemServiceInterface
      *
      * @param string $version
      * @param int    $itemId
+     * @param string $region
      *
      * @return array Item Objects
      */
-    public function fetch(string $version, int $itemId = null): array
+    public function fetch(string $version, int $itemId = null, string $region = 'euw'): array
     {
         $this->log->info("Fetching items from DB for version: {$version}".(
             isset($itemId) ? " [{$itemId}]" : ""
         ));
 
-        $where = [ 'version' => $version ];
+        $where = [ 'version' => $version, 'region' => $region ];
 
         if (isset($itemId) && !empty($itemId)) {
             $where['item_id'] = $itemId;
@@ -124,9 +125,10 @@ final class SqlItems implements ItemServiceInterface
             }
 
             foreach ($results as $item) {
+                $item['region'] = $region;
                 $this->items[$item['item_id']] = $this->create(
                     $item,
-                    $this->fetchStats($item['item_id'], $item['version'])
+                    $this->fetchStats($item)
                 );
             }
         }
@@ -136,14 +138,15 @@ final class SqlItems implements ItemServiceInterface
 
     /**
      * Fetch the stats for the given item
-     * @param int $itemId
-     * @param string $version
+     *
+     * @param array $item
+     *
      * @return array
      */
-    private function fetchStats(int $itemId, string $version) : array
+    private function fetchStats(array $item) : array
     {
         $request = new ItemStatsRequest(
-            ['item_id' => $itemId, 'version' => $version],
+            ['item_id' => $item['item_id'], 'version' => $item['version'], 'region' => $item['region']],
             '*'
         );
         $stats = [];
@@ -160,6 +163,7 @@ final class SqlItems implements ItemServiceInterface
 
     /**
      * Store the item stats in the database
+     *
      * @param Item $item
      */
     private function storeStats(Item $item)
@@ -173,6 +177,7 @@ final class SqlItems implements ItemServiceInterface
                     'stat_name' => $key,
                     'stat_value' => $value,
                     'version' => $item->version(),
+                    'region' => $item->region()
                 ]
             );
 
@@ -201,7 +206,28 @@ final class SqlItems implements ItemServiceInterface
             $item['purchase_value'],
             $item['sale_value'],
             $stats,
-            $item['version']
+            $item['version'],
+            $item['region']
         );
+    }
+
+    /**
+     * Converts Item object into SQL data array
+     *
+     * @param Item $item
+     *
+     * @return array
+     */
+    private function convertItemToArray(Item $item) : array
+    {
+        return [
+            'item_id' => $item->getID(),
+            'item_name' => $item->name(),
+            'description' => $item->description(),
+            'purchase_value' => $item->goldToBuy(),
+            'sale_value' => $item->goldFromSale(),
+            'version' => $item->version(),
+            'region' => $item->region()
+        ];
     }
 }

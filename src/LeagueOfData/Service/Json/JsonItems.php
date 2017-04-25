@@ -11,7 +11,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Item object JSON factory.
- * @package LeagueOfData\Service|Json
+ *
+ * @package LeagueOfData\Service\Json
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
@@ -63,15 +64,16 @@ final class JsonItems implements ItemServiceInterface
      *
      * @param string $version
      * @param int    $itemId
+     * @param string $region
+     *
      * @return array Item Objects
      */
-    public function fetch(string $version, int $itemId = null) : array
+    public function fetch(string $version, int $itemId = null, string $region = 'euw') : array
     {
         $this->log->info("Fetching items from API for version: {$version}".(
             isset($itemId) ? " [{$itemId}]" : ""
         ));
 
-        $region = 'euw';
         $params = [ 'version' => $version, 'region' => $region ];
 
         if (isset($itemId) && !empty($itemId)) {
@@ -83,14 +85,15 @@ final class JsonItems implements ItemServiceInterface
         $this->items = [];
 
         if ($response !== false) {
-            if (!isset($response->data)) {
-                $temp = new \stdClass();
-                $temp->data = [ $response ];
+            if (!isset($response['data'])) {
+                $temp['data'] = [ $response ];
                 $response = $temp;
             }
 
-            foreach ($response->data as $item) {
-                $this->items[$item->id] = $this->create($item, $version);
+            foreach ($response['data'] as $item) {
+                $item['version'] = $version;
+                $item['region'] = $region;
+                $this->items[$item['id']] = $this->create($item);
             }
         }
 
@@ -122,34 +125,35 @@ final class JsonItems implements ItemServiceInterface
      *
      * @param array $item
      * @param string $version
+     *
      * @return Item
      */
-    private function create(\stdClass $item, string $version) : Item
+    private function create(array $item) : Item
     {
-        $stats = $this->createStats($item);
-
         return new Item(
-            $item->id,
-            (isset($item->name) ? $item->name : ''),
-            (isset($item->description) ? $item->description : ''),
-            (isset($item->gold->total) ? $item->gold->total : ''),
-            (isset($item->gold->sell) ? $item->gold->sell : ''),
-            $stats,
-            $version
+            $item['id'],
+            (isset($item['name']) ? $item['name'] : ''),
+            (isset($item['description']) ? $item['description'] : ''),
+            (isset($item['gold']['total']) ? $item['gold']['total'] : ''),
+            (isset($item['gold']['sell']) ? $item['gold']['sell'] : ''),
+            $this->createStats($item),
+            $item['version'],
+            $item['region']
         );
     }
 
     /**
      * Create the item stats objects from JSON data
      *
-     * @param \stdClass $item
+     * @param array $item
+     *
      * @return array
      */
-    private function createStats(\stdClass $item) : array
+    private function createStats(array $item) : array
     {
         $stats = [];
 
-        foreach ($item->stats as $key => $value) {
+        foreach ($item['stats'] as $key => $value) {
             $stats[] = new ItemStat($key, $value);
         }
 

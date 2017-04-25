@@ -16,13 +16,18 @@ class ChampionStatsSpec extends ObjectBehavior
         ChampionDefenseInterface $armor,
         ChampionDefenseInterface $magicResist
     ) {
-        $this->beConstructedWith($health, $mana, $attack, $armor, $magicResist, 335);
+        $this->beConstructedWith(1, $health, $mana, $attack, $armor, $magicResist, 335, '7.8.1', 'euw');
     }
 
     public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionStats');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+    }
+
+    public function it_has_a_champion_id()
+    {
+        $this->getID()->shouldReturn(1);
     }
 
     public function it_has_a_movement_speed()
@@ -53,5 +58,15 @@ class ChampionStatsSpec extends ObjectBehavior
     public function it_has_magic_resist()
     {
         $this->magicResist()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
+    }
+
+    public function it_has_a_version()
+    {
+        $this->version()->shouldReturn('7.8.1');
+    }
+
+    public function it_has_a_region()
+    {
+        $this->region()->shouldReturn('euw');
     }
 }

@@ -34,6 +34,9 @@ class Item implements ItemInterface, ImmutableInterface
     /* @var string version */
     private $version;
 
+    /* @var string region */
+    private $region;
+
     public function __construct(
         int $itemID,
         string $name,
@@ -41,7 +44,8 @@ class Item implements ItemInterface, ImmutableInterface
         int $purchaseValue,
         int $saleValue,
         array $stats,
-        string $version
+        string $version,
+        string $region
     ) {
     
         $this->constructImmutable();
@@ -53,23 +57,7 @@ class Item implements ItemInterface, ImmutableInterface
         $this->description = $description;
         $this->version = $version;
         $this->stats = $stats;
-    }
-
-    /**
-     * Array of Item data
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'item_id' => $this->itemID,
-            'item_name' => $this->name,
-            'description' => $this->description,
-            'purchase_value' => $this->purchaseValue,
-            'sale_value' => $this->saleValue,
-            'version' => $this->version
-        ];
+        $this->region = $region;
     }
 
     /**
@@ -134,6 +122,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Fetch the item stats
+     *
      * @return array
      */
     public function stats() : array
@@ -149,7 +138,9 @@ class Item implements ItemInterface, ImmutableInterface
 
     /**
      * Fetch a specific stat
+     *
      * @param string $key
+     *
      * @return float
      */
     public function getStat(string $key) : float
@@ -161,5 +152,15 @@ class Item implements ItemInterface, ImmutableInterface
         }
 
         return 0;
+    }
+
+    /**
+     * Region data is for
+     *
+     * @return string
+     */
+    public function region() : string
+    {
+        return $this->region;
     }
 }

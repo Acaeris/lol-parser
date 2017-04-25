@@ -8,9 +8,12 @@ services:
     rabbitmq:
         class: LeagueOfData\Service\RabbitMQ
         arguments: ['@logger']
+    champion-stat-api:
+        class: LeagueOfData\Service\Json\JsonChampionStats
+        arguments: ['@logger']
     champion-api:
         class: LeagueOfData\Service\Json\JsonChampions
-        arguments: ['@api-adapter', '@logger']
+        arguments: ['@api-adapter', '@logger', '@champion-stat-api']
     item-api:
         class: LeagueOfData\Service\Json\JsonItems
         arguments: ['@api-adapter', '@logger']
@@ -22,7 +25,7 @@ services:
         arguments: ['@api-adapter', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@sql-adapter', '@logger', '@champion-stat-api']
     item-db:
         class: LeagueOfData\Service\Sql\SqlItems
         arguments: ['@sql-adapter', '@logger']

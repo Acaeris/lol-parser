@@ -28,11 +28,6 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     }
     use ResourceTrait;
 
-    /** @var string Tag for Resource Type: Health */
-    const RESOURCE_HEALTH = 'hp';
-    /** @var string Tag for Resource Type: Mana */
-    const RESOURCE_MANA = 'mp';
-
     /** @var int The base regeneration rate of this resource */
     private $regen;
     /** @var int The amount the regeneration rate increases per level */
@@ -41,17 +36,16 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     /**
      * Construct a Champion Resource object
      *
-     * @param string $type          Type of resource represented by this object
      * @param float  $baseValue     The base amount of that resource the champion starts with
      * @param float  $perLevel      The amount the maximum resource increases per level
      * @param float  $regen         The base regeneration rate of this resource
      * @param float  $regenPerLevel The amount the regeneration rate increases per level
      * @todo Add validation of parameters.
      */
-    public function __construct(string $type, float $baseValue, float $perLevel, float $regen, float $regenPerLevel)
+    public function __construct(float $baseValue, float $perLevel, float $regen, float $regenPerLevel)
     {
         $this->constructImmutable();
-        $this->constructResource($type, $baseValue, $perLevel);
+        $this->constructResource($baseValue, $perLevel);
 
         $this->regen = $regen;
         $this->regenPerLevel = $regenPerLevel;

@@ -13,7 +13,7 @@ class SqlItemsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch(new ItemRequest(['version' => '7.4.3'], '*'))->willReturn([
+        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))->willReturn([
             [
                 "item_id" => 1001,
                 "item_name" => "Boots of Speed",
@@ -31,7 +31,8 @@ class SqlItemsSpec extends ObjectBehavior
                 "version" => "7.4.3",
             ],
         ]);
-        $adapter->fetch(new ItemRequest(['item_id' => 1001, 'version' => '7.4.3'], '*'))->willReturn([
+        $request = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
+        $adapter->fetch(new ItemRequest($request, '*'))->willReturn([
             [
                 "item_id" => 1001,
                 "item_name" => "Boots of Speed",
@@ -41,7 +42,7 @@ class SqlItemsSpec extends ObjectBehavior
                 "version" => "7.4.3",
             ],
         ]);
-        $adapter->fetch(new ItemStatsRequest(['item_id' => 1001, 'version' => '7.4.3'], '*'))->willReturn([
+        $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
             [
                 "item_id" => 1001,
                 "stat_name" => "FlatMoveSpeedMod",
@@ -49,7 +50,8 @@ class SqlItemsSpec extends ObjectBehavior
                 "version" => "7.4.3",
             ]
         ]);
-        $adapter->fetch(new ItemStatsRequest(['item_id' => 1002, 'version' => '7.4.3'], '*'))->willReturn([
+        $request['item_id'] = 1002;
+        $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
             [
                 "item_id" => 1002,
                 "stat_name" => "TestMod",

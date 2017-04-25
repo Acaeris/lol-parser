@@ -45,7 +45,7 @@ class ApiAdapter implements AdapterInterface
      *
      * @return array Fetch response
      */
-    public function fetch(RequestInterface $request)
+    public function fetch(RequestInterface $request) : array
     {
         $request->requestFormat(RequestInterface::REQUEST_JSON);
         try {
@@ -71,7 +71,7 @@ class ApiAdapter implements AdapterInterface
         $state = $this->checkResponse($response);
         switch ($state) {
             case self::API_PROCEED:
-                return json_decode($response->getBody());
+                return json_decode($response->getBody(), true);
             case self::API_REPEAT:
                 sleep(1);
 
@@ -79,7 +79,7 @@ class ApiAdapter implements AdapterInterface
             case self::API_FAIL:
                 exit;
             case self::API_SKIP:
-                return false;
+                return [];
         }
     }
 

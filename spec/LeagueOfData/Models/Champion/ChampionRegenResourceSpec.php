@@ -12,7 +12,7 @@ class ChampionRegenResourceSpec extends ObjectBehavior
         $healthPerLevel = 76;
         $healthRegen = 5.424;
         $healthRegenPerLevel = 0.55;
-        $this->beConstructedWith('hp', $health, $healthPerLevel, $healthRegen, $healthRegenPerLevel);
+        $this->beConstructedWith($health, $healthPerLevel, $healthRegen, $healthRegenPerLevel);
     }
 
     public function it_is_initializable()
@@ -29,11 +29,6 @@ class ChampionRegenResourceSpec extends ObjectBehavior
     public function it_is_a_resource()
     {
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ResourceInterface');
-    }
-
-    public function it_can_output_a_type_of_resource()
-    {
-        $this->type()->shouldReturn("hp");
     }
 
     public function it_can_output_a_base_value()

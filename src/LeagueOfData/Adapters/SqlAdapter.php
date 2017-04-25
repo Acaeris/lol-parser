@@ -50,7 +50,7 @@ class SqlAdapter implements AdapterInterface
      *
      * @return array Fetch response
      */
-    public function fetch(RequestInterface $request)
+    public function fetch(RequestInterface $request) : array
     {
         $request->requestFormat(RequestInterface::REQUEST_SQL);
 

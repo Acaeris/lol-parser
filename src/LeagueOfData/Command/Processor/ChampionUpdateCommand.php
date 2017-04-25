@@ -54,9 +54,19 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             return;
         }
 
+        $output->write('Test');
+
         $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
 
+    /**
+     * If the update process fails in a recoverable state,
+     * will record the error and return the request to the message queue.
+     *
+     * @param InputInterface $input
+     * @param string $msg
+     * @param \Exception $exception
+     */
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:champion",
@@ -70,6 +80,11 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->log->error($msg, ['exception' => $exception]);
     }
 
+    /**
+     * Process data and update DB
+     *
+     * @param InputInterface $input
+     */
     private function updateData(InputInterface $input)
     {
         try {

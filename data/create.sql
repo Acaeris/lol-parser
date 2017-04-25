@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS champions (
   title         varchar(45) DEFAULT NULL,
   tags          varchar(45) DEFAULT NULL,
   resource_type varchar(20) DEFAULT NULL,
-  version       varchar(16) NOT NULL
+  version       varchar(16) NOT NULL,
+  region        varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champion_stats (
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS champion_stats (
   champion_id int         NOT NULL,
   stat_name   varchar(45) NOT NULL,
   stat_value  float       DEFAULT NULL,
-  version     varchar(16) NOT NULL
+  version     varchar(16) NOT NULL,
+  region      varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS items (
@@ -45,7 +47,8 @@ CREATE TABLE IF NOT EXISTS items (
   purchase_value int         DEFAULT NULL,
   sale_value     int         DEFAULT NULL,
   image          varchar(45) DEFAULT NULL,
-  version        varchar(16) NOT NULL
+  version        varchar(16) NOT NULL,
+  region         varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS item_stats (
@@ -54,5 +57,6 @@ CREATE TABLE IF NOT EXISTS item_stats (
   item_id    int         NOT NULL,
   stat_name  varchar(45) NOT NULL,
   stat_value float       DEFAULT NULL,
-  version    varchar(16) NOT NULL
+  version    varchar(16) NOT NULL,
+  region     varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

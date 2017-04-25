@@ -13,29 +13,29 @@ class JsonItemsSpec extends ObjectBehavior
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new ItemRequest(['version' => '7.4.3', 'region' => 'euw']);
-        $adapter->fetch($request)->willReturn((object) [
-            "data" => (object) [
-                "1001" => (object) [
+        $adapter->fetch($request)->willReturn([
+            "data" => [
+                "1001" => [
                     "id" => 1001,
                     "name" => "Boots of Speed",
                     "description" => "Test Description",
-                    "gold" => (object) [
+                    "gold" => [
                         "total" => 300,
                         "sell" => 210,
                     ],
-                    "stats" => (object) [
+                    "stats" => [
                         "FlatMovementSpeedMod" => 25,
                     ],
                 ],
-                "1002" => (object) [
+                "1002" => [
                     "id" => 1002,
                     "name" => "Test Item",
                     "description" => "Test Description",
-                    "gold" => (object) [
+                    "gold" => [
                         "total" => 300,
                         "sell" => 210,
                     ],
-                    "stats" => (object) [
+                    "stats" => [
                         "TestStat" => 100,
                     ],
                 ],
@@ -43,15 +43,15 @@ class JsonItemsSpec extends ObjectBehavior
             "version" => '7.4.3',
         ]);
         $request = new ItemRequest(['id' => 1001, 'region' => 'euw', 'version' => '7.4.3']);
-        $adapter->fetch($request)->willReturn((object) [
+        $adapter->fetch($request)->willReturn([
             "id" => 1001,
             "name" => "Boots of Speed",
             "description" => "Test Description",
-            "gold" => (object) [
+            "gold" => [
                 "total" => 300,
                 "sell" => 210,
             ],
-            "stats" => (object) [
+            "stats" => [
                 "FlatMovementSpeedMod" => 25,
             ],
         ]);

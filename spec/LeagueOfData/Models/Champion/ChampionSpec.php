@@ -10,7 +10,7 @@ class ChampionSpec extends ObjectBehavior
     public function let(
         ChampionStatsInterface $stats
     ) {
-        $this->beConstructedWith(1, "Test", "Test Character", "mp", ["Fighter", "Mage"], $stats, "6.21.1");
+        $this->beConstructedWith(1, "Test", "Test Character", "mp", ["Fighter", "Mage"], $stats, "6.21.1", "euw");
     }
 
     public function it_is_initializable()
@@ -62,5 +62,10 @@ class ChampionSpec extends ObjectBehavior
     public function it_has_stats()
     {
         $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+    }
+
+    public function it_has_a_region()
+    {
+        $this->region()->shouldReturn('euw');
     }
 }

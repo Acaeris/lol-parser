@@ -14,17 +14,17 @@ class JsonRealmsSpec extends ObjectBehavior
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new RealmRequest(['region' => 'euw']);
-        $adapter->fetch($request)->willReturn((object) [
+        $adapter->fetch($request)->willReturn([
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
             'v' => '7.4.3'
         ]);
         $request = new RealmRequest(['region' => 'eune']);
-        $adapter->fetch($request)->willReturn((object) [
+        $adapter->fetch($request)->willReturn([
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
             'v' => '7.4.3'
         ]);
         $request = new RealmRequest(['region' => 'na']);
-        $adapter->fetch($request)->willReturn((object) [
+        $adapter->fetch($request)->willReturn([
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
             'v' => '7.4.3'
         ]);

@@ -28,6 +28,9 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     /** @var string Tag for defence type: Magic Resistance */
     const DEFENSE_MAGICRESIST = 'spellBlock';
 
+    /** @var string Defense type **/
+    private $type;
+
     /**
      * Construct a Champion Defense object
      *
@@ -39,8 +42,19 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     public function __construct(string $type, float $base, float $perLevel)
     {
         $this->constructImmutable();
-        $this->isValidType($type);
-        $this->constructResource($type, $base, $perLevel);
+        if ($this->isValidType($type)) {
+            $this->type = $type;
+        }
+        $this->constructResource($base, $perLevel);
+    }
+    /**
+     * Defence type
+     *
+     * @return string Defence type
+     */
+    public function type() : string
+    {
+        return $this->type;
     }
 
     /**

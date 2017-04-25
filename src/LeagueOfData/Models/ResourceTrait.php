@@ -15,28 +15,26 @@ namespace LeagueOfData\Models;
  */
 trait ResourceTrait
 {
-    public static $validResources = [
-        'hp' => 'hp',
-        'mp' => 'mp',
-        'mana' => 'mp',
-        'rage' => 'rage',
-        'gnarfury' => 'rage',
-        'heat' => 'heat',
-        'energy' => 'energy',
-        'wind' => 'wind',
-        'flow' => 'flow',
-        'fury' => 'fury',
-        'dragonfury' => 'fury',
-        'battlefury' => 'fury',
-        'blood well' => 'blood',
-        'bloodwell' => 'blood',
-        'crimson rush' => 'rush',
-        'ferocity' => 'ferocity',
-        'courage' => 'courage',
-        'shield' => 'shield',
-        'none' => 'na',
-        'armor' => 'armor',
-        'spellblock' => 'spellBlock',
+    private $validResources = [
+        'hp',
+        'mp',
+        'mana',
+        'rage',
+        'gnarfury',
+        'heat',
+        'energy',
+        'wind',
+        'flow',
+        'fury',
+        'dragonfury',
+        'battlefury',
+        'blood well',
+        'bloodwell',
+        'crimson rush',
+        'ferocity',
+        'courage',
+        'shield',
+        'none',
     ];
 
     /** @var string The type of resource this object represents */
@@ -48,45 +46,29 @@ trait ResourceTrait
 
     /**
      * Create the resource
-     * @param string $type
+     *
      * @param float $baseValue
      * @param float $perLevel
      */
-    public function constructResource(string $type, float $baseValue, float $perLevel)
+    public function constructResource(float $baseValue, float $perLevel)
     {
-        $this->validateType($type);
-
         $this->baseValue = $baseValue;
         $this->perLevel = $perLevel;
     }
 
     /**
      * Validate the type of resource
-     * @param string $type
-     * @throws \InvalidArgumentException
-     */
-    private function validateType(string $type)
-    {
-        $found = false;
-        foreach (self::$validResources as $code => $index) {
-            if ($code === strtolower($type) || $index === strtolower($type)) {
-                $this->type = $index;
-                $found = true;
-            }
-        }
-        if (!$found) {
-            throw new \InvalidArgumentException("Invalid resource type supplied: ".$type);
-        }
-    }
-
-    /**
-     * Resource Type
      *
-     * @return string Resource type
+     * @param string $type
+     *
+     * @return bool
      */
-    public function type() : string
+    public function isValid(string $type)
     {
-        return $this->type;
+        if (in_array($type, $this->validResources)) {
+            return true;
+        }
+        return false;
     }
 
     /**

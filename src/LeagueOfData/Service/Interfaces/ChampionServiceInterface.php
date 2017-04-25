@@ -6,6 +6,7 @@ use LeagueOfData\Models\Champion\Champion;
 
 /**
  * Champion Service interface
+ *
  * @package LeagueOfData\Service|Interfaces
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
@@ -17,10 +18,11 @@ interface ChampionServiceInterface
      *
      * @param string $version
      * @param int    $championId
+     * @param string $region
      *
      * @return array Champion Objects
      */
-    public function fetch(string $version, int $championId = null) : array;
+    public function fetch(string $version, int $championId = null, string $region = 'euw') : array;
 
     /**
      * Store the champion objects in the database

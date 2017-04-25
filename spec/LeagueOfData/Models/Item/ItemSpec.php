@@ -11,7 +11,7 @@ class ItemSpec extends ObjectBehavior
     {
         $itemStat->key()->willReturn('moveSpeed');
         $itemStat->value()->willReturn((float) 30);
-        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, [$itemStat], '7.4.3');
+        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, [$itemStat], '7.4.3', 'euw');
     }
 
     public function it_is_initializable()
@@ -65,15 +65,8 @@ class ItemSpec extends ObjectBehavior
         $this->getStat('moveSpeed')->shouldReturn((float) 30);
     }
 
-    public function it_can_be_converted_to_array_for_storage()
+    public function it_has_a_region()
     {
-        $this->toArray()->shouldReturn([
-            'item_id' => 1,
-            'item_name' => 'Infinity Edge',
-            'description' => 'Test Description',
-            'purchase_value' => 300,
-            'sale_value' => 210,
-            'version' => '7.4.3'
-        ]);
+        $this->region()->shouldReturn('euw');
     }
 }
