@@ -64,7 +64,7 @@ final class SqlItems implements ItemServiceInterface
      */
     public function store()
     {
-        $this->log->info("Storing ".count($this->items)." new/updated items");
+        $this->log->debug("Storing ".count($this->items)." new/updated items");
 
         foreach ($this->items as $item) {
             $request = new ItemRequest(
@@ -105,7 +105,7 @@ final class SqlItems implements ItemServiceInterface
      */
     public function fetch(string $version, int $itemId = null, string $region = 'euw'): array
     {
-        $this->log->info("Fetching items from DB for version: {$version}".(
+        $this->log->debug("Fetching items from DB for version: {$version}".(
             isset($itemId) ? " [{$itemId}]" : ""
         ));
 
@@ -132,6 +132,7 @@ final class SqlItems implements ItemServiceInterface
                 );
             }
         }
+        $this->log->debug(count($this->items)." items fetched from DB");
 
         return $this->items;
     }

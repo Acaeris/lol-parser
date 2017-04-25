@@ -47,9 +47,11 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('item-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
+        $this->log->notice('Checking Item data for update');
+
         if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('itemId'))) == 0
             || $input->getOption('force')) {
-            $this->log->info("Update required");
+            $this->log->notice("Update required");
             $this->updateData($input);
             return;
         }

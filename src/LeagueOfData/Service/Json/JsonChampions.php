@@ -74,7 +74,7 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function fetch(string $version, int $championId = null, string $region = 'euw') : array
     {
-        $this->log->info("Fetching champions from API for version: {$version}".(
+        $this->log->debug("Fetching champions from API for version: {$version}".(
             isset($championId) ? " [{$championId}]" : ""
         ));
 
@@ -88,7 +88,7 @@ final class JsonChampions implements ChampionServiceInterface
         $response = $this->source->fetch($request);
         $this->champions = [];
         $this->processResponse($response, $version, $region);
-        $this->log->info(count($this->champions)." champions fetched from API");
+        $this->log->debug(count($this->champions)." champions fetched from API");
 
         return $this->champions;
     }

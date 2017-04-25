@@ -49,7 +49,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $resourceType;
 
     /**
-     * @var string Region data is for 
+     * @var string Region data is for
      */
     private $region;
 

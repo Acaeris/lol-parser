@@ -47,14 +47,14 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('champion-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
+        $this->log->notice('Checking Champion data for update');
+
         if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('championId'))) == 0
             || $input->getOption('force')) {
-            $this->log->info("Update required");
+            $this->log->notice("Update required");
             $this->updateData($input);
             return;
         }
-
-        $output->write('Test');
 
         $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
@@ -99,7 +99,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             preg_match("/CONSTRAINT `(\w+)`/", $exception, $matches);
 
             if ($matches[1] == 'version') {
-                $this->log->info("Requesting refresh of version data");
+                $this->log->notice("Version data outdated. Automating update.");
                 $this->messageQueue->addProcessToQueue(
                     'update:version',
                     '{ "command" : "update:version" }'

@@ -37,7 +37,6 @@ final class QueueCommand extends ContainerAwareCommand
 
     public function process(AMQPMessage $msg)
     {
-        $this->log->info('Starting process');
         $task = json_decode($msg->body, true);
         $command = $this->getApplication()->find($task['command']);
         $commandInput = new ArrayInput($task['params']);

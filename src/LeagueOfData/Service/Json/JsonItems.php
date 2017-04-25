@@ -70,7 +70,7 @@ final class JsonItems implements ItemServiceInterface
      */
     public function fetch(string $version, int $itemId = null, string $region = 'euw') : array
     {
-        $this->log->info("Fetching items from API for version: {$version}".(
+        $this->log->debug("Fetching items from API for version: {$version}".(
             isset($itemId) ? " [{$itemId}]" : ""
         ));
 
@@ -97,7 +97,7 @@ final class JsonItems implements ItemServiceInterface
             }
         }
 
-        $this->log->info(count($this->items)." items fetched from API");
+        $this->log->debug(count($this->items)." items fetched from API");
 
         return $this->items;
     }

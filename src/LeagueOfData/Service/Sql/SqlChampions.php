@@ -5,15 +5,9 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
-use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
-use LeagueOfData\Models\Champion\ChampionStats;
-use LeagueOfData\Models\Champion\ChampionRegenResource;
-use LeagueOfData\Models\Champion\ChampionAttack;
-use LeagueOfData\Models\Champion\ChampionDefense;
-use LeagueOfData\Models\ResourceTrait;
 
 /**
  * Champion object SQL factory.
@@ -28,7 +22,7 @@ final class SqlChampions implements ChampionServiceInterface
     /* @var LoggerInterface Logger */
     private $log;
     /* @var JsonChampionStats Champion Stat factory */
-    private $statBuilder;
+    private $statService;
     /* @var array Champion objects */
     private $champions = [];
 
@@ -43,7 +37,7 @@ final class SqlChampions implements ChampionServiceInterface
     {
         $this->dbAdapter = $adapter;
         $this->log = $log;
-        $this->statBuilder = $statBuilder;
+        $this->statService = $statBuilder;
     }
 
     /**
@@ -79,7 +73,7 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function fetch(string $version, int $championId = null, string $region = 'euw') : array
     {
-        $this->log->info("Fetching champions from DB for version: {$version}".(
+        $this->log->debug("Fetching champions from DB for version: {$version}".(
             isset($championId) ? " [{$championId}]" : ""
         ));
 
@@ -93,7 +87,7 @@ final class SqlChampions implements ChampionServiceInterface
         $results = $this->dbAdapter->fetch($request);
         $this->champions = [];
         $this->processResults($results);
-        $this->log->info(count($this->champions)." champions fetched from DB");
+        $this->log->debug(count($this->champions)." champions fetched from DB");
 
         return $this->champions;
     }
@@ -103,7 +97,7 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function store()
     {
-        $this->log->info("Storing ".count($this->champions)." new/updated champions");
+        $this->log->debug("Storing ".count($this->champions)." new/updated champions");
 
         foreach ($this->champions as $champion) {
             $request = new ChampionRequest(
@@ -112,7 +106,7 @@ final class SqlChampions implements ChampionServiceInterface
                 $this->convertChampionToArray($champion)
             );
 
-            $this->storeStats($champion);
+            $this->statService->add($champion->stats());
 
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
@@ -121,6 +115,8 @@ final class SqlChampions implements ChampionServiceInterface
             }
             $this->dbAdapter->insert($request);
         }
+
+        $this->statService->store();
     }
 
     /**
@@ -154,68 +150,6 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
-     * Converts the champions stats for SQL insertion
-     *
-     * @param ChampionStats $stats
-     * @return array
-     */
-    private function convertStatsToArray(ChampionStats $stats) : array
-    {
-        return [
-            'moveSpeed' => $stats->moveSpeed(),
-            'hp' => $stats->health()->baseValue(),
-            'hpPerLevel' => $stats->health()->increasePerLevel(),
-            'hpRegen' => $stats->health()->regenBaseValue(),
-            'hpRegenPerLevel' => $stats->health()->regenIncreasePerLevel(),
-            'resource' => $stats->resource()->baseValue(),
-            'resourcePerLevel' => $stats->resource()->increasePerLevel(),
-            'resourceRegen' => $stats->resource()->regenBaseValue(),
-            'resourceRegenPerLevel' => $stats->resource()->regenIncreasePerLevel(),
-            'attackRange' => $stats->attack()->range(),
-            'attackDamage' => $stats->attack()->baseDamage(),
-            'attackDamagePerLevel' => $stats->attack()->damagePerLevel(),
-            'attackSpeedOffset' => $stats->attack()->attackSpeed(),
-            'attackSpeedPerLevel' => $stats->attack()->attackSpeedPerLevel(),
-            'crit' => $stats->attack()->baseCritChance(),
-            'critPerLevel' => $stats->attack()->critChancePerLevel(),
-            'armor' => $stats->armor()->baseValue(),
-            'armorPerLevel' => $stats->armor()->increasePerLevel(),
-            'spellBlock' => $stats->magicResist()->baseValue(),
-            'spellBlockPerLevel' => $stats->magicResist()->increasePerLevel()
-        ];
-    }
-
-    /**
-     * Store the champion stats in the database
-     * @param Champion $champion
-     */
-    private function storeStats(Champion $champion)
-    {
-        $stats = $this->convertStatsToArray($champion->stats());
-
-        foreach ($stats as $key => $value) {
-            $request = new ChampionStatsRequest(
-                ['champion_id' => $champion->getID(), 'version' => $champion->version(), 'stat_name' => $key],
-                'champion_id',
-                [
-                    'champion_id' => $champion->getID(),
-                    'stat_name' => $key,
-                    'stat_value' => $value,
-                    'version' => $champion->version(),
-                    'region' => $champion->region()
-                ]
-            );
-
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
-
-                return;
-            }
-            $this->dbAdapter->insert($request);
-        }
-    }
-
-    /**
      * Build the Champion object from the given data.
      *
      * @param array $champion
@@ -224,13 +158,14 @@ final class SqlChampions implements ChampionServiceInterface
      */
     private function create(array $champion) : Champion
     {
+        $stats = $this->statService->fetch($champion['version'], $champion['champion_id'], $champion['region']);
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],
             $champion['title'],
             $champion['resource_type'],
             explode('|', $champion['tags']),
-            $this->statBuilder->fetch($champion['version'], $champion['champion_id'], $champion['region']),
+            $stats[$champion['champion_id']],
             $champion['version'],
             $champion['region']
         );

@@ -2,7 +2,9 @@
 
 namespace LeagueOfData\Service\Sql;
 
+use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
@@ -41,7 +43,7 @@ class SqlChampionStats implements ChampionStatsServiceInterface
         $attack = $this->createAttack($champion);
         $armor = $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion);
         $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
-        
+
         return new ChampionStats(
             $champion['champion_id'],
             $health,
@@ -49,10 +51,32 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             $attack,
             $armor,
             $magicResist,
-            $champion['moveSpeed'],
+            isset($champion['moveSpeed']) ? $champion['moveSpeed'] : 0,
             $champion['version'],
             $champion['region']
         );
+    }
+
+    /**
+     * Add a champion's stats to the collection
+     *
+     * @param ChampionStats $champion
+     */
+    public function add(ChampionStats $champion)
+    {
+        $this->champions[$champion->getID()] = $champion;
+    }
+
+    /**
+     * Add all champion stats objects to internal array
+     *
+     * @param array $champions ChampionStats objects
+     */
+    public function addAll(array $champions)
+    {
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getID()] = $champion;
+        }
     }
 
     /**
@@ -66,7 +90,7 @@ class SqlChampionStats implements ChampionStatsServiceInterface
      */
     public function fetch(string $version, int $championId = null, string $region = "euw") : array
     {
-        $this->log->info("Fetching champion stats from DB for version: {$version}".(
+        $this->log->debug("Fetching champion stats from DB for version: {$version}".(
             isset($championId) ? " [{$championId}]" : ""
         ));
 
@@ -80,20 +104,52 @@ class SqlChampionStats implements ChampionStatsServiceInterface
         $results = $this->dbAdapter->fetch($request);
         $this->champions = [];
         $this->processResults($results);
-        $this->log->info(count($this->champions)." champions' stats fetched from DB");
+        $this->log->debug(count($this->champions)." champions' stats fetched from DB");
 
         return $this->champions;
     }
 
+    /**
+     * Store the champion stats in the database
+     */
     public function store()
     {
-        $this->log->info("Storing ".count($this->champions)." new/updated champions' stats");
+        $this->log->debug("Storing ".count($this->champions)." new/updated champions' stats");
 
-        foreach ($this->champions as $id => $champion) {
-            $request = new ChampionStatsRequest(
-                ['champion_id' => $champion->getID(), ]
-            );
+        foreach ($this->champions as $champion) {
+            $stats = $this->convertStatsToArray($champion);
+
+            foreach ($stats as $key => $value) {
+                $request = new ChampionStatsRequest(
+                    ['champion_id' => $champion->getID(), 'version' => $champion->version(), 'stat_name' => $key],
+                    'champion_id',
+                    [
+                        'champion_id' => $champion->getID(),
+                        'stat_name' => $key,
+                        'stat_value' => $value,
+                        'version' => $champion->version(),
+                        'region' => $champion->region()
+                    ]
+                );
+
+                if ($this->dbAdapter->fetch($request)) {
+                    $this->dbAdapter->update($request);
+
+                    continue;
+                }
+                $this->dbAdapter->insert($request);
+            }
         }
+    }
+
+    /**
+     * Get collection of champions' stats for transfer to a different process.
+     *
+     * @return array ChampionStats objects
+     */
+    public function transfer() : array
+    {
+        return $this->champions;
     }
 
     /**
@@ -171,13 +227,45 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     private function createAttack(array $stats) : ChampionAttack
     {
         return new ChampionAttack(
-            $stats['attackRange'],
-            $stats['attackDamage'],
-            $stats['attackDamagePerLevel'],
-            $stats['attackSpeedOffset'],
-            $stats['attackSpeedPerLevel'],
-            $stats['crit'],
-            $stats['critPerLevel']
+            isset($stats['attackRange']) ? $stats['attackRange'] : 0,
+            isset($stats['attackDamage']) ? $stats['attackDamage'] : 0,
+            isset($stats['attackDamagePerLevel']) ? $stats['attackDamagePerLevel'] : 0,
+            isset($stats['attackSpeedOffset']) ? $stats['attackSpeedOffset'] : 0,
+            isset($stats['attackSpeedPerLevel']) ? $stats['attackSpeedPerLevel'] : 0,
+            isset($stats['crit']) ? $stats['crit'] : 0,
+            isset($stats['critPerLevel']) ? $stats['critPerLevel'] : 0
         );
+    }
+
+    /**
+     * Converts the champions stats for SQL insertion
+     *
+     * @param ChampionStats $stats
+     * @return array
+     */
+    private function convertStatsToArray(ChampionStats $stats) : array
+    {
+        return [
+            'moveSpeed' => $stats->moveSpeed(),
+            'hp' => $stats->health()->baseValue(),
+            'hpPerLevel' => $stats->health()->increasePerLevel(),
+            'hpRegen' => $stats->health()->regenBaseValue(),
+            'hpRegenPerLevel' => $stats->health()->regenIncreasePerLevel(),
+            'resource' => $stats->resource()->baseValue(),
+            'resourcePerLevel' => $stats->resource()->increasePerLevel(),
+            'resourceRegen' => $stats->resource()->regenBaseValue(),
+            'resourceRegenPerLevel' => $stats->resource()->regenIncreasePerLevel(),
+            'attackRange' => $stats->attack()->range(),
+            'attackDamage' => $stats->attack()->baseDamage(),
+            'attackDamagePerLevel' => $stats->attack()->damagePerLevel(),
+            'attackSpeedOffset' => $stats->attack()->attackSpeed(),
+            'attackSpeedPerLevel' => $stats->attack()->attackSpeedPerLevel(),
+            'crit' => $stats->attack()->baseCritChance(),
+            'critPerLevel' => $stats->attack()->critChancePerLevel(),
+            'armor' => $stats->armor()->baseValue(),
+            'armorPerLevel' => $stats->armor()->increasePerLevel(),
+            'spellBlock' => $stats->magicResist()->baseValue(),
+            'spellBlockPerLevel' => $stats->magicResist()->increasePerLevel()
+        ];
     }
 }
