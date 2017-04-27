@@ -13,6 +13,21 @@ use LeagueOfData\Models\Champion\Champion;
  */
 interface ChampionServiceInterface
 {
+
+    /**
+     * Add a champion to the collection
+     *
+     * @param Champion $champion
+     */
+    public function add(Champion $champion);
+
+    /**
+     * Add all champion objects to internal array
+     *
+     * @param array $champions Champion objects
+     */
+    public function addAll(array $champions);
+
     /**
      * Fetch Champions
      *
@@ -30,16 +45,18 @@ interface ChampionServiceInterface
     public function store();
 
     /**
-     * Add a champion to the collection
+     * Get collection of champions for transfer to a different process.
      *
-     * @param Champion $champion
+     * @return array Champion objects
      */
-    public function add(Champion $champion);
+    public function transfer() : array;
 
     /**
-     * Add all champion objects to internal array
+     * Create the champion object from array data
      *
-     * @param array $champions Champion objects
+     * @param array $champion
+     *
+     * @return Champion
      */
-    public function addAll(array $champions);
+    public function create(array $champion) : Champion;
 }

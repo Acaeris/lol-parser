@@ -23,7 +23,7 @@ final class JsonChampions implements ChampionServiceInterface
     /* @var LoggerInterface logger */
     private $log;
     /* @var JsonChampionStats Champion Stat factory */
-    private $statBuilder;
+    private $statService;
     /* @var array Champion Objects */
     private $champions;
 
@@ -34,11 +34,11 @@ final class JsonChampions implements ChampionServiceInterface
      * @param LoggerInterface  $log
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log,
-        ChampionStatsServiceInterface $statBuilder)
+        ChampionStatsServiceInterface $statService)
     {
         $this->source = $adapter;
         $this->log = $log;
-        $this->statBuilder = $statBuilder;
+        $this->statService = $statService;
     }
 
     /**
@@ -87,7 +87,9 @@ final class JsonChampions implements ChampionServiceInterface
         $request = new ChampionRequest($params);
         $response = $this->source->fetch($request);
         $this->champions = [];
-        $this->processResponse($response, $version, $region);
+        if (count($response) > 0) {
+            $this->processResponse($response, $version, $region);
+        }
         $this->log->debug(count($this->champions)." champions fetched from API");
 
         return $this->champions;
@@ -98,7 +100,7 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function store()
     {
-        $this->log->error("Request to store data through JSON API not available.");
+        throw new \Exception("Request to store data through JSON API not available.");
     }
 
     /**
@@ -126,7 +128,7 @@ final class JsonChampions implements ChampionServiceInterface
             $champion['title'],
             $champion['partype'],
             $champion['tags'],
-            $this->statBuilder->create($champion),
+            $this->statService->create($champion),
             $champion['version'],
             $champion['region']
         );

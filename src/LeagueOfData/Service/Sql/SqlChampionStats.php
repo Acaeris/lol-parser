@@ -20,15 +20,12 @@ use LeagueOfData\Models\Champion\ChampionAttack;
  */
 class SqlChampionStats implements ChampionStatsServiceInterface
 {
-    /* @var AdapterInterface DB adapter */
+    /** @var AdapterInterface DB adapter */
     private $dbAdapter;
-    /* @var array Champion objects */
-    private $champions = [];
-
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $log;
+    /** @var array Champion objects */
+    private $champions = [];
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
@@ -36,21 +33,22 @@ class SqlChampionStats implements ChampionStatsServiceInterface
         $this->dbAdapter = $adapter;
     }
 
+    /**
+     * Factory to create Champion Stats objects from SQL
+     *
+     * @param array $champion
+     *
+     * @return ChampionStats
+     */
     public function create(array $champion) : ChampionStats
     {
-        $health = $this->createHealth($champion);
-        $resource = $this->createResource($champion);
-        $attack = $this->createAttack($champion);
-        $armor = $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion);
-        $magicResist = $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion);
-
         return new ChampionStats(
             $champion['champion_id'],
-            $health,
-            $resource,
-            $attack,
-            $armor,
-            $magicResist,
+            $this->createHealth($champion),
+            $this->createResource($champion),
+            $this->createAttack($champion),
+            $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion),
+            $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion),
             isset($champion['moveSpeed']) ? $champion['moveSpeed'] : 0,
             $champion['version'],
             $champion['region']

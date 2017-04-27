@@ -12,11 +12,10 @@ class SqlRealmsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request = new RealmRequest([], 'SELECT `cdn`, `region`, MAX(`version`) FROM realm GROUP BY `region`');
+        $request = new RealmRequest([], 'SELECT `cdn`, `version` FROM realms ORDER BY `version` DESC LIMIT 1');
         $adapter->fetch($request)->willReturn([[
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
-            'version' => '7.4.3',
-            'region' => 'euw'
+            'version' => '7.4.3'
         ]]);
         $this->beConstructedWith($adapter, $logger);
     }
@@ -29,7 +28,7 @@ class SqlRealmsSpec extends ObjectBehavior
 
     public function it_should_find_all_realm_data()
     {
-        $this->findAll()->shouldReturnArrayOfRealms();
+        $this->fetch()->shouldReturnArrayOfRealms();
     }
 
     public function getMatchers()

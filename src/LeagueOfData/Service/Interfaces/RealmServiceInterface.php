@@ -11,9 +11,9 @@ namespace LeagueOfData\Service\Interfaces;
 interface RealmServiceInterface
 {
     /**
-     * Find all Realm data
+     * fetch all Realm data
      *
      * @return array Realm objects
      */
-    public function findAll() : array;
+    public function fetch() : array;
 }

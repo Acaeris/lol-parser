@@ -10,11 +10,9 @@ class RealmSpec extends ObjectBehavior
     {
         $cdn = 'http://ddragon.leagueoflegends.com/cdn';
         $version = '7.4.3';
-        $region = 'euw';
         $this->beConstructedWith(
             $cdn,
-            $version,
-            $region
+            $version
         );
     }
 
@@ -39,15 +37,9 @@ class RealmSpec extends ObjectBehavior
         $this->version()->shouldReturn('7.4.3');
     }
 
-    public function it_has_a_region()
-    {
-        $this->region()->shouldReturn('euw');
-    }
-
     public function it_can_be_converted_to_array_for_storage()
     {
         $this->toArray()->shouldReturn([
-            'region' => 'euw',
             'version' => '7.4.3',
             'cdn' => 'http://ddragon.leagueoflegends.com/cdn'
         ]);

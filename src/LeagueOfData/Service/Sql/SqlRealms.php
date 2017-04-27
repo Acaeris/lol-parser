@@ -40,14 +40,14 @@ class SqlRealms implements RealmServiceInterface
      *
      * @return array Realm objects
      */
-    public function findAll() : array
+    public function fetch() : array
     {
         $this->realms = [];
-        $request = new RealmRequest([], 'SELECT `cdn`, `region`, MAX(`version`) FROM realm GROUP BY `region`');
+        $request = new RealmRequest([], 'SELECT `cdn`, `version` FROM realms ORDER BY `version` DESC LIMIT 1');
         $response = $this->db->fetch($request);
 
         foreach ($response as $realm) {
-            $this->realms[] = new Realm($realm['cdn'], $realm['version'], $realm['region']);
+            $this->realms[] = new Realm($realm['cdn'], $realm['version']);
         }
 
         return $this->realms;
@@ -72,9 +72,8 @@ class SqlRealms implements RealmServiceInterface
             $request = new RealmRequest(
                 [
                     'version' => $realm->version(),
-                    'region' => $realm->region(),
                 ],
-                'SELECT version FROM realm WHERE version = :version AND region = :region',
+                'SELECT version FROM realms WHERE version = :version',
                 $realm->toArray()
             );
             if ($this->db->fetch($request)) {

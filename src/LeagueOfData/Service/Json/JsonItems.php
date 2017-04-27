@@ -83,20 +83,9 @@ final class JsonItems implements ItemServiceInterface
         $request = new ItemRequest($params);
         $response = $this->source->fetch($request);
         $this->items = [];
-
-        if ($response !== false) {
-            if (!isset($response['data'])) {
-                $temp['data'] = [ $response ];
-                $response = $temp;
-            }
-
-            foreach ($response['data'] as $item) {
-                $item['version'] = $version;
-                $item['region'] = $region;
-                $this->items[$item['id']] = $this->create($item);
-            }
+        if (count($response) > 0) {
+            $this->processResponse($response, $version, $region);
         }
-
         $this->log->debug(count($this->items)." items fetched from API");
 
         return $this->items;
@@ -107,7 +96,7 @@ final class JsonItems implements ItemServiceInterface
      */
     public function store()
     {
-        $this->log->error("Request to store data through JSON API not available.");
+        throw new \Exception("Request to store data through JSON API not available.");
     }
 
     /**
@@ -158,5 +147,28 @@ final class JsonItems implements ItemServiceInterface
         }
 
         return $stats;
+    }
+
+    /**
+     * Convert response data into Item objects
+     *
+     * @param array  $response
+     * @param string $version
+     * @param string $region
+     */
+    private function processResponse(array $response, string $version, string $region)
+    {
+        if ($response !== false) {
+            if (!isset($response['data'])) {
+                $temp['data'] = [ $response ];
+                $response = $temp;
+            }
+
+            foreach ($response['data'] as $item) {
+                $item['version'] = $version;
+                $item['region'] = $region;
+                $this->items[$item['id']] = $this->create($item);
+            }
+        }
     }
 }

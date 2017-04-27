@@ -28,10 +28,10 @@ class ChampionRequestSpec extends ObjectBehavior
         $this->data()->shouldReturn(['Test Data']);
     }
 
-    public function it_returns_the_correct_query_for_a_json_request()
+    public function it_returns_the_api_endpoint_for_a_json_request()
     {
         $this->requestFormat(RequestInterface::REQUEST_JSON);
-        $this->query()->shouldReturn('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion');
+        $this->query()->shouldReturn('static-data/v3/champions');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()

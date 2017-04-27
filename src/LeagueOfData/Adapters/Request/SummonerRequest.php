@@ -13,10 +13,10 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class SummonerRequest implements RequestInterface
 {
-    /* @var string API Request URL */
-    const API_URL = 'https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner';
     /* @var string Request Type */
-    const TYPE = "item";
+    const TYPE = "summoners";
+    /** @var string Endpoint */
+    const ENDPOINT = 'summoner/v3';
     /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw' ];
     /* @var string Output Format */
@@ -92,11 +92,14 @@ final class SummonerRequest implements RequestInterface
     public function query() : string
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
-            $params = array_merge($this->apiDefaults, $this->where);
-            $apiUrl = self::API_URL.(isset($params['name']) ? '/by-name/'.$params['name']
-                : '/'.$params['id']);
-
-            return str_replace('{region}', $params['region'], $apiUrl);
+            $url = self::ENDPOINT.'/'.self::TYPE;
+            if (isset($this->where['name'])) {
+                $url .= "/by-name/" . $this->where['name'];
+            }
+            if (isset($this->where['id'])) {
+                $url .= "/" . $this->where['id'];
+            }
+            return $url;
         }
 
         return $this->query;

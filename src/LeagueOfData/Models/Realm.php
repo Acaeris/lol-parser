@@ -23,24 +23,17 @@ final class Realm implements RealmInterface, ImmutableInterface
     private $version;
 
     /**
-     * @var string Region
-     */
-    private $region;
-
-    /**
      * Construct a Realm object
      *
      * @param string $cdn     CDN url
      * @param string $version DataDragon version
-     * @param string $region  Realm region
      */
-    public function __construct(string $cdn, string $version, string $region)
+    public function __construct(string $cdn, string $version)
     {
         $this->constructImmutable();
 
         $this->cdn = $cdn;
         $this->version = $version;
-        $this->region = $region;
     }
 
     /**
@@ -64,16 +57,6 @@ final class Realm implements RealmInterface, ImmutableInterface
     }
 
     /**
-     * Realm Region
-     *
-     * @return string Region
-     */
-    public function region() : string
-    {
-        return $this->region;
-    }
-
-    /**
      * Correctly convert the object to an array.
      * Use instead of PHP's type conversion
      *
@@ -82,7 +65,6 @@ final class Realm implements RealmInterface, ImmutableInterface
     public function toArray() : array
     {
         return [
-            'region' => $this->region,
             'version' => $this->version,
             'cdn' => $this->cdn
         ];

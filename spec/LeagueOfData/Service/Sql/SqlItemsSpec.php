@@ -3,17 +3,17 @@
 namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
+use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ItemRequest;
 use LeagueOfData\Adapters\Request\ItemStatsRequest;
 use LeagueOfData\Models\Item\Item;
-use Psr\Log\LoggerInterface;
 
 class SqlItemsSpec extends ObjectBehavior
 {
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))->willReturn([
+        $items = [
             [
                 "item_id" => 1001,
                 "item_name" => "Boots of Speed",
@@ -30,17 +30,11 @@ class SqlItemsSpec extends ObjectBehavior
                 "sale_value" => 210,
                 "version" => "7.4.3",
             ],
-        ]);
+        ];
+        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))->willReturn($items);
         $request = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
         $adapter->fetch(new ItemRequest($request, '*'))->willReturn([
-            [
-                "item_id" => 1001,
-                "item_name" => "Boots of Speed",
-                "description" => "Test Description",
-                "purchase_value" => 300,
-                "sale_value" => 210,
-                "version" => "7.4.3",
-            ],
+            $items[0],
         ]);
         $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
             [

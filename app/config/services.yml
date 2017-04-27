@@ -10,7 +10,7 @@ services:
         arguments: ['@logger']
     champion-stat-api:
         class: LeagueOfData\Service\Json\JsonChampionStats
-        arguments: ['@logger']
+        arguments: ['@api-adapter', '@logger']
     champion-api:
         class: LeagueOfData\Service\Json\JsonChampions
         arguments: ['@api-adapter', '@logger', '@champion-stat-api']

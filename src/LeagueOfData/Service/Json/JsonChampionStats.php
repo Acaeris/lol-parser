@@ -4,6 +4,7 @@ namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
@@ -18,14 +19,15 @@ use LeagueOfData\Models\Champion\ChampionAttack;
  */
 final class JsonChampionStats implements ChampionStatsServiceInterface
 {
-    /**
-     * @var LoggerInterface
-     */
+    /** @var AdapterInterface */
+    private $adapter;
+    /** @var LoggerInterface */
     private $log;
 
-    public function __construct(LoggerInterface $log)
+    public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
         $this->log = $log;
+        $this->adapter = $adapter;
     }
 
     /**
@@ -48,6 +50,60 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
             $champion['version'],
             $champion['region']
         );
+    }
+
+    /**
+     * Add a champion's stats to the collection
+     *
+     * @param ChampionStats $champion
+     */
+    public function add(ChampionStats $champion)
+    {
+        $this->champions[$champion->getID()] = $champion;
+    }
+
+    /**
+     * Add all champion stats objects to internal array
+     *
+     * @param array $champions ChampionStats objects
+     */
+    public function addAll(array $champions)
+    {
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getID()] = $champion;
+        }
+    }
+
+    /**
+     * Fetch Champions Stats
+     *
+     * @param string $version
+     * @param int    $championId
+     * @param string $region
+     *
+     * @return array ChampionStats Objects
+     */
+    public function fetch(string $version, int $championId = null, string $region = "euw") : array
+    {
+        throw new \Exception("Fetch method for Champion Stats from API is not currently implemented");
+    }
+
+    /**
+     * Store the champion stats in the database
+     */
+    public function store()
+    {
+        throw new \Exception("Store method not available for API");
+    }
+
+    /**
+     * Get collection of champions' stats for transfer to a different process.
+     *
+     * @return array ChampionStats objects
+     */
+    public function transfer() : array
+    {
+        return $this->champions;
     }
 
     /**

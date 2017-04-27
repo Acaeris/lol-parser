@@ -20,7 +20,7 @@ class SummonerRequestSpec extends ObjectBehavior
 
     public function it_has_a_request_type()
     {
-        $this->type()->shouldReturn('item');
+        $this->type()->shouldReturn('summoners');
     }
 
     public function it_has_request_data()
@@ -28,17 +28,17 @@ class SummonerRequestSpec extends ObjectBehavior
         $this->data()->shouldReturn(['Test Data']);
     }
 
-    public function it_returns_the_correct_query_for_a_json_request_bt_id()
+    public function it_returns_the_correct_query_for_a_json_request_by_id()
     {
         $this->requestFormat(RequestInterface::REQUEST_JSON);
-        $this->query()->shouldReturn('https://na.api.pvp.net/api/lol/na/v1.4/summoner/1');
+        $this->query()->shouldReturn('summoner/v3/summoners/1');
     }
 
     public function it_returns_the_correct_query_for_a_json_request_by_name()
     {
         $this->beConstructedWith(['region' => 'na', 'name' => 'Acaeris']);
         $this->requestFormat(RequestInterface::REQUEST_JSON);
-        $this->query()->shouldReturn('https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/Acaeris');
+        $this->query()->shouldReturn('summoner/v3/summoners/by-name/Acaeris');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()

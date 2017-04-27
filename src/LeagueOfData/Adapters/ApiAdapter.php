@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\ClientException;
  */
 class ApiAdapter implements AdapterInterface
 {
+    const API_URL = "https://{region}.api.riotgames.com/lol/{endpoint}";
     const API_PROCEED = 1;
     const API_SKIP = 2;
     const API_REPEAT = 3;
@@ -24,6 +25,7 @@ class ApiAdapter implements AdapterInterface
     private $log;
     private $client;
     private $apiKey;
+    private $attempts = 0;
 
     /**
      * Set up the API adapter
@@ -47,9 +49,10 @@ class ApiAdapter implements AdapterInterface
      */
     public function fetch(RequestInterface $request) : array
     {
+        $this->attempts++;
         $request->requestFormat(RequestInterface::REQUEST_JSON);
         try {
-            $response = $this->client->get($request->query(), [
+            $response = $this->client->get($this->buildQuery($request), [
                 'query' => array_merge($request->where(), ['api_key' => $this->apiKey]),
                 'headers' => [ 'Content-type' => 'application/json' ],
             ]);
@@ -71,15 +74,17 @@ class ApiAdapter implements AdapterInterface
         $state = $this->checkResponse($response);
         switch ($state) {
             case self::API_PROCEED:
+                $this->attempts = 0;
                 return json_decode($response->getBody(), true);
             case self::API_REPEAT:
                 sleep(1);
 
                 return $this->fetch($request);
+            case self::API_SKIP:
+                $this->attempts = 0;
+                return [];
             case self::API_FAIL:
                 exit;
-            case self::API_SKIP:
-                return [];
         }
     }
 
@@ -107,23 +112,37 @@ class ApiAdapter implements AdapterInterface
         $this->log->error("API is read-only");
     }
 
-    private function checkResponse(ResponseInterface $response)
+    private function checkResponse(ResponseInterface $response) : int
     {
         switch ($response->getStatusCode()) {
             case 200:
                 return self::API_PROCEED;
             case 503:
-                $this->log->info("API unavailable. Waiting to retry.");
+                if ($this->attempts < 3) {
+                    $this->log->info("API unavailable. Waiting to retry.");
 
-                return self::API_REPEAT;
+                    return self::API_REPEAT;
+                }
+                $this->log->info("API unavailable after 3 attempts. Skipping.");
+                break;
             case 404:
                 $this->log->info("Data unavailable. Skipping.");
-
-                return self::API_SKIP;
+                break;
             default:
-                $this->log->info("Unknown response: ".$response->getStatusCode());
-
-                return self::API_FAIL;
+                $this->log->error("Unknown response: ".$response->getStatusCode());
+                break;
         }
+
+        return self::API_SKIP;
+    }
+
+    private function buildQuery(RequestInterface $request) : string
+    {
+        $params = $request->where();
+        $region = $params['region'] . (in_array($params['region'], ['ru', 'kr']) ? '' : '1');
+        $url = str_replace('{region}', $region, self::API_URL).(
+            isset($params['id']) ? '/'.$params['id'] : ''
+        );
+        return str_replace('{endpoint}', $request->query(), $url);
     }
 }

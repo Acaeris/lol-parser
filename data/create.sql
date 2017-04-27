@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS realms (
-    PRIMARY KEY(region, version),
+    PRIMARY KEY(version),
     cdn     varchar(128) NOT NULL,
-    version varchar(16)  NOT NULL,
-    region  varchar(8)   NOT NULL
+    version varchar(16)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS versions (

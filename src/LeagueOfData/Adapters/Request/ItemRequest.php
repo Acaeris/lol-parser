@@ -13,10 +13,10 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class ItemRequest implements RequestInterface
 {
-    /* @var string API Request URL */
-    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/'.'{region}/v1.2/item';
     /* @var string Request Type */
     const TYPE = "items";
+    /** @var string Endpoint */
+    const ENDPOINT = 'static-data/v3';
     /* @var array Default parameters for API query */
     private $apiDefaults = [
         'region' => 'euw',
@@ -89,6 +89,16 @@ final class ItemRequest implements RequestInterface
     }
 
     /**
+     * Type of request
+     *
+     * @return string Request Type
+     */
+    public function type() : string
+    {
+        return self::TYPE;
+    }
+
+    /**
      * Source of the request
      *
      * @return string API url || SQL table
@@ -96,11 +106,7 @@ final class ItemRequest implements RequestInterface
     public function query() : string
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
-            $params = array_merge($this->apiDefaults, $this->where);
-
-            return str_replace('{region}', $params['region'], self::API_URL).(
-                isset($params['id']) ? '/'.$params['id'] : ''
-            );
+            return self::ENDPOINT.'/'.self::TYPE;
         }
 
         $parts = [];
@@ -112,16 +118,6 @@ final class ItemRequest implements RequestInterface
         $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
 
         return "SELECT {$this->columns} FROM ".self::TYPE.$where;
-    }
-
-    /**
-     * Type of request
-     *
-     * @return string Request Type
-     */
-    public function type() : string
-    {
-        return self::TYPE;
     }
 
     /**

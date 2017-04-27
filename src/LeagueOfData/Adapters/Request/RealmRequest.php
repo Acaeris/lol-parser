@@ -13,10 +13,10 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class RealmRequest implements RequestInterface
 {
-    /* @var string API Request URL */
-    const API_URL = 'https://global.api.pvp.net/api/lol/static-data/{region}/v1.2/realm';
     /* @var string Request Type */
-    const TYPE = "realm";
+    const TYPE = "realms";
+    /** @var string Endpoint */
+    const ENDPOINT = 'static-data/v3';
     /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw' ];
     /* @var string Output Format */
@@ -86,9 +86,7 @@ final class RealmRequest implements RequestInterface
     public function query() : string
     {
         if ($this->format === RequestInterface::REQUEST_JSON) {
-            $params = array_merge($this->apiDefaults, $this->where);
-
-            return str_replace('{region}', $params['region'], self::API_URL);
+            return self::ENDPOINT.'/'.self::TYPE;
         }
 
         return $this->query;

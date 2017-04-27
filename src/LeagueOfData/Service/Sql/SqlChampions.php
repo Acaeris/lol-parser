@@ -130,6 +130,28 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
+     * Create the champion object from array data
+     *
+     * @param array $champion
+     *
+     * @return Champion
+     */
+    public function create(array $champion) : Champion
+    {
+        $stats = $this->statService->fetch($champion['version'], $champion['champion_id'], $champion['region']);
+        return new Champion(
+            $champion['champion_id'],
+            $champion['champion_name'],
+            $champion['title'],
+            $champion['resource_type'],
+            explode('|', $champion['tags']),
+            $stats[$champion['champion_id']],
+            $champion['version'],
+            $champion['region']
+        );
+    }
+
+    /**
      * Converts Champion object into SQL data array
      *
      * @param Champion $champion
@@ -147,28 +169,6 @@ final class SqlChampions implements ChampionServiceInterface
             'version' => $champion->version(),
             'region' => $champion->region()
         ];
-    }
-
-    /**
-     * Build the Champion object from the given data.
-     *
-     * @param array $champion
-     *
-     * @return Champion
-     */
-    private function create(array $champion) : Champion
-    {
-        $stats = $this->statService->fetch($champion['version'], $champion['champion_id'], $champion['region']);
-        return new Champion(
-            $champion['champion_id'],
-            $champion['champion_name'],
-            $champion['title'],
-            $champion['resource_type'],
-            explode('|', $champion['tags']),
-            $stats[$champion['champion_id']],
-            $champion['version'],
-            $champion['region']
-        );
     }
 
     /**
