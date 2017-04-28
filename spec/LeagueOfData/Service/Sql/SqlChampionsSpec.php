@@ -39,7 +39,7 @@ class SqlChampionsSpec extends ObjectBehavior
     {
         $adapter->fetch(new ChampionRequest(['version' => '7.9.1', 'region' => 'euw'], '*'))
             ->willReturn($this->mockData);
-        $adapter->fetch(new ChampionRequest(['champion_id' => 266, 'region' => 'euw', 'version' => '7.9.1'], '*'))
+        $adapter->fetch(new ChampionRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'], '*'))
             ->willReturn([$this->mockData[0]]);
         $statBuilder->fetch('7.9.1', 266, 'euw')->willReturn([266 => $stats]);
         $statBuilder->fetch('7.9.1', 412, 'euw')->willReturn([412 => $stats]);

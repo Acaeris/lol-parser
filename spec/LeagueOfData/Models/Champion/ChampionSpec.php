@@ -24,48 +24,20 @@ class ChampionSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    public function it_has_an_id()
+    public function it_has_all_data_available()
     {
         $this->getID()->shouldReturn(1);
-    }
-
-    public function it_has_a_name()
-    {
         $this->name()->shouldReturn("Test");
-    }
-
-    public function it_has_a_title()
-    {
         $this->title()->shouldReturn("Test Character");
-    }
-
-    public function it_has_a_resource_type()
-    {
         $this->resourceType()->shouldReturn('mp');
-    }
-
-    public function it_has_a_client_version()
-    {
         $this->version()->shouldReturn('6.21.1');
-    }
-
-    public function it_has_tags()
-    {
         $this->tags()->shouldReturn(['Fighter', 'Mage']);
+        $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+        $this->region()->shouldReturn('euw');
     }
 
     public function it_can_return_tags_as_simple_string()
     {
         $this->tagsAsString()->shouldReturn("Fighter|Mage");
-    }
-
-    public function it_has_stats()
-    {
-        $this->stats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
-    }
-
-    public function it_has_a_region()
-    {
-        $this->region()->shouldReturn('euw');
     }
 }

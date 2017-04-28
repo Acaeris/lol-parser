@@ -9,17 +9,17 @@ class SpellSpec extends ObjectBehavior
     public function let()
     {
         $this->beConstructedWith(
-            1,
-            'Test Spell',
-            'Q',
-            'test_spell',
-            'The spell does a thing.',
-            "Test Tooltip",
-            "Mana",
-            5,
-            [10, 9, 8, 7, 6],
-            [100, 200, 300, 400, 500],
-            [100, 90, 80, 70, 60]
+            1, // Spell ID
+            'Test Spell', // Spell Name
+            'Q', // Spell default key binding
+            'test_spell', // File Name
+            'The spell does a thing.', // Description
+            "Test Tooltip", // Tooltip
+            "Mana", // Resource Type
+            5, // Max Rank
+            [10, 9, 8, 7, 6], // Cooldowns
+            [100, 200, 300, 400, 500], // Ranges
+            [100, 90, 80, 70, 60] // Costs
         );
     }
 
@@ -33,47 +33,22 @@ class SpellSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    public function it_has_an_id()
+    public function it_has_all_data_available()
     {
         $this->getID()->shouldReturn(1);
-    }
-
-    public function it_has_a_name()
-    {
         $this->name()->shouldReturn('Test Spell');
-    }
-
-    public function it_has_a_key_binding()
-    {
         $this->keyBinding()->shouldReturn('Q');
-    }
-
-    public function it_has_a_file_name()
-    {
         $this->fileName()->shouldReturn('test_spell');
-    }
-
-    public function it_has_a_description()
-    {
         $this->description()->shouldReturn('The spell does a thing.');
-    }
-
-    public function it_has_a_tooltip()
-    {
         $this->tooltip()->shouldReturn("Test Tooltip");
-    }
-
-    public function it_has_a_resource_type()
-    {
         $this->resourceType()->shouldReturn("Mana");
-    }
-
-    public function it_has_cooldowns()
-    {
+        $this->maxRank()->shouldReturn(5);
         $this->cooldowns()->shouldReturn([10, 9, 8, 7, 6]);
+        $this->ranges()->shouldReturn([100, 200, 300, 400, 500]);
+        $this->costs()->shouldReturn([100, 90, 80, 70, 60]);
     }
 
-    public function it_can_return_cooldown_for_a_given_rank()
+    public function it_can_calculate_cooldown_for_a_given_rank()
     {
         $this->cooldownByRank(3)->shouldReturn(8);
     }
@@ -81,11 +56,6 @@ class SpellSpec extends ObjectBehavior
     public function it_checks_max_rank_when_asked_for_cooldown()
     {
         $this->shouldThrow(\InvalidArgumentException::class)->during('cooldownByRank', [6]);
-    }
-
-    public function it_has_ranges()
-    {
-        $this->ranges()->shouldReturn([100, 200, 300, 400, 500]);
     }
 
     public function it_can_return_a_range_for_a_given_rank()
@@ -98,11 +68,6 @@ class SpellSpec extends ObjectBehavior
         $this->shouldThrow(\InvalidArgumentException::class)->during('rangeByRank', [6]);
     }
 
-    public function it_has_costs()
-    {
-        $this->costs()->shouldReturn([100, 90, 80, 70, 60]);
-    }
-
     public function it_can_return_cost_for_a_given_rank()
     {
         $this->costByRank(3)->shouldReturn(80);
@@ -111,10 +76,5 @@ class SpellSpec extends ObjectBehavior
     public function it_checks_max_rank_when_asked_for_costs()
     {
         $this->shouldThrow(\InvalidArgumentException::class)->during('costByRank', [6]);
-    }
-
-    public function it_has_a_max_rank()
-    {
-        $this->maxRank()->shouldReturn(5);
     }
 }
