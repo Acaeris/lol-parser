@@ -91,7 +91,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return float
      */
-    public function moveSpeed() : float
+    public function getMoveSpeed() : float
     {
         return round($this->moveSpeed, 2);
     }
@@ -101,7 +101,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return ChampionRegenResourceInterface
      */
-    public function health() : ChampionRegenResourceInterface
+    public function getHealth() : ChampionRegenResourceInterface
     {
         return $this->health;
     }
@@ -111,7 +111,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return ChampionRegenResourceInterface
      */
-    public function resource() : ChampionRegenResourceInterface
+    public function getResource() : ChampionRegenResourceInterface
     {
         return $this->resource;
     }
@@ -121,7 +121,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return ChampionAttackInterface
      */
-    public function attack() : ChampionAttackInterface
+    public function getAttack() : ChampionAttackInterface
     {
         return $this->attack;
     }
@@ -131,7 +131,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return ChampionDefenseInterface
      */
-    public function armor() : ChampionDefenseInterface
+    public function getArmor() : ChampionDefenseInterface
     {
         return $this->armor;
     }
@@ -141,7 +141,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return ChampionDefenseInterface
      */
-    public function magicResist() : ChampionDefenseInterface
+    public function getMagicResist() : ChampionDefenseInterface
     {
         return $this->magicResist;
     }
@@ -151,7 +151,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return string
      */
-    public function version() : string
+    public function getVersion() : string
     {
         return $this->version;
     }
@@ -161,7 +161,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return string
      */
-    public function region() : string
+    public function getRegion() : string
     {
         return $this->region;
     }

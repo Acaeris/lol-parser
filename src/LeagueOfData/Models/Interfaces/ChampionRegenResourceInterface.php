@@ -15,14 +15,14 @@ interface ChampionRegenResourceInterface
      *
      * @return float Base regeneration rate
      */
-    public function regenBaseValue() : float;
+    public function getRegenBaseValue() : float;
 
     /**
      * Regeneration rate increase per level
      *
      * @return float Regeneration rate increase per level
      */
-    public function regenIncreasePerLevel() : float;
+    public function getRegenIncreasePerLevel() : float;
 
     /**
      * Calculate the regeneration rate at given level
@@ -30,5 +30,5 @@ interface ChampionRegenResourceInterface
      * @param int $level Level of the champion
      * @return float Value of regeneration rate at the given level
      */
-    public function regenAtLevel(int $level) : float;
+    public function calculateRegenAtLevel(int $level) : float;
 }

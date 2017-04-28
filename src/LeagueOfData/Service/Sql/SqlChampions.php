@@ -162,12 +162,12 @@ final class SqlChampions implements ChampionServiceInterface
     {
         return [
             'champion_id' => $champion->getID(),
-            'champion_name' => $champion->name(),
-            'title' => $champion->title(),
-            'resource_type' => $champion->resourceType(),
-            'tags' => $champion->tagsAsString(),
-            'version' => $champion->version(),
-            'region' => $champion->region()
+            'champion_name' => $champion->getName(),
+            'title' => $champion->getTitle(),
+            'resource_type' => $champion->getResourceType(),
+            'tags' => $champion->getTagsAsString(),
+            'version' => $champion->getVersion(),
+            'region' => $champion->getRegion()
         ];
     }
 

@@ -119,14 +119,14 @@ class SqlChampionStats implements ChampionStatsServiceInterface
 
             foreach ($stats as $key => $value) {
                 $request = new ChampionStatsRequest(
-                    ['champion_id' => $champion->getID(), 'version' => $champion->version(), 'stat_name' => $key],
+                    ['champion_id' => $champion->getID(), 'version' => $champion->getVersion(), 'stat_name' => $key],
                     'champion_id',
                     [
                         'champion_id' => $champion->getID(),
                         'stat_name' => $key,
                         'stat_value' => $value,
-                        'version' => $champion->version(),
-                        'region' => $champion->region()
+                        'version' => $champion->getVersion(),
+                        'region' => $champion->getRegion()
                     ]
                 );
 
@@ -244,26 +244,26 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     private function convertStatsToArray(ChampionStats $stats) : array
     {
         return [
-            'moveSpeed' => $stats->moveSpeed(),
-            'hp' => $stats->health()->baseValue(),
-            'hpPerLevel' => $stats->health()->increasePerLevel(),
-            'hpRegen' => $stats->health()->regenBaseValue(),
-            'hpRegenPerLevel' => $stats->health()->regenIncreasePerLevel(),
-            'resource' => $stats->resource()->baseValue(),
-            'resourcePerLevel' => $stats->resource()->increasePerLevel(),
-            'resourceRegen' => $stats->resource()->regenBaseValue(),
-            'resourceRegenPerLevel' => $stats->resource()->regenIncreasePerLevel(),
-            'attackRange' => $stats->attack()->range(),
-            'attackDamage' => $stats->attack()->baseDamage(),
-            'attackDamagePerLevel' => $stats->attack()->damagePerLevel(),
-            'attackSpeedOffset' => $stats->attack()->attackSpeed(),
-            'attackSpeedPerLevel' => $stats->attack()->attackSpeedPerLevel(),
-            'crit' => $stats->attack()->baseCritChance(),
-            'critPerLevel' => $stats->attack()->critChancePerLevel(),
-            'armor' => $stats->armor()->baseValue(),
-            'armorPerLevel' => $stats->armor()->increasePerLevel(),
-            'spellBlock' => $stats->magicResist()->baseValue(),
-            'spellBlockPerLevel' => $stats->magicResist()->increasePerLevel()
+            'moveSpeed' => $stats->getMoveSpeed(),
+            'hp' => $stats->getHealth()->getBaseValue(),
+            'hpPerLevel' => $stats->getHealth()->getIncreasePerLevel(),
+            'hpRegen' => $stats->getHealth()->getRegenBaseValue(),
+            'hpRegenPerLevel' => $stats->getHealth()->regenIncreasePerLevel(),
+            'resource' => $stats->getResource()->getBaseValue(),
+            'resourcePerLevel' => $stats->getResource()->getIncreasePerLevel(),
+            'resourceRegen' => $stats->getResource()->getRegenBaseValue(),
+            'resourceRegenPerLevel' => $stats->getResource()->getRegenIncreasePerLevel(),
+            'attackRange' => $stats->getAttack()->getRange(),
+            'attackDamage' => $stats->getAttack()->getBaseDamage(),
+            'attackDamagePerLevel' => $stats->getAttack()->getDamagePerLevel(),
+            'attackSpeedOffset' => $stats->getAttack()->getAttackSpeed(),
+            'attackSpeedPerLevel' => $stats->getAttack()->getAttackSpeedPerLevel(),
+            'crit' => $stats->getAttack()->getBaseCritChance(),
+            'critPerLevel' => $stats->getAttack()->getCritChancePerLevel(),
+            'armor' => $stats->getArmor()->getBaseValue(),
+            'armorPerLevel' => $stats->getArmor()->getIncreasePerLevel(),
+            'spellBlock' => $stats->getMagicResist()->getBaseValue(),
+            'spellBlockPerLevel' => $stats->getMagicResist()->getIncreasePerLevel()
         ];
     }
 }

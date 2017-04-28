@@ -16,7 +16,17 @@ class ChampionStatsSpec extends ObjectBehavior
         ChampionDefenseInterface $armor,
         ChampionDefenseInterface $magicResist
     ) {
-        $this->beConstructedWith(1, $health, $mana, $attack, $armor, $magicResist, 335, '7.8.1', 'euw');
+        $this->beConstructedWith(
+            1, // Champion ID
+            $health, // Health object
+            $mana, // Resource object
+            $attack, // Attack object
+            $armor, // Armor object
+            $magicResist, // Magic Resist object
+            335, // Move Speed
+            '7.8.1', // Version
+            'euw' // Region
+        );
     }
 
     public function it_is_initializable()
@@ -25,48 +35,16 @@ class ChampionStatsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
     }
 
-    public function it_has_a_champion_id()
+    public function it_has_all_data_available()
     {
         $this->getID()->shouldReturn(1);
-    }
-
-    public function it_has_a_movement_speed()
-    {
-        $this->moveSpeed()->shouldReturn(335.0);
-    }
-
-    public function it_has_health()
-    {
-        $this->health()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
-    }
-
-    public function it_has_resource()
-    {
-        $this->resource()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
-    }
-
-    public function it_has_attack_data()
-    {
-        $this->attack()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionAttackInterface');
-    }
-
-    public function it_has_armor()
-    {
-        $this->armor()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
-    }
-
-    public function it_has_magic_resist()
-    {
-        $this->magicResist()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
-    }
-
-    public function it_has_a_version()
-    {
-        $this->version()->shouldReturn('7.8.1');
-    }
-
-    public function it_has_a_region()
-    {
-        $this->region()->shouldReturn('euw');
+        $this->getMoveSpeed()->shouldReturn(335.0);
+        $this->getHealth()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
+        $this->getResource()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
+        $this->getAttack()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionAttackInterface');
+        $this->getArmor()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
+        $this->getMagicResist()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
+        $this->getVersion()->shouldReturn('7.8.1');
+        $this->getRegion()->shouldReturn('euw');
     }
 }

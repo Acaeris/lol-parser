@@ -15,40 +15,40 @@ interface ChampionStatsInterface
      *
      * @return float
      */
-    public function moveSpeed() : float;
+    public function getMoveSpeed() : float;
 
     /**
      * Champion Health
      *
      * @return ChampionRegenResourceInterface
      */
-    public function health() : ChampionRegenResourceInterface;
+    public function getHealth() : ChampionRegenResourceInterface;
 
     /**
      * Champion Resource (e.g. Mana, Rage, Energy, etc.)
      *
      * @return ChampionRegenResourceInterface
      */
-    public function resource() : ChampionRegenResourceInterface;
+    public function getResource() : ChampionRegenResourceInterface;
 
     /**
      * Champion Attack
      *
      * @return ChampionAttackInterface
      */
-    public function attack() : ChampionAttackInterface;
+    public function getAttack() : ChampionAttackInterface;
 
     /**
      * Champion Armor
      *
      * @return ChampionDefenseInterface
      */
-    public function armor() : ChampionDefenseInterface;
+    public function getArmor() : ChampionDefenseInterface;
 
     /**
      * Champion Magic Resist
      *
      * @return ChampionDefenseInterface
      */
-    public function magicResist() : ChampionDefenseInterface;
+    public function getMagicResist() : ChampionDefenseInterface;
 }

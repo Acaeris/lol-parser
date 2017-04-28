@@ -76,7 +76,7 @@ trait ResourceTrait
      *
      * @return float Base resource value
      */
-    public function baseValue() : float
+    public function getBaseValue() : float
     {
         return round($this->baseValue, 2);
     }
@@ -86,7 +86,7 @@ trait ResourceTrait
      *
      * @return float Base resource increase per level
      */
-    public function increasePerLevel() : float
+    public function getIncreasePerLevel() : float
     {
         return round($this->perLevel, 2);
     }
@@ -97,7 +97,7 @@ trait ResourceTrait
      * @param int $level Level of the champion
      * @return float Value of max resource at the given level
      */
-    public function valueAtLevel(int $level) : float
+    public function calculateValueAtLevel(int $level) : float
     {
         return round($this->baseValue + $this->perLevel * ($level - 1), 2);
     }

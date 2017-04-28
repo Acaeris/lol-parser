@@ -8,56 +8,37 @@ class ChampionRegenResourceSpec extends ObjectBehavior
 {
     public function let()
     {
-        $health = 511.68;
-        $healthPerLevel = 76;
-        $healthRegen = 5.424;
-        $healthRegenPerLevel = 0.55;
-        $this->beConstructedWith($health, $healthPerLevel, $healthRegen, $healthRegenPerLevel);
+        $this->beConstructedWith(
+            511.68, // Base value
+            76, // Value increase per level
+            5.424, // Base regen value
+            0.55 // Regen value increase per level
+        );
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable_immutable_and_a_resource()
     {
         $this->shouldHaveType('LeagueOfData\Models\Champion\ChampionRegenResource');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
-    }
-
-    public function it_is_immutable()
-    {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
-    }
-
-    public function it_is_a_resource()
-    {
         $this->shouldImplement('LeagueOfData\Models\Interfaces\ResourceInterface');
     }
 
-    public function it_can_output_a_base_value()
+    public function it_has_all_data_available()
     {
-        $this->baseValue()->shouldReturn(511.68);
-    }
-
-    public function it_can_output_a_value_per_level()
-    {
-        $this->increasePerLevel()->shouldReturn(76.0);
+        $this->getBaseValue()->shouldReturn(511.68);
+        $this->getIncreasePerLevel()->shouldReturn(76.0);
+        $this->getRegenBaseValue()->shouldReturn(5.424);
+        $this->getRegenIncreasePerLevel()->shouldReturn(0.55);
     }
 
     public function it_can_output_the_value_at_a_given_level()
     {
-        $this->valueAtLevel(5)->shouldReturn(815.68);
-    }
-
-    public function it_can_output_a_regen_base_value()
-    {
-        $this->regenBaseValue()->shouldReturn(5.424);
-    }
-
-    public function it_can_output_a_regen_per_level_value()
-    {
-        $this->regenIncreasePerLevel()->shouldReturn(0.55);
+        $this->calculateValueAtLevel(5)->shouldReturn(815.68);
     }
 
     public function it_can_output_a_regen_value_at_a_given_level()
     {
-        $this->regenAtLevel(5)->shouldReturn(7.624);
+        $this->calculateRegenAtLevel(5)->shouldReturn(7.624);
     }
 }

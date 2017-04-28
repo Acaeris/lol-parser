@@ -15,5 +15,5 @@ interface ChampionDefenseInterface
      *
      * @return string Defence type
      */
-    public function type() : string;
+    public function getType() : string;
 }

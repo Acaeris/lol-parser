@@ -15,21 +15,21 @@ interface ChampionAttackInterface
      *
      * @return float Attack range
      */
-    public function range() : float;
+    public function getRange() : float;
 
     /**
      * Base attack damage
      *
      * @return float Base attack damage
      */
-    public function baseDamage() : float;
+    public function getBaseDamage() : float;
 
     /**
      * Attack damage increase per level
      *
      * @return float Attack damage increase per level
      */
-    public function damagePerLevel() : float;
+    public function getDamagePerLevel() : float;
 
     /**
      * Calculate attack damage at a given level
@@ -37,21 +37,21 @@ interface ChampionAttackInterface
      * @param int $level Level of the champion
      * @return float Value of attack damage at the given level
      */
-    public function damageAtLevel(int $level) : float;
+    public function calculateDamageAtLevel(int $level) : float;
 
     /**
      * Base attack speed
      *
      * @return float Base attack speed
      */
-    public function attackSpeed() : float;
+    public function getAttackSpeed() : float;
 
     /**
      * Attack speed increase per level
      *
      * @return float Attack speed increase per level
      */
-    public function attackSpeedPerLevel() : float;
+    public function getAttackSpeedPerLevel() : float;
 
     /**
      * Calculate the attack speed at a given level
@@ -59,21 +59,21 @@ interface ChampionAttackInterface
      * @param int $level Level of the champion
      * @return float Value of the attack speed at the given level
      */
-    public function attackSpeedAtLevel(int $level) : float;
+    public function calculateAttackSpeedAtLevel(int $level) : float;
 
     /**
      * Base critical hit chance
      *
      * @return float Base critical hit chance
      */
-    public function baseCritChance() : float;
+    public function getBaseCritChance() : float;
 
     /**
      * Critical hit chance increase per level
      *
      * @return float Critical hit chance per level
      */
-    public function critChancePerLevel() : float;
+    public function getCritChancePerLevel() : float;
 
     /**
      * Calculate the critical hit chance at a given level
@@ -81,5 +81,5 @@ interface ChampionAttackInterface
      * @param int $level Level of the champion
      * @return float Value of the critical hit chance at the given level
      */
-    public function critChanceAtLevel(int $level) : float;
+    public function calculateCritChanceAtLevel(int $level) : float;
 }

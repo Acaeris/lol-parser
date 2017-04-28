@@ -52,7 +52,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
      *
      * @return string Defence type
      */
-    public function type() : string
+    public function getType() : string
     {
         return $this->type;
     }

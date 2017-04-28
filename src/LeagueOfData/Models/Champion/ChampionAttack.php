@@ -69,7 +69,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Attack range
      */
-    public function range() : float
+    public function getRange() : float
     {
         return round($this->range, 2);
     }
@@ -79,7 +79,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Base attack damage
      */
-    public function baseDamage() : float
+    public function getBaseDamage() : float
     {
         return round($this->damage, 3);
     }
@@ -89,7 +89,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Attack damage increase per level
      */
-    public function damagePerLevel() : float
+    public function getDamagePerLevel() : float
     {
         return round($this->damagePerLevel, 3);
     }
@@ -100,7 +100,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      * @param int $level Level of the champion
      * @return float Value of attack damage at the given level
      */
-    public function damageAtLevel(int $level) : float
+    public function calculateDamageAtLevel(int $level) : float
     {
         return round($this->damage + $this->damagePerLevel * ($level - 1), 3);
     }
@@ -110,7 +110,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Base attack speed
      */
-    public function attackSpeed() : float
+    public function getAttackSpeed() : float
     {
         return round($this->speedOffset, 2);
     }
@@ -120,7 +120,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Attack speed increase per level
      */
-    public function attackSpeedPerLevel() : float
+    public function getAttackSpeedPerLevel() : float
     {
         return round($this->speedPerLevel, 2);
     }
@@ -131,7 +131,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      * @param int $level Level of the champion
      * @return float Value of the attack speed at the given level
      */
-    public function attackSpeedAtLevel(int $level) : float
+    public function calculateAttackSpeedAtLevel(int $level) : float
     {
         return round($this->speedOffset + $this->speedPerLevel * ($level - 1), 2);
     }
@@ -141,7 +141,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Base critical hit chance
      */
-    public function baseCritChance() : float
+    public function getBaseCritChance() : float
     {
         return round($this->crit, 2);
     }
@@ -151,7 +151,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      *
      * @return float Critical hit chance per level
      */
-    public function critChancePerLevel() : float
+    public function getCritChancePerLevel() : float
     {
         return round($this->critPerLevel, 2);
     }
@@ -162,7 +162,7 @@ final class ChampionAttack implements ChampionAttackInterface, ImmutableInterfac
      * @param int $level Level of the champion
      * @return float Value of the critical hit chance at the given level
      */
-    public function critChanceAtLevel(int $level) : float
+    public function calculateCritChanceAtLevel(int $level) : float
     {
         return round($this->crit + $this->critPerLevel * ($level - 1), 2);
     }

@@ -56,7 +56,7 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
      *
      * @return float Base regeneration rate
      */
-    public function regenBaseValue() : float
+    public function getRegenBaseValue() : float
     {
         return round($this->regen, 3);
     }
@@ -66,7 +66,7 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
      *
      * @return float Regeneration rate increase per level
      */
-    public function regenIncreasePerLevel() : float
+    public function getRegenIncreasePerLevel() : float
     {
         return round($this->regenPerLevel, 3);
     }
@@ -77,7 +77,7 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
      * @param int $level Level of the champion
      * @return float Value of regeneration rate at the given level
      */
-    public function regenAtLevel(int $level) : float
+    public function calculateRegenAtLevel(int $level) : float
     {
         return round($this->regen + $this->regenPerLevel * ($level - 1), 3);
     }
