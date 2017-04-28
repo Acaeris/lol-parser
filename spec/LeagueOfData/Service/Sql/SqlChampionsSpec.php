@@ -31,7 +31,11 @@ class SqlChampionsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, ChampionStatsServiceInterface $statBuilder, ChampionStatsInterface $stats)
+    public function let(
+        AdapterInterface $adapter,
+        LoggerInterface $logger,
+        ChampionStatsServiceInterface $statBuilder,
+        ChampionStatsInterface $stats)
     {
         $adapter->fetch(new ChampionRequest(['version' => '7.9.1', 'region' => 'euw'], '*'))
             ->willReturn($this->mockData);
@@ -62,7 +66,7 @@ class SqlChampionsSpec extends ObjectBehavior
     {
         return [
             'returnArrayOfChampions' => function($champions) {
-                foreach($champions as $champion) {
+                foreach ($champions as $champion) {
                     if (!$champion instanceof Champion) {
                         return false;
                     }

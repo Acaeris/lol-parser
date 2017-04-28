@@ -13,59 +13,27 @@ final class Spell implements SpellInterface, ImmutableInterface
         __construct as constructImmutable;
     }
 
-    /**
-     * @var int Spell ID
-     */
+    /** @var int Spell ID */
     private $spellID;
-
-    /**
-     * @var string Spell Name
-     */
+    /** @var string Spell Name */
     private $name;
-
-    /**
-     * @var string Default key binding
-     */
+    /** @var string Default key binding */
     private $keyBinding;
-
-    /**
-     * @var string Spell icon file name
-     */
+    /** @var string Spell icon file name */
     private $fileName;
-
-    /**
-     * @var string Spell description
-     */
+    /** @var string Spell description */
     private $description;
-
-    /**
-     * @var string Tooltip text
-     */
+    /** @var string Tooltip text */
     private $tooltip;
-
-    /**
-     * @var string Resource Type
-     */
+    /** @var string Resource Type */
     private $resourceType;
-    
-    /**
-     * @var array Spell Cooldowns
-     */
+    /** @var array Spell Cooldowns */
     private $cooldowns;
-
-    /**
-     * @var array Spell Ranges
-     */
+    /** @var array Spell Ranges */
     private $ranges;
-
-    /**
-     * @var array Spell costs
-     */
+    /** @var array Spell costs */
     private $costs;
-
-    /**
-     * @var int Maximum rank of the spell
-     */
+    /** @var int Maximum rank of the spell */
     private $maxRank;
 
     public function __construct(

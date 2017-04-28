@@ -15,7 +15,7 @@ class Item implements ItemInterface, ImmutableInterface
 
     /* @var int Item ID */
     private $itemID;
-    
+
     /* @var string Item Name */
     private $name;
 

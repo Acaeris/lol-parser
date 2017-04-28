@@ -13,7 +13,7 @@ class SqlVersionsSpec extends ObjectBehavior
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $request = new VersionRequest(['full_version' => '7.4.3'],
-            'full_version', 
+            'full_version',
             ['full_version' => '7.4.3']);
         $adapter->fetch($request)->willReturn(['7.4.3']);
         $request = new VersionRequest([], 'full_version');
