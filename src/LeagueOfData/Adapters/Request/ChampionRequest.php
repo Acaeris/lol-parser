@@ -58,10 +58,7 @@ final class ChampionRequest implements RequestInterface
         if (isset($where['champion_id']) && !is_int($where['champion_id'])) {
             throw new \InvalidArgumentException("Invalid ID supplied for Champion request");
         }
-        if (isset($where['region']) && !in_array($where['region'], self::VALID_REGIONS)) {
-            throw new \InvalidArgumentException("Invalid Region supplied for Champion request");
-        }
-        // TODO: Add version validation
+        // TODO: Move validation out of here.
     }
 
     /**

@@ -11,31 +11,32 @@ use LeagueOfData\Models\Item\Item;
 
 class SqlItemsSpec extends ObjectBehavior
 {
+    private $mockData = [
+        [
+            "item_id" => 1001,
+            "item_name" => "Boots of Speed",
+            "description" => "Test Description",
+            "purchase_value" => 300,
+            "sale_value" => 210,
+            "version" => "7.4.3",
+        ],
+        [
+            "item_id" => 1002,
+            "item_name" => "Test Item",
+            "description" => "Test Description",
+            "purchase_value" => 300,
+            "sale_value" => 210,
+            "version" => "7.4.3",
+        ],
+    ];
+
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $items = [
-            [
-                "item_id" => 1001,
-                "item_name" => "Boots of Speed",
-                "description" => "Test Description",
-                "purchase_value" => 300,
-                "sale_value" => 210,
-                "version" => "7.4.3",
-            ],
-            [
-                "item_id" => 1002,
-                "item_name" => "Test Item",
-                "description" => "Test Description",
-                "purchase_value" => 300,
-                "sale_value" => 210,
-                "version" => "7.4.3",
-            ],
-        ];
-        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))->willReturn($items);
+        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))
+            ->willReturn($this->mockData);
         $request = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
-        $adapter->fetch(new ItemRequest($request, '*'))->willReturn([
-            $items[0],
-        ]);
+        $adapter->fetch(new ItemRequest($request, '*'))
+            ->willReturn([$this->mockData[0]]);
         $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
             [
                 "item_id" => 1001,

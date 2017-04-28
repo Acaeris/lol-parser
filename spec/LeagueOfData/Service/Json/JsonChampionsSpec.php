@@ -7,7 +7,6 @@ use PhpSpec\ObjectBehavior;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Models\Champion\Champion;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use Psr\Log\LoggerInterface;
 

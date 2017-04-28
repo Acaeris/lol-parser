@@ -56,16 +56,4 @@ class ItemRequestSpec extends ObjectBehavior
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Item request'))
             ->during('validate', [['id' => 'test']]);
     }
-
-    public function it_can_validate_a_correct_region_parameter()
-    {
-        $this->shouldNotThrow(new \InvalidArgumentException('Invalid Region supplied for Item request'))
-            ->during('validate', [['region' => 'na']]);
-    }
-
-    public function it_can_validate_an_incorrect_region_parameter()
-    {
-        $this->shouldThrow(new \InvalidArgumentException('Invalid Region supplied for Item request'))
-            ->during('validate', [['region' => 'an']]);
-    }
 }
