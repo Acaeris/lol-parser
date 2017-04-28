@@ -41,7 +41,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
         $this->log->info('Fetching version data');
         $versions = $this->service->fetch();
 
-        $this->database->addAll($this->service->transfer());
+        $this->database->add($this->service->transfer());
         $this->database->store();
 
         foreach ($versions as $version) {

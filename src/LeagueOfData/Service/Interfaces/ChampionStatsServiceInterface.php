@@ -23,18 +23,11 @@ interface ChampionStatsServiceInterface
     public function create(array $champion) : ChampionStats;
 
     /**
-     * Add a champion's stats to the collection
-     *
-     * @param ChampionStats $champion
-     */
-    public function add(ChampionStats $champion);
-
-    /**
-     * Add all champion stats objects to internal array
+     * Add champion stats objects to internal array
      *
      * @param array $champions ChampionStats objects
      */
-    public function addAll(array $champions);
+    public function add(array $champions);
 
     /**
      * Fetch Champions Stats

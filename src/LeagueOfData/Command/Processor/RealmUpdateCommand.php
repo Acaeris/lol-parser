@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RealmUpdateCommand extends ContainerAwareCommand
 {
     private $log;
-    private $db;
+    private $database;
 
     /**
      * Configures the Realm update command
@@ -27,10 +27,10 @@ class RealmUpdateCommand extends ContainerAwareCommand
     {
         $this->log = $this->getContainer()->get('logger');
         $this->service = $this->getContainer()->get('realm-api');
-        $this->db = $this->getContainer()->get('realm-db');
+        $this->database = $this->getContainer()->get('realm-db');
 
         $this->log->info('Updating Realm data');
-        $this->db->addAll($this->service->fetch());
-        $this->db->store();
+        $this->database->add($this->service->fetch());
+        $this->database->store();
     }
 }

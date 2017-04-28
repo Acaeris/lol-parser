@@ -41,21 +41,11 @@ final class SqlChampions implements ChampionServiceInterface
     }
 
     /**
-     * Add a champion to the collection
-     *
-     * @param Champion $champion
-     */
-    public function add(Champion $champion)
-    {
-        $this->champions[$champion->getID()] = $champion;
-    }
-
-    /**
-     * Add all champion objects to internal array
+     * Add champion objects to internal array
      *
      * @param array $champions Champion objects
      */
-    public function addAll(array $champions)
+    public function add(array $champions)
     {
         foreach ($champions as $champion) {
             $this->champions[$champion->getID()] = $champion;
@@ -101,12 +91,12 @@ final class SqlChampions implements ChampionServiceInterface
 
         foreach ($this->champions as $champion) {
             $request = new ChampionRequest(
-                ['champion_id' => $champion->getID(), 'version' => $champion->version()],
+                ['champion_id' => $champion->getID(), 'version' => $champion->getVersion()],
                 'champion_name',
                 $this->convertChampionToArray($champion)
             );
 
-            $this->statService->add($champion->stats());
+            $this->statService->add([$champion->getStats()]);
 
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);

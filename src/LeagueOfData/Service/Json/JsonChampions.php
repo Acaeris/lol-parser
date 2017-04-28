@@ -42,21 +42,11 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
-     * Add a champion to the collection
-     *
-     * @param Champion $champion
-     */
-    public function add(Champion $champion)
-    {
-        $this->champions[$champion->getID()] = $champion;
-    }
-
-    /**
-     * Add all champion objects to internal array
+     * Add champion objects to internal array
      *
      * @param array $champions Champion objects
      */
-    public function addAll(array $champions)
+    public function add(array $champions)
     {
         foreach ($champions as $champion) {
             $this->champions[$champion->getID()] = $champion;

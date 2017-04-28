@@ -78,7 +78,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
             $this->service->fetch($input->getArgument('release'), $input->getArgument('itemId'));
             $this->log->info("Storing item data for version ".$input->getArgument('release'));
 
-            $this->database->addAll($this->service->transfer());
+            $this->database->add($this->service->transfer());
             $this->database->store();
         } catch (\Exception $exception) {
             $this->recover($input, 'Unexpected API response: ', $exception);

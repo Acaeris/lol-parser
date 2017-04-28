@@ -31,21 +31,11 @@ final class JsonRealms implements RealmServiceInterface
     }
 
     /**
-     * Add a realm to the collection
-     *
-     * @param Realm $realm
-     */
-    public function add(Realm $realm)
-    {
-        $this->realms[] = $realm;
-    }
-
-    /**
      * Add all realm objects to internal array
      *
      * @param array $realms Realm objects
      */
-    public function addAll(array $realms)
+    public function add(array $realms)
     {
         foreach ($realms as $realm) {
             $this->realms[] = $realm;

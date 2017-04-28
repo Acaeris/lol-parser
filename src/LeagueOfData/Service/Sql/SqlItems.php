@@ -38,21 +38,11 @@ final class SqlItems implements ItemServiceInterface
     }
 
     /**
-     * Add an item object to internal array
-     *
-     * @param Item $item
-     */
-    public function add(Item $item)
-    {
-        $this->items[$item->getID()] = $item;
-    }
-
-    /**
-     * Add all item objects to internal array
+     * Add item objects to internal array
      *
      * @param array $items Item objects
      */
-    public function addAll(array $items)
+    public function add(array $items)
     {
         foreach ($items as $item) {
             $this->items[$item->getID()] = $item;

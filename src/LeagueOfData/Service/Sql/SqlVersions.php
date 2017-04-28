@@ -36,21 +36,11 @@ final class SqlVersions implements VersionServiceInterface
     }
 
     /**
-     * Add a version object to internal array
-     *
-     * @param Version $version
-     */
-    public function add(Version $version)
-    {
-        $this->versions[] = $version;
-    }
-
-    /**
-     * Add all version objects to internal array
+     * Add version objects to internal array
      *
      * @param array $versions Version objects
      */
-    public function addAll(array $versions)
+    public function add(array $versions)
     {
         $this->versions = array_merge($this->versions, $versions);
     }

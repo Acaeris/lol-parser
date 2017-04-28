@@ -1,8 +1,6 @@
 <?php
 namespace LeagueOfData\Service\Interfaces;
 
-use LeagueOfData\Models\Version;
-
 /**
  * Version Service interface
  * @package LeagueOfData\Service|Interfaces
@@ -12,18 +10,11 @@ use LeagueOfData\Models\Version;
 interface VersionServiceInterface
 {
     /**
-     * Add a version object to internal array
-     *
-     * @param Version $version
-     */
-    public function add(Version $version);
-
-    /**
-     * Add all version objects to internal array
+     * Add version objects to internal array
      *
      * @param array $versions Version objects
      */
-    public function addAll(array $versions);
+    public function add(array $versions);
 
     /**
      * Store the version objects in the DB

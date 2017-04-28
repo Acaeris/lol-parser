@@ -44,8 +44,8 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     {
         return new ChampionStats(
             $champion['champion_id'],
-            $this->createHealth($champion),
-            $this->createResource($champion),
+            $this->createResource('hp', $champion),
+            $this->createResource('resource', $champion),
             $this->createAttack($champion),
             $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion),
             $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion),
@@ -56,24 +56,18 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     }
 
     /**
-     * Add a champion's stats to the collection
-     *
-     * @param ChampionStats $champion
-     */
-    public function add(ChampionStats $champion)
-    {
-        $this->champions[$champion->getID()] = $champion;
-    }
-
-    /**
      * Add all champion stats objects to internal array
      *
      * @param array $champions ChampionStats objects
      */
-    public function addAll(array $champions)
+    public function add(array $champions)
     {
         foreach ($champions as $champion) {
-            $this->champions[$champion->getID()] = $champion;
+            if ($champion instanceof ChampionStats) {
+                $this->champions[$champion->getID()] = $champion;
+                continue;
+            }
+            $this->log->error('Incorrect object supplied to Champion Stats service', $champion);
         }
     }
 
@@ -169,36 +163,20 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     }
 
     /**
-     * Create Champion Health object
-     *
-     * @param array $stats
-     *
-     * @return ChampionRegenResource
-     */
-    private function createHealth(array $stats) : ChampionRegenResource
-    {
-        return new ChampionRegenResource(
-            isset($stats['hp']) ? $stats['hp'] : 0,
-            isset($stats['hpPerLevel']) ? $stats['hpPerLevel'] : 0,
-            isset($stats['hpRegen']) ? $stats['hpRegen'] : 0,
-            isset($stats['hpRegenPerLevel']) ? $stats['hpRegenPerLevel'] : 0
-        );
-    }
-
-    /**
      * Create Champion Resource object
      *
+     * @param string $type
      * @param array $stats
      *
      * @return ChampionRegenResource
      */
-    private function createResource(array $stats) : ChampionRegenResource
+    private function createResource(string $type, array $stats) : ChampionRegenResource
     {
         return new ChampionRegenResource(
-            isset($stats['resource']) ? $stats['resource'] : 0,
-            isset($stats['resourcePerLevel']) ? $stats['resourcePerLevel'] : 0,
-            isset($stats['resourceRegen']) ? $stats['resourceRegen'] : 0,
-            isset($stats['resourceRegenPerLevel']) ? $stats['resourceRegenPerLevel'] : 0
+            isset($stats[$type]) ? $stats[$type] : 0,
+            isset($stats[$type.'PerLevel']) ? $stats[$type.'PerLevel'] : 0,
+            isset($stats[$type.'Regen']) ? $stats[$type.'Regen'] : 0,
+            isset($stats[$type.'RegenPerLevel']) ? $stats[$type.'RegenPerLevel'] : 0
         );
     }
 

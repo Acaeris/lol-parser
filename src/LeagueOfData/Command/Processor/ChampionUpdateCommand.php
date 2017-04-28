@@ -91,7 +91,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             $this->service->fetch($input->getArgument('release'), $input->getArgument('championId'));
             $this->log->info("Storing champion data for version ".$input->getArgument('release'));
 
-            $this->database->addAll($this->service->transfer());
+            $this->database->add($this->service->transfer());
             $this->database->store();
         } catch (\Exception $exception) {
             $this->recover($input, 'Unexpected API response: ', $exception);

@@ -54,11 +54,11 @@ class SqlRealms implements RealmServiceInterface
     }
 
     /**
-     * Add all realm objects to internal array
+     * Add realm objects to internal array
      *
      * @param array $realms Realm objects
      */
-    public function addAll(array $realms)
+    public function add(array $realms)
     {
         $this->realms = array_merge($this->realms, $realms);
     }
