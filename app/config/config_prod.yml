@@ -1,0 +1,21 @@
+imports:
+    - { resource: config.yml }
+
+monolog:
+    handlers:
+        main:
+            type:   stream
+            path:   "%kernel.logs_dir%/%kernel.environment%.log"
+            level:  info
+        console:
+            type:   console
+            bubble: false
+    
+doctrine:
+    dbal:
+        driver:         pdo_mysql
+        dbname:         leagueOfData
+        user:           lolparser
+        password:       95lV#1QUqURH
+        charset:        UTF8
+        server_version: 5.7

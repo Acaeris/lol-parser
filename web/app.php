@@ -6,10 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 $loader = require __DIR__ . '/../app/autoload.php';
 include_once __DIR__ . '/../app/bootstrap.php.cache';
 
-$kernel = new AppKernal('prod', false);
+$kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
 
 $request = Request::createFromGlobals();
-$resposne = $kernel->handle($request);
+$response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);

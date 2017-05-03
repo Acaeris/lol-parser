@@ -226,7 +226,7 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             'hp' => $stats->getHealth()->getBaseValue(),
             'hpPerLevel' => $stats->getHealth()->getIncreasePerLevel(),
             'hpRegen' => $stats->getHealth()->getRegenBaseValue(),
-            'hpRegenPerLevel' => $stats->getHealth()->regenIncreasePerLevel(),
+            'hpRegenPerLevel' => $stats->getHealth()->getRegenIncreasePerLevel(),
             'resource' => $stats->getResource()->getBaseValue(),
             'resourcePerLevel' => $stats->getResource()->getIncreasePerLevel(),
             'resourceRegen' => $stats->getResource()->getRegenBaseValue(),
