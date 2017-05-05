@@ -119,6 +119,7 @@ final class JsonChampions implements ChampionServiceInterface
             $champion['partype'],
             $champion['tags'],
             $this->statService->create($champion),
+            preg_replace('/\\.[^.\\s]{3,4}$/', '', $champion['image']['full']),
             $champion['version'],
             $champion['region']
         );

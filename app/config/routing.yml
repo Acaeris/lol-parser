@@ -1,3 +1,11 @@
-parser:
-    resource: "@LeagueOfData/Controller/"
-    type:     annotation
+#parser:
+#    resource: "@LeagueOfData/Controller/"
+#    type:     annotation
+
+home:
+    path:       /
+    defaults:   { _controller: LeagueOfData:Default:index }
+
+champion-byId:
+    path:       /champion/id/{id}
+    defaults:   { _controller: LeagueOfData:Champion:byId }

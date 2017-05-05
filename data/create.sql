@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS champions (
   title         varchar(45) DEFAULT NULL,
   tags          varchar(45) DEFAULT NULL,
   resource_type varchar(20) DEFAULT NULL,
+  image_name    varchar(45) DEFAULT NULL,
   version       varchar(16) NOT NULL,
   region        varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

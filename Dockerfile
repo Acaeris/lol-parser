@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     rsync
 
-RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli
+RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli bcmath
 
 RUN rm -rf /var/lib/apt/lists/*
 

@@ -6,20 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController extends Controller
+class ChampionController extends Controller
 {
-    /**
-     * Index Action
-     */
-    public function indexAction(Request $request)
+    public function byIdAction(Request $request, $id)
     {
         $db = $this->get('champion-db');
         $serializer = $this->get('serializer');
-
-        $annie = $db->fetch('7.9.1', 1);
+        $champion = $db->fetch('7.9.2', $id);
 
         return new Response(
-            $serializer->serialize($annie[1], 'json'),
+            $serializer->serialize($champion[$id], 'json'),
             Response::HTTP_OK,
             [
                 'Content-type' => 'application/json',

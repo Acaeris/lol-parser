@@ -153,12 +153,22 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     {
         if ($results !== false) {
             if (!is_array($results)) {
-                $results = [ $results ];
+                throw new \Exception('Stat Results in unexpected format');
+            }
+            
+            $champions = [];
+
+            foreach ($results as $stat) {
+                $champions[$stat['champion_id']]['champion_id'] = $stat['champion_id'];
+                $champions[$stat['champion_id']]['version'] = $stat['version'];
+                $champions[$stat['champion_id']]['region'] = $stat['region'];
+                $champions[$stat['champion_id']][$stat['stat_name']] = $stat['stat_value'];
             }
 
-            foreach ($results as $champion) {
-                $this->champions[$champion['champion_id']] = $this->create($champion);
+            foreach ($champions as $id => $champion) {
+                $this->champions[$id] = $this->create($champion);
             }
+
         }
     }
 
@@ -226,7 +236,7 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             'hp' => $stats->getHealth()->getBaseValue(),
             'hpPerLevel' => $stats->getHealth()->getIncreasePerLevel(),
             'hpRegen' => $stats->getHealth()->getRegenBaseValue(),
-            'hpRegenPerLevel' => $stats->getHealth()->regenIncreasePerLevel(),
+            'hpRegenPerLevel' => $stats->getHealth()->getRegenIncreasePerLevel(),
             'resource' => $stats->getResource()->getBaseValue(),
             'resourcePerLevel' => $stats->getResource()->getIncreasePerLevel(),
             'resourceRegen' => $stats->getResource()->getRegenBaseValue(),

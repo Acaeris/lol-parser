@@ -18,7 +18,7 @@ final class ChampionRequest implements RequestInterface
     /** @var string Endpoint */
     const ENDPOINT = 'static-data/v3';
     /* @var array Default parameters for API query */
-    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all' ];
+    private $apiDefaults = [ 'region' => 'euw', 'champListData' => 'all' ];
     /* @var string Output Format */
     private $format;
     /* @var array Data to be used in request */

@@ -101,7 +101,7 @@ final class SqlChampions implements ChampionServiceInterface
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
 
-                return;
+                continue;
             }
             $this->dbAdapter->insert($request);
         }
@@ -136,6 +136,7 @@ final class SqlChampions implements ChampionServiceInterface
             $champion['resource_type'],
             explode('|', $champion['tags']),
             $stats[$champion['champion_id']],
+            $champion['image_name'],
             $champion['version'],
             $champion['region']
         );
@@ -156,6 +157,7 @@ final class SqlChampions implements ChampionServiceInterface
             'title' => $champion->getTitle(),
             'resource_type' => $champion->getResourceType(),
             'tags' => $champion->getTagsAsString(),
+            'image_name' => $champion->getImageName(),
             'version' => $champion->getVersion(),
             'region' => $champion->getRegion()
         ];
