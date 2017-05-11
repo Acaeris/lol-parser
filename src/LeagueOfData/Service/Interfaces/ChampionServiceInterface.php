@@ -3,6 +3,7 @@
 namespace LeagueOfData\Service\Interfaces;
 
 use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Adapters\RequestInterface;
 
 /**
  * Champion Service interface
@@ -23,13 +24,11 @@ interface ChampionServiceInterface
     /**
      * Fetch Champions
      *
-     * @param string $version
-     * @param int    $championId
-     * @param string $region
+     * @param RequestInterface $request
      *
      * @return array Champion Objects
      */
-    public function fetch(string $version, int $championId = null, string $region = 'euw') : array;
+    public function fetch(RequestInterface $request) : array;
 
     /**
      * Store the champion objects in the database

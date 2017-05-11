@@ -11,13 +11,6 @@ namespace LeagueOfData\Adapters;
  */
 interface RequestInterface
 {
-    /* @var string JSON Format type */
-    const REQUEST_JSON = 'json';
-    /* @var string SQL Format Type */
-    const REQUEST_SQL = 'sql';
-    /* @var array Valid Regions for API requests */
-    const VALID_REGIONS = ['na', 'euw', 'eune'];
-
     /**
      * Set format request will be in
      *
@@ -40,7 +33,7 @@ interface RequestInterface
     public function query() : string;
 
     /**
-     * Type of request
+     * Return request type
      *
      * @return string Request Type
      */
@@ -52,13 +45,13 @@ interface RequestInterface
      * @return array Request parameters
      */
     public function where() : array;
-
+    
     /**
      * Validate request parameters
      *
-     * @param array       $where Where parameters
-     * @param string|null $query Query string
-     * @param array|null  $data  Request data
+     * @param array  $where   Where parameters
+     * @param string $columns Columns
+     * @param array  $data    Request data
      */
-    public function validate(array $where, string $query = null, array $data = null);
+    public function validate(array $where, string $columns = '*', array $data = null);
 }

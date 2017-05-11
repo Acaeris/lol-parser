@@ -6,6 +6,7 @@ use LeagueOfData\Adapters\RequestInterface;
 
 /**
  * Adapter Interface
+ *
  * @package LeagueOfData\Adapters
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
@@ -26,16 +27,16 @@ interface AdapterInterface
      *
      * @param LeagueOfData\Adapters\RequestInterface $request Request object
      *
-     * @return stdClass Insert response
+     * @return int Insert response
      */
-    public function insert(RequestInterface $request);
+    public function insert(RequestInterface $request) : int;
 
     /**
      * Update object interface
      *
      * @param LeagueOfData\Adapters\RequestInterface $request Request object
      *
-     * @return stdClass Update response.
+     * @return int Update response.
      */
-    public function update(RequestInterface $request);
+    public function update(RequestInterface $request) : int;
 }

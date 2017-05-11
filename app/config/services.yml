@@ -1,7 +1,10 @@
 services:
+    guzzle:
+        class: GuzzleHttp\Client
+        arguments: []
     api-adapter:
         class: LeagueOfData\Adapters\ApiAdapter
-        arguments: ['@logger', '%apiKey%']
+        arguments: ['@logger', '@guzzle', '%apiKey%']
     sql-adapter:
         class: LeagueOfData\Adapters\SqlAdapter
         arguments: ['@logger', '@database_connection']
@@ -10,6 +13,9 @@ services:
         arguments: ['@logger']
     champion-stat-api:
         class: LeagueOfData\Service\Json\JsonChampionStats
+        arguments: ['@api-adapter', '@logger']
+    champion-spell-api:
+        class: LeagueOfData\Service\Json\JsonChampionSpells
         arguments: ['@api-adapter', '@logger']
     champion-api:
         class: LeagueOfData\Service\Json\JsonChampions
@@ -25,6 +31,9 @@ services:
         arguments: ['@api-adapter', '@logger']
     champion-stat-db:
         class: LeagueOfData\Service\Sql\SqlChampionStats
+        arguments: ['@sql-adapter', '@logger']
+    champion-spell-db:
+        class: LeagueOfData\Service\Sql\SqlChampionSpells
         arguments: ['@sql-adapter', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions

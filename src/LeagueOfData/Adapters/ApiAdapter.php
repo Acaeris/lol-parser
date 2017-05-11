@@ -31,12 +31,13 @@ class ApiAdapter implements AdapterInterface
      * Set up the API adapter
      *
      * @param LoggerInterface $log
+     * @param Client          $client
      * @param string          $apiKey
      */
-    public function __construct(LoggerInterface $log, string $apiKey)
+    public function __construct(LoggerInterface $log, Client $client, string $apiKey)
     {
         $this->log = $log;
-        $this->client = new Client();
+        $this->client = $client;
         $this->apiKey = $apiKey;
     }
 
@@ -50,7 +51,7 @@ class ApiAdapter implements AdapterInterface
     public function fetch(RequestInterface $request) : array
     {
         $this->attempts++;
-        $request->requestFormat(RequestInterface::REQUEST_JSON);
+        $request->requestFormat(Request::TYPE_JSON);
         try {
             $response = $this->client->get($this->buildQuery($request), [
                 'query' => array_merge($request->where(), ['api_key' => $this->apiKey]),
@@ -93,11 +94,12 @@ class ApiAdapter implements AdapterInterface
      *
      * @param LeagueOfData\Adapters\RequestInterface $request Request object
      *
-     * @return stdClass Insert response
+     * @return int Insert response
      */
-    public function insert(RequestInterface $request)
+    public function insert(RequestInterface $request) : int
     {
-        $this->log->error("API is read-only");
+        $this->log->error("API is read-only", ['request' => $request]);
+        return -1;
     }
 
     /**
@@ -105,14 +107,21 @@ class ApiAdapter implements AdapterInterface
      *
      * @param LeagueOfData\Adapters\RequestInterface $request Request object
      *
-     * @return stdClass Update response.
+     * @return int Update response.
      */
-    public function update(RequestInterface $request)
+    public function update(RequestInterface $request) : int
     {
-        $this->log->error("API is read-only");
+        $this->log->error("API is read-only", ['request' => $request]);
+        return -1;
     }
 
-    private function checkResponse(ResponseInterface $response) : int
+    /**
+     * Checks the response code from the API
+     *
+     * @param ResponseInterface $response
+     * @return int
+     */
+    public function checkResponse(ResponseInterface $response) : int
     {
         switch ($response->getStatusCode()) {
             case 200:
@@ -136,7 +145,13 @@ class ApiAdapter implements AdapterInterface
         return self::API_SKIP;
     }
 
-    private function buildQuery(RequestInterface $request) : string
+    /**
+     * Builds the API query
+     *
+     * @param RequestInterface $request
+     * @return string
+     */
+    public function buildQuery(RequestInterface $request) : string
     {
         $params = $request->where();
         $region = $params['region'] . (in_array($params['region'], ['ru', 'kr']) ? '' : '1');

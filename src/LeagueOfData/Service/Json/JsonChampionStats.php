@@ -5,6 +5,7 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
@@ -23,6 +24,8 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
     private $adapter;
     /** @var LoggerInterface */
     private $log;
+    /** @var array */
+    private $champions;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
@@ -34,10 +37,9 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
      * Factory to create Champion Stats objects from JSON
      *
      * @param array $champion
-     *
      * @return ChampionStatsInterface
      */
-    public function create(array $champion): ChampionStats
+    public function create(array $champion) : ChampionStats
     {
         return new ChampionStats(
             $champion['id'],
@@ -67,13 +69,10 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
     /**
      * Fetch Champions Stats
      *
-     * @param string $version
-     * @param int    $championId
-     * @param string $region
-     *
+     * @param RequestInterface $request
      * @return array ChampionStats Objects
      */
-    public function fetch(string $version, int $championId = null, string $region = "euw") : array
+    public function fetch(RequestInterface $request) : array
     {
         throw new \Exception("Fetch method for Champion Stats from API is not currently implemented");
     }

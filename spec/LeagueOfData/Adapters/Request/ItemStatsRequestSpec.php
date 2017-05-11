@@ -3,7 +3,7 @@
 namespace spec\LeagueOfData\Adapters\Request;
 
 use PhpSpec\ObjectBehavior;
-use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 
 class ItemStatsRequestSpec extends ObjectBehavior
 {
@@ -18,26 +18,26 @@ class ItemStatsRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_a_request_type()
-    {
-        $this->type()->shouldReturn('item_stats');
-    }
-
     public function it_has_request_data()
     {
         $this->data()->shouldReturn(['Test Data']);
     }
 
+    public function it_has_a_type()
+    {
+        $this->type()->shouldReturn('item_stats');
+    }
+
     public function it_cannot_be_used_for_a_json_request()
     {
-        $this->requestFormat(RequestInterface::REQUEST_JSON);
+        $this->requestFormat(Request::TYPE_JSON);
         $this->shouldThrow(new \Exception('Cannot create API query for stats alone'))
             ->during('query');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()
     {
-        $this->requestFormat(RequestInterface::REQUEST_SQL);
+        $this->requestFormat(Request::TYPE_SQL);
         $this->query()->shouldReturn('SELECT test_column FROM item_stats WHERE region = :region');
     }
 

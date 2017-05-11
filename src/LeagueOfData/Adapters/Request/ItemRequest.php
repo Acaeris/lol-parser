@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Adapters\Request;
 
-use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 
 /**
  * Request object for Item Services
@@ -11,41 +11,14 @@ use LeagueOfData\Adapters\RequestInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class ItemRequest implements RequestInterface
+final class ItemRequest extends Request
 {
-    /* @var string Request Type */
-    const TYPE = "items";
-    /** @var string Endpoint */
-    const ENDPOINT = 'static-data/v3';
     /* @var array Default parameters for API query */
     private $apiDefaults = [
         'region' => 'euw',
         'itemListData' => 'all',
         'itemData' => 'all',
     ];
-    /* @var string Output Format */
-    private $format;
-    /* @var array Data to be used in request */
-    private $data;
-    /* @var string Requested columns */
-    private $columns;
-    /* @var array Where parameters of request */
-    private $where;
-
-    /**
-     * Construct Item Request
-     *
-     * @param array  $where
-     * @param string $columns
-     * @param array  $data
-     */
-    public function __construct(array $where, string $columns = null, array $data = null)
-    {
-        $this->validate($where, $columns, $data);
-        $this->where = $where;
-        $this->data = $data;
-        $this->columns = $columns;
-    }
 
     /**
      * Validate request parameters
@@ -66,33 +39,13 @@ final class ItemRequest implements RequestInterface
     }
 
     /**
-     * Set format request will be in
+     * Returns request type
      *
-     * @param string $format Request Format
-     */
-    public function requestFormat(string $format)
-    {
-        $this->format = $format;
-    }
-
-    /**
-     * Data used for request
-     *
-     * @return array Data used for request
-     */
-    public function data() : array
-    {
-        return $this->data;
-    }
-
-    /**
-     * Type of request
-     *
-     * @return string Request Type
+     * @return string Request type
      */
     public function type() : string
     {
-        return self::TYPE;
+        return 'items';
     }
 
     /**
@@ -102,8 +55,8 @@ final class ItemRequest implements RequestInterface
      */
     public function query() : string
     {
-        if ($this->format === RequestInterface::REQUEST_JSON) {
-            return self::ENDPOINT.'/'.self::TYPE;
+        if ($this->format === Request::TYPE_JSON) {
+            return 'static-data/v3/items';
         }
 
         $parts = [];
@@ -114,7 +67,7 @@ final class ItemRequest implements RequestInterface
 
         $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
 
-        return "SELECT {$this->columns} FROM ".self::TYPE.$where;
+        return "SELECT {$this->columns} FROM items".$where;
     }
 
     /**
@@ -124,7 +77,7 @@ final class ItemRequest implements RequestInterface
      */
     public function where() : array
     {
-        if ($this->format === RequestInterface::REQUEST_JSON) {
+        if ($this->format === Request::TYPE_JSON) {
             return array_merge($this->apiDefaults, $this->where);
         }
 

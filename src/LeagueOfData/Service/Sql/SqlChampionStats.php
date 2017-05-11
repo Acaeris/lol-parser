@@ -5,6 +5,7 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
@@ -74,25 +75,12 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     /**
      * Fetch Champions Stats
      *
-     * @param string $version
-     * @param int    $championId
-     * @param string $region
-     *
+     * @param RequestInterface $request
      * @return array ChampionStats Objects
      */
-    public function fetch(string $version, int $championId = null, string $region = "euw") : array
+    public function fetch(RequestInterface $request) : array
     {
-        $this->log->debug("Fetching champion stats from DB for version: {$version}".(
-            isset($championId) ? " [{$championId}]" : ""
-        ));
-
-        $where = [ 'version' => $version, 'region' => $region ];
-
-        if (isset($championId) && !empty($championId)) {
-            $where['champion_id'] = $championId;
-        }
-
-        $request = new ChampionStatsRequest($where, '*');
+        $this->log->debug("Fetching champion stats from DB");
         $results = $this->dbAdapter->fetch($request);
         $this->champions = [];
         $this->processResults($results);

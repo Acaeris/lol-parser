@@ -3,7 +3,7 @@
 namespace spec\LeagueOfData\Adapters\Request;
 
 use PhpSpec\ObjectBehavior;
-use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 
 class SummonerRequestSpec extends ObjectBehavior
 {
@@ -18,32 +18,32 @@ class SummonerRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_a_request_type()
-    {
-        $this->type()->shouldReturn('summoners');
-    }
-
     public function it_has_request_data()
     {
         $this->data()->shouldReturn(['Test Data']);
     }
 
+    public function it_has_a_type()
+    {
+        $this->type()->shouldReturn('summoners');
+    }
+
     public function it_returns_the_correct_query_for_a_json_request_by_id()
     {
-        $this->requestFormat(RequestInterface::REQUEST_JSON);
+        $this->requestFormat(Request::TYPE_JSON);
         $this->query()->shouldReturn('summoner/v3/summoners/1');
     }
 
     public function it_returns_the_correct_query_for_a_json_request_by_name()
     {
         $this->beConstructedWith(['region' => 'na', 'name' => 'Acaeris']);
-        $this->requestFormat(RequestInterface::REQUEST_JSON);
+        $this->requestFormat(Request::TYPE_JSON);
         $this->query()->shouldReturn('summoner/v3/summoners/by-name/Acaeris');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()
     {
-        $this->requestFormat(RequestInterface::REQUEST_SQL);
+        $this->requestFormat(Request::TYPE_SQL);
         $this->query()->shouldReturn('Test Query');
     }
 

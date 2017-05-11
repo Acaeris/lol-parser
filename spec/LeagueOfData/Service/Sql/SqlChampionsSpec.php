@@ -5,16 +5,20 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
+use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Models\Champion\Champion;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 
 class SqlChampionsSpec extends ObjectBehavior
 {
+    private $allRequest;
+    private $singleRequest;
     private $mockData = [
         [
             "champion_id" => 266,
             "champion_name" => "Aatrox",
+            "image_name" => "Aatrox",
             "title" => "the Darkin Blade",
             "tags" => "Fighter|Tank",
             "resource_type" => "Blood Well",
@@ -23,6 +27,7 @@ class SqlChampionsSpec extends ObjectBehavior
         ], [
             "champion_id" => 412,
             "champion_name" => "Thresh",
+            "image_name" => "Aatrox",
             "title" => "the Chain Warden",
             "tags" => "Support",
             "resource_type" => "Mana",
@@ -37,12 +42,14 @@ class SqlChampionsSpec extends ObjectBehavior
         ChampionStatsServiceInterface $statBuilder,
         ChampionStatsInterface $stats)
     {
-        $adapter->fetch(new ChampionRequest(['version' => '7.9.1', 'region' => 'euw'], '*'))
-            ->willReturn($this->mockData);
-        $adapter->fetch(new ChampionRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'], '*'))
-            ->willReturn([$this->mockData[0]]);
-        $statBuilder->fetch('7.9.1', 266, 'euw')->willReturn([266 => $stats]);
-        $statBuilder->fetch('7.9.1', 412, 'euw')->willReturn([412 => $stats]);
+        $this->allRequest = new ChampionRequest(['version' => '7.9.1', 'region' => 'euw']);
+        $this->singleRequest = new ChampionRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
+        $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
+        $threshStatRequest = new ChampionStatsRequest(['champion_id' => 412, 'version' => '7.9.1', 'region' => 'euw']);
+        $adapter->fetch($this->allRequest)->willReturn($this->mockData);
+        $adapter->fetch($this->singleRequest)->willReturn([$this->mockData[0]]);
+        $statBuilder->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
+        $statBuilder->fetch($threshStatRequest)->willReturn([412 => $stats]);
         $this->beConstructedWith($adapter, $logger, $statBuilder);
     }
 
@@ -54,12 +61,12 @@ class SqlChampionsSpec extends ObjectBehavior
 
     public function it_should_fetch_all_if_only_version_passed()
     {
-        $this->fetch('7.9.1')->shouldReturnArrayOfChampions();
+        $this->fetch($this->allRequest)->shouldReturnArrayOfChampions();
     }
 
     public function it_should_fetch_one_if_version_and_id_passed()
     {
-        $this->fetch('7.9.1', 266)->shouldReturnArrayOfChampions();
+        $this->fetch($this->singleRequest)->shouldReturnArrayOfChampions();
     }
 
     public function getMatchers()

@@ -4,7 +4,9 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
+use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
@@ -55,25 +57,13 @@ final class SqlChampions implements ChampionServiceInterface
     /**
      * Fetch Champions
      *
-     * @param string $version
-     * @param int    $championId
-     * @param string $region
+     * @param RequestInterface $request
      *
      * @return array Champion Objects
      */
-    public function fetch(string $version, int $championId = null, string $region = 'euw') : array
+    public function fetch(RequestInterface $request) : array
     {
-        $this->log->debug("Fetching champions from DB for version: {$version}".(
-            isset($championId) ? " [{$championId}]" : ""
-        ));
-
-        $where = [ 'version' => $version, 'region' => $region ];
-
-        if (isset($championId) && !empty($championId)) {
-            $where['champion_id'] = $championId;
-        }
-
-        $request = new ChampionRequest($where, '*');
+        $this->log->debug("Fetching champions from DB");
         $results = $this->dbAdapter->fetch($request);
         $this->champions = [];
         $this->processResults($results);
@@ -128,7 +118,12 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function create(array $champion) : Champion
     {
-        $stats = $this->statService->fetch($champion['version'], $champion['champion_id'], $champion['region']);
+        $request = new ChampionStatsRequest([
+            'version' => $champion['version'],
+            'region' => $champion['region'],
+            'champion_id' => $champion['champion_id'],
+        ], '*');
+        $stats = $this->statService->fetch($request);
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],

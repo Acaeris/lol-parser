@@ -7,5 +7,5 @@ home:
     defaults:   { _controller: LeagueOfData:Default:index }
 
 champion-byId:
-    path:       /champion/id/{id}
+    path:       /champion/id
     defaults:   { _controller: LeagueOfData:Champion:byId }

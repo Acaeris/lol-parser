@@ -6,7 +6,7 @@ use LeagueOfData\Models\Champion\Champion;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\ChampionRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 final class JsonChampions implements ChampionServiceInterface
 {
     /* @var AdapterInterface API adapter */
-    private $source;
+    private $adapter;
     /* @var LoggerInterface logger */
     private $log;
     /* @var JsonChampionStats Champion Stat factory */
@@ -36,71 +36,9 @@ final class JsonChampions implements ChampionServiceInterface
     public function __construct(AdapterInterface $adapter, LoggerInterface $log,
         ChampionStatsServiceInterface $statService)
     {
-        $this->source = $adapter;
+        $this->adapter = $adapter;
         $this->log = $log;
         $this->statService = $statService;
-    }
-
-    /**
-     * Add champion objects to internal array
-     *
-     * @param array $champions Champion objects
-     */
-    public function add(array $champions)
-    {
-        foreach ($champions as $champion) {
-            $this->champions[$champion->getID()] = $champion;
-        }
-    }
-
-    /**
-     * Fetch Champions
-     *
-     * @param string $version
-     * @param int    $championId
-     * @param string $region
-     *
-     * @return array Champion Objects
-     */
-    public function fetch(string $version, int $championId = null, string $region = 'euw') : array
-    {
-        $this->log->debug("Fetching champions from API for version: {$version}".(
-            isset($championId) ? " [{$championId}]" : ""
-        ));
-
-        $params = ['version' => $version, 'region' => $region];
-
-        if (isset($championId) && !empty($championId)) {
-            $params['id'] = $championId;
-        }
-
-        $request = new ChampionRequest($params);
-        $response = $this->source->fetch($request);
-        $this->champions = [];
-        if (count($response) > 0) {
-            $this->processResponse($response, $version, $region);
-        }
-        $this->log->debug(count($this->champions)." champions fetched from API");
-
-        return $this->champions;
-    }
-
-    /**
-     * Not implemented in JSON API calls
-     */
-    public function store()
-    {
-        throw new \Exception("Request to store data through JSON API not available.");
-    }
-
-    /**
-     * Collection of Champion objects
-     *
-     * @return array
-     */
-    public function transfer() : array
-    {
-        return $this->champions;
     }
 
     /**
@@ -126,13 +64,62 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
+     * Add champion objects to internal array
+     *
+     * @param array $champions Champion objects
+     */
+    public function add(array $champions)
+    {
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getID()] = $champion;
+        }
+    }
+
+    /**
+     * Fetch Champions
+     *
+     * @param RequestInterface $request
+     *
+     * @return array Champion Objects
+     */
+    public function fetch(RequestInterface $request) : array
+    {
+        $this->log->debug("Fetching champions from API");
+        $response = $this->adapter->fetch($request);
+        $this->champions = [];
+        if (count($response) > 0) {
+            $this->processResponse($response, $request);
+        }
+        $this->log->debug(count($this->champions)." champions fetched from API");
+
+        return $this->champions;
+    }
+
+    /**
+     * Not implemented in JSON API calls
+     */
+    public function store()
+    {
+        throw new \Exception("Request to store data through JSON API not available.");
+    }
+
+    /**
+     * Collection of Champion objects
+     *
+     * @return array
+     */
+    public function transfer() : array
+    {
+        return $this->champions;
+    }
+
+    /**
      * Convert response data into Champion objects
      *
-     * @param array  $response
-     * @param string $version
-     * @param string $region
+     * @param array            $response
+     * @param RequestInterface $request
      */
-    private function processResponse(array $response, string $version, string $region)
+    private function processResponse(array $response, RequestInterface $request)
     {
         if ($response !== false) {
             if (!isset($response['data'])) {
@@ -140,9 +127,11 @@ final class JsonChampions implements ChampionServiceInterface
                 $response = $temp;
             }
 
+            $params = $request->where();
+
             foreach ($response['data'] as $champion) {
-                $champion['version'] = $version;
-                $champion['region'] = $region;
+                $champion['version'] = $params['version'];
+                $champion['region'] = $params['region'];
                 $this->champions[$champion['id']] = $this->create($champion);
             }
         }

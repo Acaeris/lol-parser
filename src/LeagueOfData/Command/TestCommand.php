@@ -37,6 +37,6 @@ class TestCommand extends ContainerAwareCommand
         $this->log = $this->getContainer()->get('logger');
         $this->database = $this->getContainer()->get('champion-db');
 
-        $this->database->fetch('7.9.1', $input->getArgument('championId'));
+        var_dump($this->database->test());
     }
 }

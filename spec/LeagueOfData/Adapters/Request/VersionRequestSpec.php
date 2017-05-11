@@ -17,11 +17,6 @@ class VersionRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_a_request_type()
-    {
-        $this->type()->shouldReturn('versions');
-    }
-
     public function it_has_request_data()
     {
         $this->data()->shouldReturn(['Test Data']);

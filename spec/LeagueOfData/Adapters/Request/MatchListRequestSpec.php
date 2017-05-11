@@ -3,7 +3,7 @@
 namespace spec\LeagueOfData\Adapters\Request;
 
 use PhpSpec\ObjectBehavior;
-use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 
 class MatchListRequestSpec extends ObjectBehavior
 {
@@ -18,25 +18,25 @@ class MatchListRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_a_request_type()
-    {
-        $this->type()->shouldReturn('match-list');
-    }
-
     public function it_has_request_data()
     {
         $this->data()->shouldReturn(['Test Data']);
     }
 
+    public function it_has_a_type()
+    {
+        $this->type()->shouldReturn('match-list');
+    }
+
     public function it_returns_the_correct_query_for_a_json_request()
     {
-        $this->requestFormat(RequestInterface::REQUEST_JSON);
+        $this->requestFormat(Request::TYPE_JSON);
         $this->query()->shouldReturn('https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()
     {
-        $this->requestFormat(RequestInterface::REQUEST_SQL);
+        $this->requestFormat(Request::TYPE_SQL);
         $this->query()->shouldReturn('Test Query');
     }
 

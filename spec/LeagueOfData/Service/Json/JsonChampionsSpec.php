@@ -12,6 +12,9 @@ use Psr\Log\LoggerInterface;
 
 class JsonChampionsSpec extends ObjectBehavior
 {
+    private $allRequest;
+    private $singleRequest;
+    
     public function let(
         AdapterInterface $adapter,
         LoggerInterface $logger,
@@ -25,6 +28,9 @@ class JsonChampionsSpec extends ObjectBehavior
                     "title" => "the Darkin Blade",
                     "name" => "Aatrox",
                     "key" => "Aatrox",
+                    "image" => [
+                        "full" => "Aatrox.png"
+                    ],
                     "partype" => "Blood Well",
                     "tags" => ['Fighter', 'Tank'],
                     "stats" => [
@@ -55,6 +61,9 @@ class JsonChampionsSpec extends ObjectBehavior
                     "title" => "the Chain Warden",
                     "name" => "Thresh",
                     "key" => "Thresh",
+                    "image" => [
+                        "full" => "Thresh.png"
+                    ],
                     "partype" => "Mana",
                     "tags" => ['Support'],
                     "stats" => [
@@ -83,10 +92,10 @@ class JsonChampionsSpec extends ObjectBehavior
             ],
             "version" => '7.4.3'
         ];
-        $request = new ChampionRequest(['version' => '7.4.3', 'region' => 'euw']);
-        $adapter->fetch($request)->willReturn($champions);
-        $request = new ChampionRequest(['id' => 266, 'region' => 'euw', 'version' => '7.4.3']);
-        $adapter->fetch($request)->willReturn($champions['data']['Aatrox']);
+        $this->allRequest = new ChampionRequest(['version' => '7.4.3', 'region' => 'euw']);
+        $adapter->fetch($this->allRequest)->willReturn($champions);
+        $this->singleRequest = new ChampionRequest(['id' => 266, 'region' => 'euw', 'version' => '7.4.3']);
+        $adapter->fetch($this->singleRequest)->willReturn($champions['data']['Aatrox']);
         $champions['data']['Aatrox']['version'] = "7.4.3";
         $champions['data']['Aatrox']['region'] = "euw";
         $champions['data']['Thresh']['version'] = "7.4.3";
@@ -105,12 +114,12 @@ class JsonChampionsSpec extends ObjectBehavior
 
     public function it_should_fetch_all_if_only_version_passed()
     {
-        $this->fetch('7.4.3')->shouldReturnArrayOfChampions();
+        $this->fetch($this->allRequest)->shouldReturnArrayOfChampions();
     }
 
     public function it_should_fetch_one_if_version_and_id_passed()
     {
-        $this->fetch('7.4.3', 266)->shouldReturnArrayOfChampions();
+        $this->fetch($this->singleRequest)->shouldReturnArrayOfChampions();
     }
 
     public function getMatchers()

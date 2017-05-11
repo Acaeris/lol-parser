@@ -17,6 +17,7 @@ class ChampionSpec extends ObjectBehavior
             "mp", // Resource Type
             ["Fighter", "Mage"], // Tags
             $stats, // Stats
+            "Test", // Image Name
             "6.21.1", // Version
             "euw" // Region
         );
@@ -38,6 +39,7 @@ class ChampionSpec extends ObjectBehavior
         $this->getID()->shouldReturn(1);
         $this->getName()->shouldReturn("Test");
         $this->getTitle()->shouldReturn("Test Character");
+        $this->getImageName()->shouldReturn("Test");
         $this->getResourceType()->shouldReturn('mp');
         $this->getVersion()->shouldReturn('6.21.1');
         $this->getTags()->shouldReturn(['Fighter', 'Mage']);

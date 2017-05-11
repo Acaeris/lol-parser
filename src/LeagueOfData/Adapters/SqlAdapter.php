@@ -3,6 +3,7 @@
 namespace LeagueOfData\Adapters;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
 
 /**
  * SQL Adapter class
@@ -12,18 +13,18 @@ use Psr\Log\LoggerInterface;
  */
 class SqlAdapter implements AdapterInterface
 {
-    /* @var Psr\Log\LoggerInterface Logger */
+    /* @var LoggerInterface Logger */
     private $log;
-    /* @var object DB */
+    /* @var Connection DB */
     private $database;
 
     /**
      * Set up the SQL adapter
      *
      * @param LoggerInterface $log
-     * @param type            $database
+     * @param Connection      $database
      */
-    public function __construct(LoggerInterface $log, $database)
+    public function __construct(LoggerInterface $log, Connection $database)
     {
         $this->log = $log;
         $this->database = $database;
@@ -32,13 +33,13 @@ class SqlAdapter implements AdapterInterface
     /**
      * Insert object into SQL
      *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
+     * @param RequestInterface $request Request object
      *
-     * @return stdClass Insert response
+     * @return int Insert response
      */
-    public function insert(RequestInterface $request)
+    public function insert(RequestInterface $request) : int
     {
-        $request->requestFormat(RequestInterface::REQUEST_SQL);
+        $request->requestFormat(Request::TYPE_SQL);
 
         return $this->database->insert($request->type(), $request->data());
     }
@@ -46,13 +47,13 @@ class SqlAdapter implements AdapterInterface
     /**
      * Fetch data from SQL
      *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
+     * @param RequestInterface $request Request object
      *
      * @return array Fetch response
      */
     public function fetch(RequestInterface $request) : array
     {
-        $request->requestFormat(RequestInterface::REQUEST_SQL);
+        $request->requestFormat(Request::TYPE_SQL);
 
         return $this->database->fetchAll($request->query(), $request->where());
     }
@@ -60,13 +61,13 @@ class SqlAdapter implements AdapterInterface
     /**
      * Update object in SQL
      *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
+     * @param RequestInterface $request Request object
      *
-     * @return stdClass Update response.
+     * @return int Update response.
      */
-    public function update(RequestInterface $request)
+    public function update(RequestInterface $request) : int
     {
-        $request->requestFormat(RequestInterface::REQUEST_SQL);
+        $request->requestFormat(Request::TYPE_SQL);
 
         return $this->database->update($request->type(), $request->data(), $request->where());
     }

@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use LeagueOfData\Adapters\Request\ChampionRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class ChampionUpdateCommand extends ContainerAwareCommand
@@ -28,9 +30,10 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->setName('update:champion')
             ->setDescription('API processor command for champion data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('championId', InputArgument::OPTIONAL, 'Champion ID to process data for.'
+            ->addOption('championId', 'i', InputOption::VALUE_REQUIRED, 'Champion ID to process data for.'
                 . ' (Will fetch all if not supplied)')
-            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
+            ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force a refresh of the data.');
     }
 
     /**
@@ -47,16 +50,37 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('champion-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        $this->log->notice('Checking Champion data for update');
+        $this->log->notice('Checking Champion data for update. [v: '
+            . $input->getArgument('release') . ']');
+        $request = $this->buildRequest($input);
 
-        if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('championId'))) == 0
+        if (count($this->database->fetch($request)) == 0
             || $input->getOption('force')) {
             $this->log->notice("Update required");
             $this->updateData($input);
             return;
         }
 
-        $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
+        $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+    }
+
+    /**
+     * Build a request object
+     * @param InputInterface $input
+     * @return RequestInterface
+     */
+    private function buildRequest(InputInterface $input) : RequestInterface
+    {
+        $where = [
+            'version' => $input->getArgument('release'),
+            'region' => $input->getOption('region')
+        ];
+
+        if (null !== $input->getOption('championId')) {
+            $where['champion_id'] = $this->getOption('championId');
+        }
+
+        return new ChampionRequest($where, '*');
     }
 
     /**
@@ -72,8 +96,8 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         $params = '"command" : "update:champion",
                 "release" : "'.$input->getArgument('release').'"';
 
-        if (!empty($input->getArgument('championId'))) {
-            $params .= ', "championId" : "'.$input->getArgument('championId').'"';
+        if (!empty($input->getOption('championId'))) {
+            $params .= ', "championId" : "'.$input->getOption('championId').'"';
         }
 
         $this->messageQueue->addProcessToQueue('update:champion', "{ {$params} }");
@@ -88,8 +112,8 @@ class ChampionUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->service->fetch($input->getArgument('release'), $input->getArgument('championId'));
-            $this->log->info("Storing champion data for version ".$input->getArgument('release'));
+            $this->service->fetch($this->buildRequest($input));
+            $this->log->info("Storing champion data");
 
             $this->database->add($this->service->transfer());
             $this->database->store();

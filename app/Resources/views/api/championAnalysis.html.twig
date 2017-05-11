@@ -1,0 +1,32 @@
+{
+    "id": {{ champion.id }},
+    "name": "{{ champion.name }}",
+    "imageName": "{{ champion.imageName }}",
+    "title": "{{ champion.title }}",
+    "tags": {{ champion.tags | json_encode | raw }},
+    "resourceType": "{{ champion.resourceType }}",
+    "stats": {
+        "moveSpeed": {{ champion.stats.moveSpeed }},
+        "health": {{ champion.stats.health.baseValue }},
+        "healthPerLevel": {{ champion.stats.health.increasePerLevel }},
+        "healthRegen": {{ champion.stats.health.regenBaseValue }},
+        "healthRegenPerLevel": {{ champion.stats.health.regenIncreasePerLevel }},
+        "resource": {{ champion.stats.resource.baseValue }},
+        "resourcePerLevel": {{ champion.stats.resource.increasePerLevel }},
+        "resourceRegen": {{ champion.stats.resource.regenBaseValue }},
+        "resourceRegenPerLevel": {{ champion.stats.resource.regenIncreasePerLevel }},
+        "attack": {{ champion.stats.attack.baseDamage }},
+        "attackPerLevel": {{ champion.stats.attack.damagePerLevel }},
+        "attackRange": {{ champion.stats.attack.range }},
+        "attackSpeed": {{ champion.stats.attack.attackSpeed }},
+        "attackSpeedPerLevel": {{ champion.stats.attack.attackSpeedPerLevel }},
+        "crit": {{ champion.stats.attack.baseCritChance }},
+        "critPerLevel": {{ champion.stats.attack.critChancePerLevel }},
+        "armor": {{ champion.stats.armor.baseValue }},
+        "armorPerLevel": {{ champion.stats.armor.increasePerLevel }},
+        "magicResist": {{ champion.stats.magicResist.baseValue }},
+        "magicResistPerLevel": {{ champion.stats.magicResist.increasePerLevel }}
+    },
+    "version": "{{ champion.version }}",
+    "region": "{{ champion.region }}"
+}

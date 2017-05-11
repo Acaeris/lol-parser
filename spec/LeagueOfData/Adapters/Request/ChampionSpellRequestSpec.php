@@ -5,7 +5,7 @@ namespace spec\LeagueOfData\Adapters\Request;
 use PhpSpec\ObjectBehavior;
 use LeagueOfData\Adapters\Request;
 
-class ItemRequestSpec extends ObjectBehavior
+class ChampionSpellRequestSpec extends ObjectBehavior
 {
     public function let()
     {
@@ -14,7 +14,7 @@ class ItemRequestSpec extends ObjectBehavior
 
     public function it_should_be_initializable()
     {
-        $this->shouldHaveType('LeagueOfData\Adapters\Request\ItemRequest');
+        $this->shouldHaveType('LeagueOfData\Adapters\Request\ChampionSpellRequest');
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
@@ -25,19 +25,20 @@ class ItemRequestSpec extends ObjectBehavior
 
     public function it_has_a_type()
     {
-        $this->type()->shouldReturn('items');
+        $this->type()->shouldReturn('champion_spells');
     }
 
-    public function it_returns_the_correct_query_for_a_json_request()
+    public function it_cannot_be_used_for_a_json_request()
     {
         $this->requestFormat(Request::TYPE_JSON);
-        $this->query()->shouldReturn('static-data/v3/items');
+        $this->shouldThrow(new \Exception('Cannot create API query for spells alone'))
+            ->during('query');
     }
 
     public function it_returns_the_correct_query_for_an_sql_request()
     {
         $this->requestFormat(Request::TYPE_SQL);
-        $this->query()->shouldReturn('SELECT test_column FROM items WHERE region = :region');
+        $this->query()->shouldReturn('SELECT test_column FROM champion_spells WHERE region = :region');
     }
 
     public function it_can_process_the_request_parameters()
@@ -47,13 +48,15 @@ class ItemRequestSpec extends ObjectBehavior
 
     public function it_can_validate_a_correct_id_parameter()
     {
-        $this->shouldNotThrow(new \InvalidArgumentException('Invalid ID supplied for Item request'))
-            ->during('validate', [['id' => 1]]);
+        $this->shouldNotThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))
+            ->during('validate', [['champion_id' => 1]]);
     }
 
     public function it_can_validate_an_incorrect_id_parameter()
     {
-        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Item request'))
-            ->during('validate', [['id' => 'test']]);
+        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))
+            ->during('validate', [['champion_id' => 'test']]);
+        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))
+            ->during('validate', [['champion_id' => 1.2]]);
     }
 }

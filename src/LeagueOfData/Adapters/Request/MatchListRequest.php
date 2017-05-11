@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Adapters\Request;
 
-use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 
 /**
  * Request object for Match List Services
@@ -11,38 +11,13 @@ use LeagueOfData\Adapters\RequestInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class MatchListRequest implements RequestInterface
+final class MatchListRequest extends Request
 {
 
     /* @var string API Request URL */
     const API_URL = 'https://{region}.api.pvp.net/api/lol/{region}/v2.2/matchlist/by-summoner/';
-    /* @var string Request Type */
-    const TYPE = "match-list";
     /* @var array Default parameters for API query */
     private $apiDefaults = [ 'region' => 'euw' ];
-    /* @var string Output Format */
-    private $format;
-    /* @var array Data to be used in request */
-    private $data;
-    /* @var string Request query */
-    private $query;
-    /* @var array Where parameters of request */
-    private $where;
-
-    /**
-     * Construct Match List request
-     *
-     * @param array  $where
-     * @param string $query
-     * @param array  $data
-     */
-    public function __construct(array $where, string $query = null, array $data = null)
-    {
-        $this->validate($where, $query, $data);
-        $this->where = $where;
-        $this->data = $data;
-        $this->query = $query;
-    }
 
     /**
      * Validate request parameters
@@ -63,23 +38,13 @@ final class MatchListRequest implements RequestInterface
     }
 
     /**
-     * Set format request will be in
+     * Returns request type
      *
-     * @param string $format Request Format
+     * @return string Request type
      */
-    public function requestFormat(string $format)
+    public function type() : string
     {
-        $this->format = $format;
-    }
-
-    /**
-     * Data used for request
-     *
-     * @return array Data used for request
-     */
-    public function data() : array
-    {
-        return $this->data;
+        return 'match-list';
     }
 
     /**
@@ -89,23 +54,13 @@ final class MatchListRequest implements RequestInterface
      */
     public function query() : string
     {
-        if ($this->format === RequestInterface::REQUEST_JSON) {
+        if ($this->format === Request::TYPE_JSON) {
             $params = array_merge($this->apiDefaults, $this->where);
 
             return str_replace('{region}', $params['region'], self::API_URL);
         }
 
-        return $this->query;
-    }
-
-    /**
-     * Type of request
-     *
-     * @return string Request Type
-     */
-    public function type() : string
-    {
-        return self::TYPE;
+        return $this->columns;
     }
 
     /**
@@ -115,7 +70,7 @@ final class MatchListRequest implements RequestInterface
      */
     public function where() : array
     {
-        if ($this->format === RequestInterface::REQUEST_JSON) {
+        if ($this->format === Request::TYPE_JSON) {
             return array_merge($this->apiDefaults, $this->where);
         }
 

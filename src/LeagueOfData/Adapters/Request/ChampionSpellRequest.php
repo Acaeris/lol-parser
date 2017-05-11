@@ -5,23 +5,18 @@ namespace LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\Request;
 
 /**
- * Request object for Champion Stats
+ * Request object for Champion Spells
  *
  * @package  LeagueOfData|Adapters\Request
  * @author   Caitlyn Osborne <acaeris@gmail.com>
  * @link     http://lod.gg League of Data
  */
-class ChampionStatsRequest extends Request
+class ChampionSpellRequest extends Request
 {
-    /**
-     * Source of the request
-     *
-     * @return string API url || SQL query
-     */
     public function query(): string
     {
         if ($this->format == Request::TYPE_JSON) {
-            throw new \Exception('Cannot create API query for stats alone');
+            throw new \Exception('Cannot create API query for spells alone');
         }
 
         $parts = [];
@@ -30,7 +25,7 @@ class ChampionStatsRequest extends Request
             $parts[] = "{$key} = :{$key}";
         }
 
-        return "SELECT {$this->columns} FROM champion_stats WHERE ".implode(" AND ", $parts);
+        return "SELECT {$this->columns} FROM champion_spells WHERE ".implode(" AND ", $parts);
     }
 
     /**
@@ -40,7 +35,7 @@ class ChampionStatsRequest extends Request
      */
     public function type() : string
     {
-        return 'champion_stats';
+        return 'champion_spells';
     }
 
     /**
@@ -56,4 +51,5 @@ class ChampionStatsRequest extends Request
             throw new \InvalidArgumentException('Invalid ID supplied for Champion Stats request');
         }
     }
+
 }

@@ -10,6 +10,9 @@ use LeagueOfData\Models\Champion\ChampionStats;
 
 class SqlChampionStatsSpec extends ObjectBehavior
 {
+    private $allRequest;
+    private $singleRequest;
+
     private $mockData = [
         [
             'champion_id' => 266,
@@ -22,10 +25,10 @@ class SqlChampionStatsSpec extends ObjectBehavior
 
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch(new ChampionStatsRequest(['version' => '7.9.1', 'region' => 'euw'], '*'))
-            ->willReturn($this->mockData);
-        $adapter->fetch(new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'], '*'))
-            ->willReturn($this->mockData);
+        $this->allRequest = new ChampionStatsRequest(['version' => '7.9.1', 'region' => 'euw'], '*');
+        $this->singleRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'], '*');
+        $adapter->fetch($this->allRequest)->willReturn($this->mockData);
+        $adapter->fetch($this->singleRequest)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -37,12 +40,12 @@ class SqlChampionStatsSpec extends ObjectBehavior
 
     public function it_should_fetch_all_if_only_version_passed()
     {
-        $this->fetch('7.9.1')->shouldReturnArrayOfChampionStats();
+        $this->fetch($this->allRequest)->shouldReturnArrayOfChampionStats();
     }
 
     public function it_should_fetch_one_if_version_and_id_passed()
     {
-        $this->fetch('7.9.1', 266)->shouldReturnArrayOfChampionStats();
+        $this->fetch($this->singleRequest)->shouldReturnArrayOfChampionStats();
     }
 
     public function getMatchers()
