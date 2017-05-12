@@ -14,7 +14,7 @@ class JsonChampionsSpec extends ObjectBehavior
 {
     private $allRequest;
     private $singleRequest;
-    
+
     public function let(
         AdapterInterface $adapter,
         LoggerInterface $logger,

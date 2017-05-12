@@ -26,7 +26,8 @@ class SqlChampionStatsSpec extends ObjectBehavior
     public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
         $this->allRequest = new ChampionStatsRequest(['version' => '7.9.1', 'region' => 'euw'], '*');
-        $this->singleRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'], '*');
+        $this->singleRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'],
+            '*');
         $adapter->fetch($this->allRequest)->willReturn($this->mockData);
         $adapter->fetch($this->singleRequest)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);

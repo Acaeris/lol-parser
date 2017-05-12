@@ -38,8 +38,8 @@ class SqlAdapterSpec extends ObjectBehavior
         $request->requestFormat('sql')->shouldBeCalled();
         $request->query()->willReturn('SELECT * FROM champions WHERE region = :region AND id = :id');
         $request->where()->willReturn(['region' => 'na','id' => 1]);
-        $database->fetchAll('SELECT * FROM champions WHERE region = :region AND id = :id', ['region' => 'na', 'id' => 1])
-            ->willReturn(['Test']);
+        $database->fetchAll('SELECT * FROM champions WHERE region = :region AND id = :id',
+            ['region' => 'na', 'id' => 1])->willReturn(['Test']);
         $this->fetch($request)->shouldReturn(['Test']);
     }
 }

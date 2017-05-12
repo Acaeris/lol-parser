@@ -45,7 +45,7 @@ interface RequestInterface
      * @return array Request parameters
      */
     public function where() : array;
-    
+
     /**
      * Validate request parameters
      *
