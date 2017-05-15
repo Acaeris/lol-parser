@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
-use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use Psr\Log\LoggerInterface;
 
@@ -127,7 +127,7 @@ class JsonChampionsSpec extends ObjectBehavior
         return [
             'returnArrayOfChampions' => function($champions) {
                 foreach ($champions as $champion) {
-                    if (!$champion instanceof Champion) {
+                    if (!$champion instanceof ChampionInterface) {
                         return false;
                     }
                 }

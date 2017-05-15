@@ -28,7 +28,7 @@ class ChampionAttackSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    public function it_has_all_data_available()
+    public function it_has_all_required_data_available()
     {
         $this->getRange()->shouldReturn(575.0);
         $this->getBaseDamage()->shouldReturn(50.41);

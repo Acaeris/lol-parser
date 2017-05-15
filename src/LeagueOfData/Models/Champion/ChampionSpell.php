@@ -5,6 +5,7 @@ namespace LeagueOfData\Models\Champion;
 use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
 
 /**
  * Champion Spell model
@@ -13,6 +14,12 @@ use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
  */
 class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
 {
+
+    /**
+     * @var ChampionSpellResourceInterface
+     */
+    private $resource;
+
     /**
      * @var int Champion ID
      */
@@ -45,6 +52,22 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @var string
      */
     private $tooltip;
+    /**
+     * @var array
+     */
+    private $cooldowns;
+    /**
+     * @var array
+     */
+    private $ranges;
+    /**
+     * @var array
+     */
+    private $effects;
+    /**
+     * @var array
+     */
+    private $variables;
 
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -58,7 +81,12 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
         string $imageName,
         int $maxRank,
         string $description,
-        string $tooltip
+        string $tooltip,
+        array $cooldowns,
+        array $ranges,
+        array $effects,
+        array $variables,
+        ChampionSpellResourceInterface $resource
     ) {
         $this->constructImmutable();
 
@@ -70,6 +98,11 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
         $this->maxRank = $maxRank;
         $this->description = $description;
         $this->tooltip = $tooltip;
+        $this->cooldowns = $cooldowns;
+        $this->ranges = $ranges;
+        $this->effects = $effects;
+        $this->variables = $variables;
+        $this->resource = $resource;
     }
 
     /**
@@ -150,5 +183,116 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     public function getTooltip() : string
     {
         return $this->tooltip;
+    }
+
+    /**
+     * Get spell cooldowns
+     *
+     * @return array
+     */
+    public function getCooldowns() : array
+    {
+        return $this->cooldowns;
+    }
+
+    /**
+     * Get spell cooldown by rank
+     *
+     * @param int $rank
+     * @return int
+     * @throws \InvalidArgumentException
+     */
+    public function getCooldownByRank(int $rank) : int
+    {
+        if (!isset($this->cooldowns[$rank - 1])) {
+            throw new \InvalidArgumentException('Rank too high for spell.');
+        }
+        return $this->cooldowns[$rank - 1];
+    }
+
+    /**
+     * Get spell ranges
+     *
+     * @return array
+     */
+    public function getRanges() : array
+    {
+        return $this->ranges;
+    }
+
+    /**
+     * Get spell range by rank
+     *
+     * @param int $rank
+     * @return int
+     * @throws \InvalidArgumentException
+     */
+    public function getRangeByRank(int $rank) : int
+    {
+        if (!isset($this->ranges[$rank - 1])) {
+            throw new \InvalidArgumentException('Rank too high for spell.');
+        }
+        return $this->ranges[$rank - 1];
+    }
+
+    /**
+     * Get spell effects
+     *
+     * @return array
+     */
+    public function getEffects() : array
+    {
+        return $this->effects;
+    }
+
+    /**
+     * Get effect by key
+     *
+     * @param int $key
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    public function getEffectByKey(int $key) : array
+    {
+        if (!isset($this->effects[$key])) {
+            throw new \InvalidArgumentException('Effect not available');
+        }
+        return $this->effects[$key];
+    }
+
+    /**
+     * Get effect value by key and rank
+     *
+     * @param int $key
+     * @param int $rank
+     * @return float
+     * @throws \InvalidArgumentException
+     */
+    public function getEffectValue(int $key, int $rank) : float
+    {
+        if (!isset($this->effects[$key]) || !isset($this->effects[$key][$rank])) {
+            throw new \InvalidArgumentException('Effect not available or rank to high for spell.');
+        }
+        return $this->effects[$key][$rank - 1];
+    }
+
+    /**
+     * Get spell variables
+     *
+     * @return array
+     */
+    public function getVars() : array
+    {
+        return $this->variables;
+    }
+
+    /**
+     * Get spell resource
+     *
+     * @return ChampionSpellResourceInterface
+     */
+    public function getResource() : ChampionSpellResourceInterface
+    {
+        return $this->resource;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace LeagueOfData\Models\Interfaces;
 
+use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
+
 /**
  * Champion Spell Interface
  *
@@ -48,4 +50,58 @@ interface ChampionSpellInterface
      * Get spell tooltip
      */
     public function getTooltip() : string;
+
+    /**
+     * Get spell cooldowns
+     */
+    public function getCooldowns() : array;
+
+    /**
+     * Get spell cooldown by rank
+     *
+     * @param int $rank
+     */
+    public function getCooldownByRank(int $rank) : int;
+    
+    /**
+     * Get spell ranges
+     */
+    public function getRanges() : array;
+
+    /**
+     * Get spell range by rank
+     *
+     * @param int $rank
+     */
+    public function getRangeByRank(int $rank) : int;
+
+    /**
+     * Get spell effects
+     */
+    public function getEffects() : array;
+
+    /**
+     * Get spell effect by key
+     *
+     * @param int $key
+     */
+    public function getEffectByKey(int $key) : array;
+
+    /**
+     * Get spell effect value by key and rank
+     *
+     * @param int $key
+     * @param int $rank
+     */
+    public function getEffectValue(int $key, int $rank) : float;
+
+    /**
+     * Get spell variables
+     */
+    public function getVars() : array;
+
+    /**
+     * Get spell resource
+     */
+    public function getResource() : ChampionSpellResourceInterface;
 }
