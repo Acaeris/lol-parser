@@ -3,6 +3,7 @@
 namespace LeagueOfData\Service\Interfaces;
 
 use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
 
 /**
  * Champion Spells object factory Interface
@@ -14,25 +15,17 @@ use LeagueOfData\Adapters\RequestInterface;
 interface ChampionSpellsServiceInterface
 {
     /**
-     * Factory to create Champion Spells objects
-     *
-     * @param array $champion
-     * @return ChampionSpells
+     * Add champion spell objects to internal array
      */
-    public function create(array $champion) : array;
+    public function add(array $spells);
 
     /**
-     * Add champion spell objects to internal array
-     *
-     * @param array $champion
+     * Factory to create Champion Spells objects
      */
-    public function add(array $champion);
+    public function create(array $spell) : ChampionSpellInterface;
 
     /**
      * Fetch Champion Spells
-     *
-     * @param RequestInterface $request
-     * @return array ChampionSpells Objects
      */
     public function fetch(RequestInterface $request) : array;
 
@@ -43,8 +36,6 @@ interface ChampionSpellsServiceInterface
 
     /**
      * Get collection of champions' spells for transfer to a different process.
-     *
-     * @return array ChampionSpells objects
      */
     public function transfer() : array;
 }

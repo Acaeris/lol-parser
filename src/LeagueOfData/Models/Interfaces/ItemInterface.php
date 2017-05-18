@@ -12,66 +12,46 @@ interface ItemInterface
 {
     /**
      * Item ID
-     *
-     * @return int
      */
-    public function getID() : int;
+    public function getItemID() : int;
 
     /**
      * Item Name
-     *
-     * @return string
      */
-    public function name() : string;
+    public function getName() : string;
 
     /**
      * Item Description
-     *
-     * @return string
      */
-    public function description() : string;
+    public function getDescription() : string;
 
     /**
      * Item purchase cost
-     *
-     * @return int
      */
-    public function goldToBuy() : int;
+    public function getGoldToBuy() : int;
 
     /**
      * Item sale value
-     *
-     * @return int
      */
-    public function goldFromSale() : int;
-
-    /**
-     * Data version of item
-     *
-     * @return string
-     */
-    public function version() : string;
+    public function getGoldFromSale() : int;
 
     /**
      * Fetch the item stats
-     *
-     * @return array
      */
-    public function stats() : array;
+    public function getStats() : array;
 
     /**
      * Fetch a specific stat
-     *
-     * @param string $key
-     *
-     * @return float
      */
     public function getStat(string $key) : float;
 
     /**
-     * Region data is for
-     *
-     * @return string
+     * Data version of item
      */
-    public function region() : string;
+    public function getVersion() : string;
+
+    /**
+     * Region data is for
+     */
+    public function getRegion() : string;
 }

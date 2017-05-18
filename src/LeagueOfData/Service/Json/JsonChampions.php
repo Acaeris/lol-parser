@@ -2,12 +2,13 @@
 
 namespace LeagueOfData\Service\Json;
 
+use Psr\Log\LoggerInterface;
 use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Champion object JSON factory.
@@ -42,13 +43,24 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
+     * Add champion objects to internal array
+     *
+     * @param array $champions Champion objects
+     */
+    public function add(array $champions)
+    {
+        foreach ($champions as $champion) {
+            $this->champions[$champion->getChampionID()] = $champion;
+        }
+    }
+
+    /**
      * Create the champion object from array data
      *
      * @param array $champion
-     *
      * @return Champion
      */
-    public function create(array $champion) : Champion
+    public function create(array $champion) : ChampionInterface
     {
         return new Champion(
             $champion['id'],
@@ -64,22 +76,9 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
-     * Add champion objects to internal array
-     *
-     * @param array $champions Champion objects
-     */
-    public function add(array $champions)
-    {
-        foreach ($champions as $champion) {
-            $this->champions[$champion->getID()] = $champion;
-        }
-    }
-
-    /**
      * Fetch Champions
      *
      * @param RequestInterface $request
-     *
      * @return array Champion Objects
      */
     public function fetch(RequestInterface $request) : array

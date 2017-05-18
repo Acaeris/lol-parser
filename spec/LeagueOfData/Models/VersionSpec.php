@@ -11,34 +11,18 @@ class VersionSpec extends ObjectBehavior
         $this->beConstructedWith("6.21.1");
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable_and_immutable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Version');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\VersionInterface');
-    }
-
-    public function it_is_immutable()
-    {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    public function it_can_output_full_version()
+    public function it_contains_all_required_data()
     {
-        $this->fullVersion()->shouldReturn("6.21.1");
-    }
-
-    public function it_can_output_the_season()
-    {
-        $this->season()->shouldReturn(6);
-    }
-
-    public function it_can_output_the_major_version()
-    {
-        $this->majorVersion()->shouldReturn(21);
-    }
-
-    public function it_can_output_the_hotfix_version()
-    {
-        $this->hotfix()->shouldReturn(1);
+        $this->getFullVersion()->shouldReturn("6.21.1");
+        $this->getSeason()->shouldReturn(6);
+        $this->getMajorVersion()->shouldReturn(21);
+        $this->getHotfix()->shouldReturn(1);
     }
 }

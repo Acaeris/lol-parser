@@ -4,21 +4,18 @@ namespace spec\LeagueOfData\Service\Json;
 
 use PhpSpec\ObjectBehavior;
 
-use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\VersionRequest;
-use LeagueOfData\Models\Version;
 use Psr\Log\LoggerInterface;
+use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\VersionInterface;
 
 class JsonVersionsSpec extends ObjectBehavior
 {
-    public function let(AdapterInterface $adapter, LoggerInterface $logger)
+    private $mockData = ['7.5.2', '7.5.1', '7.4.3'];
+
+    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
-        $request = new VersionRequest([]);
-        $adapter->fetch($request)->willReturn([
-            '7.5.2',
-            '7.5.1',
-            '7.4.3'
-        ]);
+        $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -28,9 +25,9 @@ class JsonVersionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionServiceInterface');
     }
 
-    public function it_should_find_all_version_data()
+    public function it_should_find_all_version_data(RequestInterface $request)
     {
-        $this->fetch()->shouldReturnArrayOfVersions();
+        $this->fetch($request)->shouldReturnArrayOfVersions();
     }
 
     public function getMatchers()
@@ -38,7 +35,7 @@ class JsonVersionsSpec extends ObjectBehavior
         return [
             'returnArrayOfVersions' => function($versions) {
                 foreach ($versions as $version) {
-                    if (!$version instanceof Version) {
+                    if (!$version instanceof VersionInterface) {
                         return false;
                     }
                 }

@@ -2,7 +2,7 @@
 
 namespace LeagueOfData\Service\Interfaces;
 
-use LeagueOfData\Models\Champion\ChampionStats;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Adapters\RequestInterface;
 
 /**
@@ -18,9 +18,9 @@ interface ChampionStatsServiceInterface
      * Factory to create Champion Stats objects
      *
      * @param array $champion
-     * @return ChampionStats
+     * @return ChampionStatsInterface
      */
-    public function create(array $champion) : ChampionStats;
+    public function create(array $champion) : ChampionStatsInterface;
 
     /**
      * Add champion stats objects to internal array

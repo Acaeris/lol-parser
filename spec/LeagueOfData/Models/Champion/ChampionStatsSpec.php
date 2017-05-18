@@ -37,7 +37,7 @@ class ChampionStatsSpec extends ObjectBehavior
 
     public function it_has_all_data_available()
     {
-        $this->getID()->shouldReturn(1);
+        $this->getChampionID()->shouldReturn(1);
         $this->getMoveSpeed()->shouldReturn(335.0);
         $this->getHealth()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
         $this->getResource()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');

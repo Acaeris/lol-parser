@@ -65,7 +65,7 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getID() : int
+    public function getItemID() : int
     {
         return $this->itemID;
     }
@@ -75,7 +75,7 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return string
      */
-    public function name() : string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -85,7 +85,7 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return string
      */
-    public function description() : string
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -95,7 +95,7 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return int
      */
-    public function goldToBuy() : int
+    public function getGoldToBuy() : int
     {
         return $this->purchaseValue;
     }
@@ -105,19 +105,9 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return int
      */
-    public function goldFromSale() : int
+    public function getGoldFromSale() : int
     {
         return $this->saleValue;
-    }
-
-    /**
-     * Data version of item
-     *
-     * @return string
-     */
-    public function version() : string
-    {
-        return $this->version;
     }
 
     /**
@@ -125,7 +115,7 @@ class Item implements ItemInterface, ImmutableInterface
      *
      * @return array
      */
-    public function stats() : array
+    public function getStats() : array
     {
         $stats = [];
 
@@ -155,11 +145,21 @@ class Item implements ItemInterface, ImmutableInterface
     }
 
     /**
+     * Data version of item
+     *
+     * @return string
+     */
+    public function getVersion() : string
+    {
+        return $this->version;
+    }
+
+    /**
      * Region data is for
      *
      * @return string
      */
-    public function region() : string
+    public function getRegion() : string
     {
         return $this->region;
     }

@@ -23,7 +23,9 @@ class ChampionSpellSpec extends ObjectBehavior
             [625, 630, 635, 640, 645], // Ranges
             [null, [0, 1, 2, 3, 4]], // Effects
             [$variables], // Variables
-            $resource // Resource
+            $resource, // Resource
+            '7.9.1', // Version
+            'euw' // Region
         );
     }
 
@@ -49,6 +51,8 @@ class ChampionSpellSpec extends ObjectBehavior
         $this->getEffects()->shouldReturn([null, [0, 1, 2, 3, 4]]);
         $this->getVars()->shouldReturnArrayOfSpellVars();
         $this->getResource()->shouldReturn($resource);
+        $this->getVersion()->shouldReturn('7.9.1');
+        $this->getRegion()->shouldReturn('euw');
     }
 
     public function it_can_fetch_cooldown_by_rank()

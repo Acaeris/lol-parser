@@ -10,6 +10,7 @@ use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Interfaces\ChampionInterface;
 
 /**
  * Champion object SQL factory.
@@ -50,7 +51,11 @@ final class SqlChampions implements ChampionServiceInterface
     public function add(array $champions)
     {
         foreach ($champions as $champion) {
-            $this->champions[$champion->getID()] = $champion;
+            if ($champion instanceof ChampionInterface) {
+                $this->champions[$champion->getChampionID()] = $champion;
+                continue;
+            }
+            $this->log->error('Incorrect object supplied to Champion service', [$champion]);
         }
     }
 
@@ -58,7 +63,6 @@ final class SqlChampions implements ChampionServiceInterface
      * Fetch Champions
      *
      * @param RequestInterface $request
-     *
      * @return array Champion Objects
      */
     public function fetch(RequestInterface $request) : array
@@ -81,7 +85,7 @@ final class SqlChampions implements ChampionServiceInterface
 
         foreach ($this->champions as $champion) {
             $request = new ChampionRequest(
-                ['champion_id' => $champion->getID(), 'version' => $champion->getVersion()],
+                ['champion_id' => $champion->getChampionID(), 'version' => $champion->getVersion()],
                 'champion_name',
                 $this->convertChampionToArray($champion)
             );
@@ -114,9 +118,9 @@ final class SqlChampions implements ChampionServiceInterface
      *
      * @param array $champion
      *
-     * @return Champion
+     * @return ChampionInterface
      */
-    public function create(array $champion) : Champion
+    public function create(array $champion) : ChampionInterface
     {
         $request = new ChampionStatsRequest([
             'version' => $champion['version'],
@@ -140,14 +144,14 @@ final class SqlChampions implements ChampionServiceInterface
     /**
      * Converts Champion object into SQL data array
      *
-     * @param Champion $champion
+     * @param ChampionInterface $champion
      *
      * @return array
      */
-    private function convertChampionToArray(Champion $champion) : array
+    private function convertChampionToArray(ChampionInterface $champion) : array
     {
         return [
-            'champion_id' => $champion->getID(),
+            'champion_id' => $champion->getChampionID(),
             'champion_name' => $champion->getName(),
             'title' => $champion->getTitle(),
             'resource_type' => $champion->getResourceType(),

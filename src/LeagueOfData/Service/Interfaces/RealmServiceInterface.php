@@ -2,18 +2,40 @@
 
 namespace LeagueOfData\Service\Interfaces;
 
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\RealmInterface;
+
 /**
  * Realm Service interface
- * @package LeagueOfData\Service|Interfaces
+ *
+ * @package LeagueOfData\Service\Interfaces
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 interface RealmServiceInterface
 {
     /**
-     * fetch all Realm data
-     *
-     * @return array Realm objects
+     * Add realm objects to internal array
      */
-    public function fetch() : array;
+    public function add(array $realms);
+
+    /**
+     * Factory to create Realm objects
+     */
+    public function create(array $realm) : RealmInterface;
+
+    /**
+     * Fetch all Realm data
+     */
+    public function fetch(RequestInterface $request) : array;
+
+    /**
+     * Store the realms in the database
+     */
+    public function store();
+
+    /**
+     * Get collection of realms for transfer to a different process.
+     */
+    public function transfer() : array;
 }

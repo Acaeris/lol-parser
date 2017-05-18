@@ -2,12 +2,13 @@
 
 namespace LeagueOfData\Service\Json;
 
+use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ItemServiceInterface;
-use LeagueOfData\Adapters\Request\ItemRequest;
 use LeagueOfData\Models\Item\Item;
 use LeagueOfData\Models\Item\ItemStat;
+use LeagueOfData\Models\Interfaces\ItemInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use Psr\Log\LoggerInterface;
+use LeagueOfData\Adapters\RequestInterface;
 
 /**
  * Item object JSON factory.
@@ -45,36 +46,44 @@ final class JsonItems implements ItemServiceInterface
     public function add(array $items)
     {
         foreach ($items as $item) {
-            $this->items[$item->getID()] = $item;
+            $this->items[$item->getItemID()] = $item;
         }
+    }
+
+    /**
+     * Create the item object from JSON data
+     *
+     * @param array $item
+     * @param array $stats
+     * @return ItemInterface
+     */
+    public function create(array $item, array $stats) : ItemInterface
+    {
+        return new Item(
+            $item['id'],
+            (isset($item['name']) ? $item['name'] : ''),
+            (isset($item['description']) ? $item['description'] : ''),
+            (isset($item['gold']['total']) ? $item['gold']['total'] : ''),
+            (isset($item['gold']['sell']) ? $item['gold']['sell'] : ''),
+            $this->createStats($item),
+            $item['version'],
+            $item['region']
+        );
     }
 
     /**
      * Fetch Items
      *
-     * @param string $version
-     * @param int    $itemId
-     * @param string $region
-     *
+     * @param RequestInterface $request
      * @return array Item Objects
      */
-    public function fetch(string $version, int $itemId = null, string $region = 'euw') : array
+    public function fetch(RequestInterface $request) : array
     {
-        $this->log->debug("Fetching items from API for version: {$version}".(
-            isset($itemId) ? " [{$itemId}]" : ""
-        ));
-
-        $params = [ 'version' => $version, 'region' => $region ];
-
-        if (isset($itemId) && !empty($itemId)) {
-            $params['id'] = $itemId;
-        }
-
-        $request = new ItemRequest($params);
+        $this->log->debug("Fetching items from API");
         $response = $this->source->fetch($request);
         $this->items = [];
         if (count($response) > 0) {
-            $this->processResponse($response, $version, $region);
+            $this->processResponse($response, $request);
         }
         $this->log->debug(count($this->items)." items fetched from API");
 
@@ -100,28 +109,6 @@ final class JsonItems implements ItemServiceInterface
     }
 
     /**
-     * Create the item object from JSON data
-     *
-     * @param array $item
-     * @param string $version
-     *
-     * @return Item
-     */
-    private function create(array $item) : Item
-    {
-        return new Item(
-            $item['id'],
-            (isset($item['name']) ? $item['name'] : ''),
-            (isset($item['description']) ? $item['description'] : ''),
-            (isset($item['gold']['total']) ? $item['gold']['total'] : ''),
-            (isset($item['gold']['sell']) ? $item['gold']['sell'] : ''),
-            $this->createStats($item),
-            $item['version'],
-            $item['region']
-        );
-    }
-
-    /**
      * Create the item stats objects from JSON data
      *
      * @param array $item
@@ -143,10 +130,9 @@ final class JsonItems implements ItemServiceInterface
      * Convert response data into Item objects
      *
      * @param array  $response
-     * @param string $version
-     * @param string $region
+     * @param RequestInterface $request
      */
-    private function processResponse(array $response, string $version, string $region)
+    private function processResponse(array $response, RequestInterface $request)
     {
         if ($response !== false) {
             if (!isset($response['data'])) {
@@ -154,10 +140,12 @@ final class JsonItems implements ItemServiceInterface
                 $response = $temp;
             }
 
+            $params = $request->where();
+
             foreach ($response['data'] as $item) {
-                $item['version'] = $version;
-                $item['region'] = $region;
-                $this->items[$item['id']] = $this->create($item);
+                $item['version'] = $params['version'];
+                $item['region'] = $params['region'];
+                $this->items[$item['id']] = $this->create($item, []);
             }
         }
     }

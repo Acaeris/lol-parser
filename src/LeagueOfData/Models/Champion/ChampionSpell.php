@@ -14,12 +14,6 @@ use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
  */
 class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
 {
-
-    /**
-     * @var ChampionSpellResourceInterface
-     */
-    private $resource;
-
     /**
      * @var int Champion ID
      */
@@ -68,6 +62,18 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @var array
      */
     private $variables;
+    /**
+     * @var ChampionSpellResourceInterface
+     */
+    private $resource;
+    /**
+     * @var string
+     */
+    private $version;
+    /**
+     * @var string
+     */
+    private $region;
 
     use ImmutableTrait {
         __construct as constructImmutable;
@@ -86,7 +92,9 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
         array $ranges,
         array $effects,
         array $variables,
-        ChampionSpellResourceInterface $resource
+        ChampionSpellResourceInterface $resource,
+        string $version,
+        string $region
     ) {
         $this->constructImmutable();
 
@@ -103,6 +111,8 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
         $this->effects = $effects;
         $this->variables = $variables;
         $this->resource = $resource;
+        $this->version = $version;
+        $this->region = $region;
     }
 
     /**
@@ -294,5 +304,25 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     public function getResource() : ChampionSpellResourceInterface
     {
         return $this->resource;
+    }
+
+    /**
+     * Get spell version
+     *
+     * @return string
+     */
+    public function getVersion() : string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get spell region
+     *
+     * @return string
+     */
+    public function getRegion() : string
+    {
+        return $this->region;
     }
 }

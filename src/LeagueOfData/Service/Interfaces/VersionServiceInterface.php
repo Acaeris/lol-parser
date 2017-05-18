@@ -1,9 +1,13 @@
 <?php
 namespace LeagueOfData\Service\Interfaces;
 
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\VersionInterface;
+
 /**
  * Version Service interface
- * @package LeagueOfData\Service|Interfaces
+ *
+ * @package LeagueOfData\Service\Interfaces
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
@@ -11,10 +15,18 @@ interface VersionServiceInterface
 {
     /**
      * Add version objects to internal array
-     *
-     * @param array $versions Version objects
      */
     public function add(array $versions);
+
+    /**
+     * Factory for creating version objects
+     */
+    public function create(string $version) : VersionInterface;
+
+    /**
+     * Find all Version data
+     */
+    public function fetch(RequestInterface $request) : array;
 
     /**
      * Store the version objects in the DB
@@ -22,16 +34,7 @@ interface VersionServiceInterface
     public function store();
 
     /**
-     * Find all Version data
-     *
-     * @return array Version objects
-     */
-    public function fetch() : array;
-
-    /**
      * Transfer objects out to another service
-     *
-     * @return array Version objects
      */
     public function transfer() : array;
 }

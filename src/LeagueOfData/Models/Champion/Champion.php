@@ -100,7 +100,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getID() : int
+    public function getChampionID() : int
     {
         return $this->championId;
     }

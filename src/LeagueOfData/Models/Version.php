@@ -53,7 +53,7 @@ final class Version implements VersionInterface, ImmutableInterface
      *
      * @return string
      */
-    public function fullVersion() : string
+    public function getFullVersion() : string
     {
         return $this->fullVersion;
     }
@@ -63,7 +63,7 @@ final class Version implements VersionInterface, ImmutableInterface
      *
      * @return int
      */
-    public function season() : int
+    public function getSeason() : int
     {
         return $this->season;
     }
@@ -73,7 +73,7 @@ final class Version implements VersionInterface, ImmutableInterface
      *
      * @return int
      */
-    public function majorVersion() : int
+    public function getMajorVersion() : int
     {
         return $this->version;
     }
@@ -83,7 +83,7 @@ final class Version implements VersionInterface, ImmutableInterface
      *
      * @return int
      */
-    public function hotfix() : int
+    public function getHotfix() : int
     {
         return $this->hotfix;
     }

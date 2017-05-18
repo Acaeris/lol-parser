@@ -5,24 +5,33 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\ItemServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Item\Item;
 use LeagueOfData\Models\Item\ItemStat;
+use LeagueOfData\Models\Interfaces\ItemInterface;
 use LeagueOfData\Adapters\Request\ItemRequest;
 use LeagueOfData\Adapters\Request\ItemStatsRequest;
 
 /**
  * Item object SQL factory.
+ *
  * @package LeagueOfData\Service|Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 final class SqlItems implements ItemServiceInterface
 {
-    /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
+    /**
+     * @var AdapterInterface DB adapter
+     */
     private $dbAdapter;
-    /* @var Psr\Log\LoggerInterface Logger */
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var array Version objects */
+    /**
+     * @var array Version objects
+     */
     private $items = [];
 
     /**
@@ -45,8 +54,29 @@ final class SqlItems implements ItemServiceInterface
     public function add(array $items)
     {
         foreach ($items as $item) {
-            $this->items[$item->getID()] = $item;
+            $this->items[$item->getItemID()] = $item;
         }
+    }
+
+    /**
+     * Build the Item object from the given data.
+     *
+     * @param array $item
+     * @param array $stats
+     * @return ItemInterface
+     */
+    public function create(array $item, array $stats) : ItemInterface
+    {
+        return new Item(
+            $item['item_id'],
+            $item['item_name'],
+            $item['description'],
+            $item['purchase_value'],
+            $item['sale_value'],
+            $stats,
+            $item['version'],
+            $item['region']
+        );
     }
 
     /**
@@ -58,7 +88,7 @@ final class SqlItems implements ItemServiceInterface
 
         foreach ($this->items as $item) {
             $request = new ItemRequest(
-                [ 'item_id' => $item->getID(), 'version' => $item->version() ],
+                [ 'item_id' => $item->getID(), 'version' => $item->getVersion() ],
                 'item_id',
                 $this->convertItemToArray($item)
             );
@@ -87,41 +117,15 @@ final class SqlItems implements ItemServiceInterface
     /**
      * Fetch Items
      *
-     * @param string $version
-     * @param int    $itemId
-     * @param string $region
-     *
+     * @param RequestInterface $request
      * @return array Item Objects
      */
-    public function fetch(string $version, int $itemId = null, string $region = 'euw'): array
+    public function fetch(RequestInterface $request): array
     {
-        $this->log->debug("Fetching items from DB for version: {$version}".(
-            isset($itemId) ? " [{$itemId}]" : ""
-        ));
-
-        $where = [ 'version' => $version, 'region' => $region ];
-
-        if (isset($itemId) && !empty($itemId)) {
-            $where['item_id'] = $itemId;
-        }
-        
-        $request = new ItemRequest($where, '*');
-        $this->items = [];
+        $this->log->debug("Fetching items from DB");
         $results = $this->dbAdapter->fetch($request);
-
-        if ($results !== false) {
-            if (!is_array($results)) {
-                $results = [ $results ];
-            }
-
-            foreach ($results as $item) {
-                $item['region'] = $region;
-                $this->items[$item['item_id']] = $this->create(
-                    $item,
-                    $this->fetchStats($item)
-                );
-            }
-        }
+        $this->items = [];
+        $this->processResults($results);
         $this->log->debug(count($this->items)." items fetched from DB");
 
         return $this->items;
@@ -159,16 +163,16 @@ final class SqlItems implements ItemServiceInterface
      */
     private function storeStats(Item $item)
     {
-        foreach ($item->stats() as $key => $value) {
+        foreach ($item->getStats() as $key => $value) {
             $request = new ItemStatsRequest(
-                ['item_id' => $item->getID(), 'version' => $item->version(), 'stat_name' => $key],
+                ['item_id' => $item->getItemID(), 'version' => $item->getVersion(), 'stat_name' => $key],
                 'item_id',
                 [
-                    'item_id' => $item->getID(),
+                    'item_id' => $item->getItemID(),
                     'stat_name' => $key,
                     'stat_value' => $value,
-                    'version' => $item->version(),
-                    'region' => $item->region()
+                    'version' => $item->getVersion(),
+                    'region' => $item->getRegion()
                 ]
             );
 
@@ -182,27 +186,6 @@ final class SqlItems implements ItemServiceInterface
     }
 
     /**
-     * Build the Item object from the given data.
-     *
-     * @param array $item
-     * @param array $stats
-     * @return Item
-     */
-    private function create(array $item, array $stats) : Item
-    {
-        return new Item(
-            $item['item_id'],
-            $item['item_name'],
-            $item['description'],
-            $item['purchase_value'],
-            $item['sale_value'],
-            $stats,
-            $item['version'],
-            $item['region']
-        );
-    }
-
-    /**
      * Converts Item object into SQL data array
      *
      * @param Item $item
@@ -212,13 +195,34 @@ final class SqlItems implements ItemServiceInterface
     private function convertItemToArray(Item $item) : array
     {
         return [
-            'item_id' => $item->getID(),
-            'item_name' => $item->name(),
-            'description' => $item->description(),
-            'purchase_value' => $item->goldToBuy(),
-            'sale_value' => $item->goldFromSale(),
-            'version' => $item->version(),
-            'region' => $item->region()
+            'item_id' => $item->getItemID(),
+            'item_name' => $item->getName(),
+            'description' => $item->getDescription(),
+            'purchase_value' => $item->getGoldToBuy(),
+            'sale_value' => $item->getGoldFromSale(),
+            'version' => $item->getVersion(),
+            'region' => $item->getRegion()
         ];
+    }
+
+    /**
+     * Convert result data into Item objects
+     *
+     * @param array $results
+     */
+    private function processResults(array $results)
+    {
+        if ($results !== false) {
+            if (!is_array($results)) {
+                $results = [ $results ];
+            }
+
+            foreach ($results as $item) {
+                $this->items[$item['item_id']] = $this->create(
+                    $item,
+                    $this->fetchStats($item)
+                );
+            }
+        }
     }
 }

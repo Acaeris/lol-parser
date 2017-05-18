@@ -36,7 +36,7 @@ class ChampionSpec extends ObjectBehavior
 
     public function it_has_all_data_available()
     {
-        $this->getID()->shouldReturn(1);
+        $this->getChampionID()->shouldReturn(1);
         $this->getName()->shouldReturn("Test");
         $this->getTitle()->shouldReturn("Test Character");
         $this->getImageName()->shouldReturn("Test");

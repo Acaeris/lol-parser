@@ -2,8 +2,12 @@
 
 namespace LeagueOfData\Service\Interfaces;
 
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\ItemInterface;
+
 /**
  * Item Service interface
+ *
  * @package LeagueOfData\Service|Interfaces
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
@@ -11,14 +15,19 @@ namespace LeagueOfData\Service\Interfaces;
 interface ItemServiceInterface
 {
     /**
-     * Fetch Items
-     *
-     * @param string $version
-     * @param int    $itemId
-     *
-     * @return array Item Objects
+     * Add item objects to internal array
      */
-    public function fetch(string $version, int $itemId = null) : array;
+    public function add(array $items);
+
+    /**
+     * Factory to create Item objects
+     */
+    public function create(array $item, array $stats) : ItemInterface;
+    
+    /**
+     * Fetch Items
+     */
+    public function fetch(RequestInterface $request) : array;
 
     /**
      * Store the item objects in the database
@@ -26,9 +35,7 @@ interface ItemServiceInterface
     public function store();
 
     /**
-     * Add item objects to internal array
-     *
-     * @param array $items Item objects
+     * Get collection of items for transfer to a different process
      */
-    public function add(array $items);
+    public function transfer() : array;
 }

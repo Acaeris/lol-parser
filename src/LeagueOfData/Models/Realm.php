@@ -41,7 +41,7 @@ final class Realm implements RealmInterface, ImmutableInterface
      *
      * @return string CDN url
      */
-    public function sourceUrl() : string
+    public function getSourceUrl() : string
     {
         return $this->cdn;
     }
@@ -51,7 +51,7 @@ final class Realm implements RealmInterface, ImmutableInterface
      *
      * @return string Version
      */
-    public function version() : string
+    public function getVersion() : string
     {
         return $this->version;
     }

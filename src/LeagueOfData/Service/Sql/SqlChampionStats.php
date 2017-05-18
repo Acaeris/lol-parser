@@ -11,6 +11,10 @@ use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
 use LeagueOfData\Models\Champion\ChampionAttack;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
+use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
+use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
 
 /**
  * Champion Stats object SQL factory
@@ -21,11 +25,17 @@ use LeagueOfData\Models\Champion\ChampionAttack;
  */
 class SqlChampionStats implements ChampionStatsServiceInterface
 {
-    /** @var AdapterInterface DB adapter */
+    /**
+     * @var AdapterInterface DB adapter
+     */
     private $dbAdapter;
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $log;
-    /** @var array Champion objects */
+    /**
+     * @var array Champion objects
+     */
     private $champions = [];
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
@@ -35,13 +45,28 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     }
 
     /**
+     * Add all champion stats objects to internal array
+     *
+     * @param array $champions ChampionStats objects
+     */
+    public function add(array $champions)
+    {
+        foreach ($champions as $champion) {
+            if ($champion instanceof ChampionStatsInterface) {
+                $this->champions[$champion->getChampionID()] = $champion;
+                continue;
+            }
+            $this->log->error('Incorrect object supplied to Champion Stats service', [$champion]);
+        }
+    }
+
+    /**
      * Factory to create Champion Stats objects from SQL
      *
      * @param array $champion
-     *
      * @return ChampionStats
      */
-    public function create(array $champion) : ChampionStats
+    public function create(array $champion) : ChampionStatsInterface
     {
         return new ChampionStats(
             $champion['champion_id'],
@@ -54,22 +79,6 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             $champion['version'],
             $champion['region']
         );
-    }
-
-    /**
-     * Add all champion stats objects to internal array
-     *
-     * @param array $champions ChampionStats objects
-     */
-    public function add(array $champions)
-    {
-        foreach ($champions as $champion) {
-            if ($champion instanceof ChampionStats) {
-                $this->champions[$champion->getID()] = $champion;
-                continue;
-            }
-            $this->log->error('Incorrect object supplied to Champion Stats service', $champion);
-        }
     }
 
     /**
@@ -165,10 +174,9 @@ class SqlChampionStats implements ChampionStatsServiceInterface
      *
      * @param string $type
      * @param array $stats
-     *
-     * @return ChampionRegenResource
+     * @return ChampionRegenResourceInterface
      */
-    private function createResource(string $type, array $stats) : ChampionRegenResource
+    private function createResource(string $type, array $stats) : ChampionRegenResourceInterface
     {
         return new ChampionRegenResource(
             isset($stats[$type]) ? $stats[$type] : 0,
@@ -182,9 +190,9 @@ class SqlChampionStats implements ChampionStatsServiceInterface
      * Create Champion Defense object
      * @param string $type
      * @param array $stats
-     * @return ChampionDefense
+     * @return ChampionDefenseInterface
      */
-    private function createDefense(string $type, array $stats) : ChampionDefense
+    private function createDefense(string $type, array $stats) : ChampionDefenseInterface
     {
         return new ChampionDefense(
             $type,
@@ -196,9 +204,9 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     /**
      * Create Champion Attack object
      * @param array $stats
-     * @return ChampionAttack
+     * @return ChampionAttackInterface
      */
-    private function createAttack(array $stats) : ChampionAttack
+    private function createAttack(array $stats) : ChampionAttackInterface
     {
         return new ChampionAttack(
             isset($stats['attackRange']) ? $stats['attackRange'] : 0,
@@ -214,10 +222,10 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     /**
      * Converts the champions stats for SQL insertion
      *
-     * @param ChampionStats $stats
+     * @param ChampionStatsInterface $stats
      * @return array
      */
-    private function convertStatsToArray(ChampionStats $stats) : array
+    private function convertStatsToArray(ChampionStatsInterface $stats) : array
     {
         return [
             'moveSpeed' => $stats->getMoveSpeed(),

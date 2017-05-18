@@ -2,11 +2,12 @@
 
 namespace LeagueOfData\Service\Json;
 
+use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\Interfaces\RealmServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\RealmRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Realm;
-use Psr\Log\LoggerInterface;
+use LeagueOfData\Models\Interfaces\RealmInterface;
 
 /**
  * Realm object JSON factory.
@@ -38,21 +39,32 @@ final class JsonRealms implements RealmServiceInterface
     public function add(array $realms)
     {
         foreach ($realms as $realm) {
-            $this->realms[] = $realm;
+            $this->realms[$realm->getVersion()] = $realm;
         }
+    }
+
+    /**
+     * Factory for creating Realm objects
+     *
+     * @param array $realm
+     * @return RealmInterface
+     */
+    public function create(array $realm) : RealmInterface
+    {
+        return new Realm($realm['cdn'], $realm['v']);
     }
 
     /**
      * Find all Realm data
      *
+     * @param RequestInterface $request
      * @return array Realm objects
      */
-    public function fetch() : array
+    public function fetch(RequestInterface $request) : array
     {
         $this->realms = [];
-        $request = new RealmRequest([]);
         $response = $this->source->fetch($request);
-        $this->realms[] = new Realm($response['cdn'], $response['v']);
+        $this->realms[$response['v']] = new Realm($response['cdn'], $response['v']);
         return $this->realms;
     }
 

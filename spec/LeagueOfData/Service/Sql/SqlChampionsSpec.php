@@ -4,16 +4,14 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\ChampionRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
-use LeagueOfData\Models\Champion\Champion;
+use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 
 class SqlChampionsSpec extends ObjectBehavior
 {
-    private $allRequest;
-    private $singleRequest;
     private $mockData = [
         [
             "champion_id" => 266,
@@ -40,14 +38,12 @@ class SqlChampionsSpec extends ObjectBehavior
         AdapterInterface $adapter,
         LoggerInterface $logger,
         ChampionStatsServiceInterface $statBuilder,
-        ChampionStatsInterface $stats)
+        ChampionStatsInterface $stats,
+        RequestInterface $request)
     {
-        $this->allRequest = new ChampionRequest(['version' => '7.9.1', 'region' => 'euw']);
-        $this->singleRequest = new ChampionRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $threshStatRequest = new ChampionStatsRequest(['champion_id' => 412, 'version' => '7.9.1', 'region' => 'euw']);
-        $adapter->fetch($this->allRequest)->willReturn($this->mockData);
-        $adapter->fetch($this->singleRequest)->willReturn([$this->mockData[0]]);
+        $adapter->fetch($request)->willReturn($this->mockData);
         $statBuilder->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
         $statBuilder->fetch($threshStatRequest)->willReturn([412 => $stats]);
         $this->beConstructedWith($adapter, $logger, $statBuilder);
@@ -59,22 +55,29 @@ class SqlChampionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionServiceInterface');
     }
 
-    public function it_should_fetch_all_if_only_version_passed()
+    public function it_should_fetch_champions(RequestInterface $request)
     {
-        $this->fetch($this->allRequest)->shouldReturnArrayOfChampions();
+        $this->fetch($request)->shouldReturnArrayOfChampions();
     }
 
-    public function it_should_fetch_one_if_version_and_id_passed()
+    public function it_can_convert_data_to_champion_object()
     {
-        $this->fetch($this->singleRequest)->shouldReturnArrayOfChampions();
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionInterface');
+    }
+
+    public function it_can_add_and_retrieve_champion_objects_from_collection(ChampionInterface $champion)
+    {
+        $champion->getChampionID()->willReturn(1);
+        $this->add([$champion]);
+        $this->transfer()->shouldReturnArrayOfChampions();
     }
 
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampions' => function($champions) {
+            'returnArrayOfChampions' => function(array $champions) {
                 foreach ($champions as $champion) {
-                    if (!$champion instanceof Champion) {
+                    if (!$champion instanceof ChampionInterface) {
                         return false;
                     }
                 }

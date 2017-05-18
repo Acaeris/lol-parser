@@ -3,21 +3,21 @@
 namespace spec\LeagueOfData\Service\Json;
 
 use PhpSpec\ObjectBehavior;
-
-use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\RealmRequest;
-use LeagueOfData\Models\Realm;
 use Psr\Log\LoggerInterface;
+use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\RealmInterface;
 
 class JsonRealmsSpec extends ObjectBehavior
 {
-    public function let(AdapterInterface $adapter, LoggerInterface $logger)
+    private $mockData = [
+        'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
+        'v' => '7.4.3'
+    ];
+
+    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
-        $request = new RealmRequest([]);
-        $adapter->fetch($request)->willReturn([
-            'cdn' => 'http://ddragon.leagueoflegends.com/cdn',
-            'v' => '7.4.3'
-        ]);
+        $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -27,9 +27,9 @@ class JsonRealmsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmServiceInterface');
     }
 
-    public function it_should_find_all_realm_data()
+    public function it_should_find_all_realm_data(RequestInterface $request)
     {
-        $this->fetch()->shouldReturnArrayOfRealms();
+        $this->fetch($request)->shouldReturnArrayOfRealms();
     }
 
     public function getMatchers()
@@ -37,7 +37,7 @@ class JsonRealmsSpec extends ObjectBehavior
         return [
             'returnArrayOfRealms' => function($realms) {
                 foreach ($realms as $realm) {
-                    if (!$realm instanceof Realm) {
+                    if (!$realm instanceof RealmInterface) {
                         return false;
                     }
                 }

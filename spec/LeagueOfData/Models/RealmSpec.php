@@ -8,33 +8,23 @@ class RealmSpec extends ObjectBehavior
 {
     public function let()
     {
-        $cdn = 'http://ddragon.leagueoflegends.com/cdn';
-        $version = '7.4.3';
         $this->beConstructedWith(
-            $cdn,
-            $version
+            'http://ddragon.leagueoflegends.com/cdn', // CDN
+            '7.4.3' // Version
         );
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable_and_immutable()
     {
         $this->shouldHaveType('LeagueOfData\Models\Realm');
         $this->shouldImplement('LeagueOfData\Models\Interfaces\RealmInterface');
-    }
-
-    public function it_is_immutable()
-    {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
     }
 
-    public function it_has_a_cdn_url()
+    public function it_contains_required_data()
     {
-        $this->sourceUrl()->shouldReturn('http://ddragon.leagueoflegends.com/cdn');
-    }
-
-    public function it_has_a_version_number()
-    {
-        $this->version()->shouldReturn('7.4.3');
+        $this->getSourceUrl()->shouldReturn('http://ddragon.leagueoflegends.com/cdn');
+        $this->getVersion()->shouldReturn('7.4.3');
     }
 
     public function it_can_be_converted_to_array_for_storage()

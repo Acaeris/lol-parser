@@ -2,25 +2,34 @@
 
 namespace LeagueOfData\Service\Sql;
 
+use Psr\Log\LoggerInterface;
+use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\Interfaces\VersionServiceInterface;
 use LeagueOfData\Models\Version;
-use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Models\Interfaces\VersionInterface;
 use LeagueOfData\Adapters\Request\VersionRequest;
-use Psr\Log\LoggerInterface;
 
 /**
  * Version object SQL factory.
+ *
  * @package LeagueOfData\Service|Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 final class SqlVersions implements VersionServiceInterface
 {
-    /* @var LeagueOfData\Adapters\AdapterInterface DB adapter */
+    /**
+     * @var AdapterInterface DB adapter
+     */
     private $dbAdapter;
-    /* @var Psr\Log\LoggerInterface Logger */
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var array Version objects */
+    /**
+     * @var array Version objects
+     */
     private $versions = [];
 
     /**
@@ -42,7 +51,41 @@ final class SqlVersions implements VersionServiceInterface
      */
     public function add(array $versions)
     {
-        $this->versions = array_merge($this->versions, $versions);
+        foreach ($versions as $version) {
+            if ($version instanceof VersionInterface) {
+                $this->versions[$version->getFullVersion()] = $version;
+                continue;
+            }
+            $this->log->error('Incorrect object supplied to Version service', [$version]);
+        }
+    }
+
+    /**
+     * Factory for creating version objects
+     *
+     * @param string $version
+     * @return VersionInterface
+     */
+    public function create(string $version) : VersionInterface
+    {
+        return new Version($version);
+    }
+
+    /**
+     * Fetch Version data
+     *
+     * @param RequestInterface $request
+     * @return array Version objects
+     */
+    public function fetch(RequestInterface $request) : array
+    {
+        $this->log->debug("Fetch versions from DB");
+        $this->versions = [];
+        $results = $this->dbAdapter->fetch($request);
+        $this->processResults($results);
+        $this->log->debug(count($this->versions)." versions fetch from DB");
+
+        return $this->versions;
     }
 
     /**
@@ -50,9 +93,11 @@ final class SqlVersions implements VersionServiceInterface
      */
     public function store()
     {
+        $this->log->debug("Storing ".count($this->versions)." new/updated versions");
+
         foreach ($this->versions as $version) {
             $request = new VersionRequest(
-                [ 'full_version' => $version->fullVersion() ],
+                [ 'full_version' => $version->getFullVersion() ],
                 'full_version',
                 $version->toArray()
             );
@@ -65,26 +110,6 @@ final class SqlVersions implements VersionServiceInterface
     }
 
     /**
-     * Fetch Version data
-     *
-     * @return array Version objects
-     */
-    public function fetch() : array
-    {
-        $this->versions = [];
-        $request = new VersionRequest([], 'full_version');
-        $results = $this->dbAdapter->fetch($request);
-
-        if ($results !== false) {
-            foreach ($results as $version) {
-                $this->versions[] = new Version($version);
-            }
-        }
-
-        return $this->versions;
-    }
-
-    /**
      * Transfer objects out to another service
      *
      * @return array Version objects
@@ -92,5 +117,20 @@ final class SqlVersions implements VersionServiceInterface
     public function transfer() : array
     {
         return $this->versions;
+    }
+
+    /**
+     * Convert result data into version objects
+     *
+     * @param array $results
+     * @throws \Exception
+     */
+    private function processResults(array $results)
+    {
+        if ($results !== false) {
+            foreach ($results as $version) {
+                $this->versions[$version] = $this->create($version);
+            }
+        }
     }
 }

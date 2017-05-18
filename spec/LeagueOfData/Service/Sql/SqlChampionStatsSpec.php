@@ -5,14 +5,11 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\ChampionStatsRequest;
-use LeagueOfData\Models\Champion\ChampionStats;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 
 class SqlChampionStatsSpec extends ObjectBehavior
 {
-    private $allRequest;
-    private $singleRequest;
-
     private $mockData = [
         [
             'champion_id' => 266,
@@ -23,13 +20,12 @@ class SqlChampionStatsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(
+        AdapterInterface $adapter,
+        LoggerInterface $logger,
+        RequestInterface $request)
     {
-        $this->allRequest = new ChampionStatsRequest(['version' => '7.9.1', 'region' => 'euw'], '*');
-        $this->singleRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw'],
-            '*');
-        $adapter->fetch($this->allRequest)->willReturn($this->mockData);
-        $adapter->fetch($this->singleRequest)->willReturn($this->mockData);
+        $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -39,22 +35,29 @@ class SqlChampionStatsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface');
     }
 
-    public function it_should_fetch_all_if_only_version_passed()
+    public function it_should_fetch_champion_stats(RequestInterface $request)
     {
-        $this->fetch($this->allRequest)->shouldReturnArrayOfChampionStats();
+        $this->fetch($request)->shouldReturnArrayOfChampionStats();
     }
 
-    public function it_should_fetch_one_if_version_and_id_passed()
+    public function it_can_convert_data_to_stat_object()
     {
-        $this->fetch($this->singleRequest)->shouldReturnArrayOfChampionStats();
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+    }
+
+    public function it_can_add_and_retrieve_stat_objects_from_collection(ChampionStatsInterface $stats)
+    {
+        $stats->getChampionID()->willReturn(1);
+        $this->add([$stats]);
+        $this->transfer()->shouldReturnArrayOfChampionStats();
     }
 
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampionStats' => function($championStats) {
+            'returnArrayOfChampionStats' => function(array $championStats) {
                 foreach ($championStats as $stat) {
-                    if (!$stat instanceof ChampionStats) {
+                    if (!$stat instanceof ChampionStatsInterface) {
                         return false;
                     }
                 }

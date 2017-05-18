@@ -5,9 +5,9 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\Request\ItemRequest;
+use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ItemStatsRequest;
-use LeagueOfData\Models\Item\Item;
+use LeagueOfData\Models\Interfaces\ItemInterface;
 
 class SqlItemsSpec extends ObjectBehavior
 {
@@ -19,6 +19,7 @@ class SqlItemsSpec extends ObjectBehavior
             "purchase_value" => 300,
             "sale_value" => 210,
             "version" => "7.4.3",
+            "region" => "euw"
         ],
         [
             "item_id" => 1002,
@@ -27,33 +28,32 @@ class SqlItemsSpec extends ObjectBehavior
             "purchase_value" => 300,
             "sale_value" => 210,
             "version" => "7.4.3",
+            "region" => "euw"
         ],
     ];
+    private $mockStats = [
+        [[
+            "item_id" => 1001,
+            "stat_name" => "FlatMoveSpeedMod",
+            "stat_value" => 30,
+            "version" => "7.4.3",
+            "region" => "euw"
+        ]], [[
+            "item_id" => 1002,
+            "stat_name" => "TestMod",
+            "stat_value" => 30,
+            "version" => "7.4.3",
+            "region" => "euw"
+        ]]
+    ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
-        $adapter->fetch(new ItemRequest(['version' => '7.4.3', 'region' => 'euw'], '*'))
-            ->willReturn($this->mockData);
-        $request = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
-        $adapter->fetch(new ItemRequest($request, '*'))
-            ->willReturn([$this->mockData[0]]);
-        $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
-            [
-                "item_id" => 1001,
-                "stat_name" => "FlatMoveSpeedMod",
-                "stat_value" => 30,
-                "version" => "7.4.3",
-            ]
-        ]);
-        $request['item_id'] = 1002;
-        $adapter->fetch(new ItemStatsRequest($request, '*'))->willReturn([
-            [
-                "item_id" => 1002,
-                "stat_name" => "TestMod",
-                "stat_value" => 30,
-                "version" => "7.4.3",
-            ]
-        ]);
+        $adapter->fetch($request)->willReturn($this->mockData);
+        $statRequest = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
+        $adapter->fetch(new ItemStatsRequest($statRequest, '*'))->willReturn($this->mockStats[0]);
+        $statRequest['item_id'] = 1002;
+        $adapter->fetch(new ItemStatsRequest($statRequest, '*'))->willReturn($this->mockStats[1]);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -63,14 +63,21 @@ class SqlItemsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemServiceInterface');
     }
 
-    public function it_should_fetch_all_if_only_version_passed()
+    public function it_should_fetch_item_data(RequestInterface $request)
     {
-        $this->fetch('7.4.3')->shouldReturnArrayOfItems();
+        $this->fetch($request)->shouldReturnArrayOfItems();
     }
 
-    public function it_should_fetch_one_if_version_and_id_passed()
+    public function it_can_convert_data_to_item_objects()
     {
-        $this->fetch('7.4.3', 1001)->shouldReturnArrayOfItems();
+        $this->create($this->mockData[0], $this->mockStats[0])->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
+    }
+
+    public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)
+    {
+        $item->getItemID()->willReturn(1);
+        $this->add([$item]);
+        $this->transfer()->shouldReturnArrayOfItems();
     }
 
     public function getMatchers()
@@ -78,7 +85,7 @@ class SqlItemsSpec extends ObjectBehavior
         return [
             'returnArrayOfItems' => function($items) {
                 foreach ($items as $item) {
-                    if (!$item instanceof Item) {
+                    if (!$item instanceof ItemInterface) {
                         return false;
                     }
                 }

@@ -15,7 +15,7 @@ interface ChampionInterface
      *
      * @return int
      */
-    public function getID() : int;
+    public function getChampionID() : int;
 
     /**
      * Champion Name

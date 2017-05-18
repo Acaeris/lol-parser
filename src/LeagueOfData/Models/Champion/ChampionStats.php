@@ -81,7 +81,7 @@ class ChampionStats implements ChampionStatsInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getID() : int
+    public function getChampionID() : int
     {
         return $this->champion_id;
     }

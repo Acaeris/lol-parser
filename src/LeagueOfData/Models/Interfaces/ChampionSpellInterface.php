@@ -104,4 +104,14 @@ interface ChampionSpellInterface
      * Get spell resource
      */
     public function getResource() : ChampionSpellResourceInterface;
+
+    /**
+     * Get spell version
+     */
+    public function getVersion() : string;
+
+    /**
+     * Get spell region
+     */
+    public function getRegion() : string;
 }
