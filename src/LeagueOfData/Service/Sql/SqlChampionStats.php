@@ -110,10 +110,14 @@ class SqlChampionStats implements ChampionStatsServiceInterface
 
             foreach ($stats as $key => $value) {
                 $request = new ChampionStatsRequest(
-                    ['champion_id' => $champion->getID(), 'version' => $champion->getVersion(), 'stat_name' => $key],
+                    [
+                        'champion_id' => $champion->getChampionID(),
+                        'version' => $champion->getVersion(),
+                        'stat_name' => $key
+                    ],
                     'champion_id',
                     [
-                        'champion_id' => $champion->getID(),
+                        'champion_id' => $champion->getChampionID(),
                         'stat_name' => $key,
                         'stat_value' => $value,
                         'version' => $champion->getVersion(),

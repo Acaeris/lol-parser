@@ -54,8 +54,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             . $input->getArgument('release') . ']');
         $request = $this->buildRequest($input);
 
-        if (count($this->database->fetch($request)) == 0
-            || $input->getOption('force')) {
+        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
             $this->log->notice("Update required");
             $this->updateData($input);
             return;
@@ -66,6 +65,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
     /**
      * Build a request object
+     *
      * @param InputInterface $input
      * @return RequestInterface
      */
@@ -119,16 +119,6 @@ class ChampionUpdateCommand extends ContainerAwareCommand
             $this->database->store();
         } catch (\Exception $exception) {
             $this->recover($input, 'Unexpected API response: ', $exception);
-        } catch (ForeignKeyConstraintViolationException $exception) {
-            preg_match("/CONSTRAINT `(\w+)`/", $exception, $matches);
-
-            if ($matches[1] == 'version') {
-                $this->log->notice("Version data outdated. Automating update.");
-                $this->messageQueue->addProcessToQueue(
-                    'update:version',
-                    '{ "command" : "update:version" }'
-                );
-            }
         }
     }
 }

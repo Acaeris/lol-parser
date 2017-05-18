@@ -66,9 +66,9 @@ final class SqlVersions implements VersionServiceInterface
      * @param string $version
      * @return VersionInterface
      */
-    public function create(string $version) : VersionInterface
+    public function create(array $version) : VersionInterface
     {
-        return new Version($version);
+        return new Version($version['full_version']);
     }
 
     /**
@@ -129,7 +129,7 @@ final class SqlVersions implements VersionServiceInterface
     {
         if ($results !== false) {
             foreach ($results as $version) {
-                $this->versions[$version] = $this->create($version);
+                $this->versions[$version['full_version']] = $this->create($version);
             }
         }
     }

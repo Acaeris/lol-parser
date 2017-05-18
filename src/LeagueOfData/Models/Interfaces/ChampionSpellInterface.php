@@ -62,7 +62,7 @@ interface ChampionSpellInterface
      * @param int $rank
      */
     public function getCooldownByRank(int $rank) : int;
-    
+
     /**
      * Get spell ranges
      */

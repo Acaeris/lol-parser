@@ -65,9 +65,9 @@ final class JsonVersions implements VersionServiceInterface
      * @param string $version
      * @return VersionInterface
      */
-    public function create(string $version) : VersionInterface
+    public function create(array $version) : VersionInterface
     {
-        return new Version($version);
+        return new Version($version[0]);
     }
 
     /**
@@ -114,7 +114,7 @@ final class JsonVersions implements VersionServiceInterface
     {
         if ($results !== false) {
             foreach ($results as $version) {
-                $this->versions[] = $this->create($version);
+                $this->versions[] = $this->create([$version]);
             }
         }
     }

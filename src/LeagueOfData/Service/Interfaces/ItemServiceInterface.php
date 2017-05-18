@@ -23,7 +23,7 @@ interface ItemServiceInterface
      * Factory to create Item objects
      */
     public function create(array $item, array $stats) : ItemInterface;
-    
+
     /**
      * Fetch Items
      */

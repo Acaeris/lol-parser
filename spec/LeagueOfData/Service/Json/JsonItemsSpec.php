@@ -63,7 +63,8 @@ class JsonItemsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_item_object()
     {
-        $this->create($this->mockData['data']['1001'], [])->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
+        $this->create($this->mockData['data']['1001'], [])
+            ->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
     }
 
     public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)

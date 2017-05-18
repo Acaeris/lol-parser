@@ -79,7 +79,7 @@ class ChampionSpellSpec extends ObjectBehavior
     {
         $this->shouldThrow('InvalidArgumentException')->during('getEffectByKey', [2]);
     }
-    
+
     public function it_should_throw_exception_if_rank_too_high()
     {
         $this->shouldThrow('InvalidArgumentException')->during('getCooldownByRank', [6]);

@@ -10,6 +10,8 @@ use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
 use LeagueOfData\Models\Champion\ChampionRegenResource;
 use LeagueOfData\Models\Champion\ChampionAttack;
+use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
 
 /**
  * Champion Stats object JSON factory
@@ -20,11 +22,17 @@ use LeagueOfData\Models\Champion\ChampionAttack;
  */
 final class JsonChampionStats implements ChampionStatsServiceInterface
 {
-    /** @var AdapterInterface */
+    /**
+     * @var AdapterInterface
+     */
     private $adapter;
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $log;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $champions;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
@@ -39,7 +47,7 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
      * @param array $champion
      * @return ChampionStatsInterface
      */
-    public function create(array $champion) : ChampionStats
+    public function create(array $champion) : ChampionStatsInterface
     {
         return new ChampionStats(
             $champion['id'],
@@ -99,10 +107,9 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
      * Create Champion Health object
      *
      * @param array $champion
-     *
-     * @return ChampionRegenResource
+     * @return ChampionRegenResourceInterface
      */
-    private function createHealth(array $champion) : ChampionRegenResource
+    private function createHealth(array $champion) : ChampionRegenResourceInterface
     {
         return new ChampionRegenResource(
             $champion['stats']['hp'],
@@ -117,10 +124,9 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
      *
      * @param string $type
      * @param array  $champion
-     *
-     * @return ChampionRegenResource
+     * @return ChampionRegenResourceInterface
      */
-    private function createResource(array $champion) : ChampionRegenResource
+    private function createResource(array $champion) : ChampionRegenResourceInterface
     {
         return new ChampionRegenResource(
             $champion['stats']['mp'],

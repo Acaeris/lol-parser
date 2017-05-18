@@ -6,7 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use LeagueOfData\Models\Version;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request\VersionRequest;
 
 class VersionUpdateCommand extends ContainerAwareCommand
 {
@@ -38,35 +39,67 @@ class VersionUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('version-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
-        $this->log->info('Fetching version data');
-        $versions = $this->service->fetch();
+        $this->log->notice('Checking version data for update');
+        $request = $this->buildRequest($input);
 
-        $this->database->add($this->service->transfer());
-        $this->database->store();
+        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
+            $this->log->notice("Update required");
+            $this->updateData($input);
+            return;
+        }
 
-        foreach ($versions as $version) {
-            $this->queueUpdates($version, $input->getOption('force'));
+        $this->log->info("Skipping update");
+    }
+
+    /**
+     * Build a request object
+     *
+     * @param InputInterface $input
+     * @return RequestInterface
+     */
+    private function buildRequest(InputInterface $input) : RequestInterface
+    {
+        return new VersionRequest([], '*');
+    }
+
+    /**
+     * Process data and update DB
+     *
+     * @param InputInterface $input
+     */
+    private function updateData(InputInterface $input)
+    {
+        try {
+            $this->service->fetch($this->buildRequest($input));
+            $this->log->info("Storing version data");
+
+            $this->database->add($this->service->transfer());
+            $this->database->store();
+            $this->queueUpdates($input->getOption('force'));
+        } catch (\Exception $exception) {
+            $this->recover($input, "Unexpected API response: ", $exception);
         }
     }
 
     /**
      * Queue new updates
      *
-     * @param Version $version Version to update for
      * @param bool $force Force update of this version
      */
-    private function queueUpdates(Version $version, bool $force)
+    private function queueUpdates(bool $force)
     {
-        $this->log->info("Queuing update for version ".$version->fullVersion());
-        $this->messageQueue->addProcessToQueue('update:champion', '{
-            "command" : "update:champion",
-            "release" : "'.$version->fullVersion().'",
-            "--force" : "'.$force.'"
-        }');
-        $this->messageQueue->addProcessToQueue('update:item', '{
-            "command" : "update:item",
-            "release" : "'.$version->fullVersion().'",
-            "--force" : "'.$force.'"
-        }');
+        foreach ($this->service->transfer() as $version) {
+            $this->log->info("Queuing update for version ".$version->getFullVersion());
+            $this->messageQueue->addProcessToQueue('update:champion', '{
+                "command" : "update:champion",
+                "release" : "'.$version->getFullVersion().'",
+                "--force" : "'.$force.'"
+            }');
+            $this->messageQueue->addProcessToQueue('update:item', '{
+                "command" : "update:item",
+                "release" : "'.$version->getFullVersion().'",
+                "--force" : "'.$force.'"
+            }');
+        }
     }
 }

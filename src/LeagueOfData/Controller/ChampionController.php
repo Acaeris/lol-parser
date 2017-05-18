@@ -13,8 +13,8 @@ class ChampionController extends Controller
     {
         $championId = $request->query->get('id');
         $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.2';
-        $db = $this->get('champion-db');
-        $champion = $db->fetch(new ChampionRequest([
+        $database = $this->get('champion-db');
+        $champion = $database->fetch(new ChampionRequest([
             'champion_id' => $championId,
             'version' => $version
         ], '*'));

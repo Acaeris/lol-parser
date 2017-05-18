@@ -29,7 +29,7 @@ class SqlChampionSpellsSpec extends ObjectBehavior
             'region' => 'euw'
         ]
     ];
-    
+
     public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
         $adapter->fetch($request)->willReturn($this->mockData);

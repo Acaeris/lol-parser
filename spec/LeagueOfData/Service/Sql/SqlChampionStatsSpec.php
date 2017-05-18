@@ -20,10 +20,7 @@ class SqlChampionStatsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(
-        AdapterInterface $adapter,
-        LoggerInterface $logger,
-        RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
         $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);

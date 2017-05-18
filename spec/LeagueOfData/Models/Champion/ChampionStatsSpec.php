@@ -40,7 +40,8 @@ class ChampionStatsSpec extends ObjectBehavior
         $this->getChampionID()->shouldReturn(1);
         $this->getMoveSpeed()->shouldReturn(335.0);
         $this->getHealth()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
-        $this->getResource()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
+        $this->getResource()
+            ->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface');
         $this->getAttack()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionAttackInterface');
         $this->getArmor()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');
         $this->getMagicResist()->shouldReturnAnInstanceOf('\LeagueOfData\Models\Interfaces\ChampionDefenseInterface');

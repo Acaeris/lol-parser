@@ -10,8 +10,14 @@ use LeagueOfData\Models\Interfaces\VersionInterface;
 
 class SqlVersionsSpec extends ObjectBehavior
 {
-    private $mockData = ['7.4.3', '7.4.2'];
-    
+    private $mockData = [
+        [
+            'full_version' => '7.4.3'
+        ],[
+            'full_version' => '7.4.2'
+        ]
+    ];
+
     public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
     {
         $adapter->fetch($request)->willReturn($this->mockData);

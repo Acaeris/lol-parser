@@ -70,7 +70,7 @@ class SqlRealms implements RealmServiceInterface
     {
         return new Realm($realm['cdn'], $realm['version']);
     }
-    
+
     /**
      * Find all Realm data
      *
@@ -132,7 +132,7 @@ class SqlRealms implements RealmServiceInterface
 
             foreach ($results as $realm) {
                 $this->realms[$realm['version']] = $this->create($realm);
-            }    
+            }
         }
     }
 }

@@ -8,16 +8,26 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request\ItemRequest;
 
 class ItemUpdateCommand extends ContainerAwareCommand
 {
-    /* @var LoggerInterface Logger */
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var ItemService API Service */
+    /**
+     * @var ItemService API Service
+     */
     private $service;
-    /* @var ItemService DB Service */
+    /**
+     * @var ItemService DB Service
+     */
     private $database;
-    /* @var object Messsage Queue Service */
+    /**
+     * @var object Messsage Queue Service
+     */
     private $messageQueue;
 
     /**
@@ -28,8 +38,9 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->setName('update:item')
             ->setDescription('API processor command for item data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addArgument('itemId', InputArgument::OPTIONAL, 'Item ID to process data for.'
+            ->addOption('itemId', 'i', InputOption::VALUE_REQUIRED, 'Item ID to process data for.'
                 . ' (Will fetch all if not supplied)')
+            ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
     }
 
@@ -48,9 +59,9 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
         $this->log->notice('Checking Item data for update');
+        $request = $this->buildRequest($input);
 
-        if (count($this->database->fetch($input->getArgument('release'), $input->getArgument('itemId'))) == 0
-            || $input->getOption('force')) {
+        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
             $this->log->notice("Update required");
             $this->updateData($input);
             return;
@@ -59,6 +70,34 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
 
+    /**
+     * Build a request object
+     *
+     * @param InputInterface $input
+     * @return RequestInterface
+     */
+    private function buildRequest(InputInterface $input) : RequestInterface
+    {
+        $where = [
+            'version' => $input->getArgument('release'),
+            'region' => $input->getOption('region')
+        ];
+
+        if (null !== $input->getOption('itemId')) {
+            $where['item_id'] = $this->getOption('itemId');
+        }
+
+        return new ItemRequest($where, '*');
+    }
+
+    /**
+     * If the update process fails in a recoverable state,
+     * will record the error and return the request to the message queue.
+     *
+     * @param InputInterface $input
+     * @param string $msg
+     * @param \Exception $exception
+     */
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
         $params = '"command" : "update:item",
@@ -72,26 +111,21 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->log->error($msg, ['exception' => $exception]);
     }
 
+    /**
+     * Process data and update DB
+     *
+     * @param InputInterface $input
+     */
     private function updateData(InputInterface $input)
     {
         try {
-            $this->service->fetch($input->getArgument('release'), $input->getArgument('itemId'));
-            $this->log->info("Storing item data for version ".$input->getArgument('release'));
+            $this->service->fetch($this->buildRequest($input));
+            $this->log->info("Storing item data");
 
             $this->database->add($this->service->transfer());
             $this->database->store();
         } catch (\Exception $exception) {
             $this->recover($input, 'Unexpected API response: ', $exception);
-        } catch (ForeignKeyConstraintViolationException $exception) {
-            preg_match("/CONSTRAINT `(\w+)`/", $exception, $matches);
-
-            if ($matches[1] == 'version') {
-                $this->log->info("Requesting refresh of version data");
-                $this->messageQueue->addProcessToQueue(
-                    'update:version',
-                    '{ "command" : "update:version" }'
-                );
-            }
         }
     }
 }

@@ -21,7 +21,7 @@ interface VersionServiceInterface
     /**
      * Factory for creating version objects
      */
-    public function create(string $version) : VersionInterface;
+    public function create(array $version) : VersionInterface;
 
     /**
      * Find all Version data

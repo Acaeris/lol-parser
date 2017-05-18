@@ -70,7 +70,8 @@ class SqlItemsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_item_objects()
     {
-        $this->create($this->mockData[0], $this->mockStats[0])->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
+        $this->create($this->mockData[0], $this->mockStats[0])
+            ->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
     }
 
     public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)

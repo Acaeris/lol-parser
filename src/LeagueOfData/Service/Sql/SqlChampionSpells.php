@@ -31,7 +31,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      */
     private $dbAdapter;
     /**
-     * @var array 
+     * @var array
      */
     private $spells;
 
