@@ -9,7 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Adapters\RequestInterface;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class ChampionUpdateCommand extends ContainerAwareCommand
 {

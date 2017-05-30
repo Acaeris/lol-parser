@@ -18,14 +18,11 @@ class ChampionSpellRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_request_data()
+    public function it_has_all_parameters()
     {
         $this->data()->shouldReturn(['Test Data']);
-    }
-
-    public function it_has_a_type()
-    {
         $this->type()->shouldReturn('champion_spells');
+        $this->where()->shouldReturn(['region' => 'na']);
     }
 
     public function it_cannot_be_used_for_a_json_request()
@@ -41,19 +38,10 @@ class ChampionSpellRequestSpec extends ObjectBehavior
         $this->query()->shouldReturn('SELECT test_column FROM champion_spells WHERE region = :region');
     }
 
-    public function it_can_process_the_request_parameters()
-    {
-        $this->where()->shouldReturn(['region' => 'na']);
-    }
-
-    public function it_can_validate_a_correct_id_parameter()
+    public function it_can_validate_parameters()
     {
         $this->shouldNotThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))
             ->during('validate', [['champion_id' => 1]]);
-    }
-
-    public function it_can_validate_an_incorrect_id_parameter()
-    {
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))
             ->during('validate', [['champion_id' => 'test']]);
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion Stats request'))

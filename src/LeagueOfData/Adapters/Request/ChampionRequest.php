@@ -25,9 +25,6 @@ final class ChampionRequest extends Request
      */
     public function validate(array $where, string $columns = '*', array $data = null)
     {
-        if (isset($where['id']) && filter_var($where['id'], FILTER_VALIDATE_INT) === false) {
-            throw new \InvalidArgumentException("Invalid ID supplied for Champion request");
-        }
         if (isset($where['champion_id']) && filter_var($where['champion_id'], FILTER_VALIDATE_INT) === false) {
             throw new \InvalidArgumentException("Invalid ID supplied for Champion request");
         }
@@ -52,7 +49,8 @@ final class ChampionRequest extends Request
     public function query() : string
     {
         if ($this->format === Request::TYPE_JSON) {
-            return 'static-data/v3/champions';
+            return 'static-data/v3/champions'
+                . (isset($this->where['champion_id']) ? '/' . $this->where['champion_id'] : '');
         }
 
         $parts = [];
@@ -74,7 +72,11 @@ final class ChampionRequest extends Request
     public function where() : array
     {
         if ($this->format === Request::TYPE_JSON) {
-            return array_merge($this->apiDefaults, $this->where);
+            $where = array_merge($this->apiDefaults, $this->where);
+            if (isset($where['champion_id'])) {
+                unset($where['champion_id']);
+            }
+            return $where;
         }
 
         return $this->where;

@@ -18,13 +18,9 @@ class ChampionRequestSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Adapters\RequestInterface');
     }
 
-    public function it_has_request_data()
+    public function it_has_all_parameters()
     {
         $this->data()->shouldReturn(['Test Data']);
-    }
-
-    public function it_has_a_type()
-    {
         $this->type()->shouldReturn('champions');
     }
 
@@ -34,40 +30,42 @@ class ChampionRequestSpec extends ObjectBehavior
         $this->query()->shouldReturn('static-data/v3/champions');
     }
 
+    public function it_returns_the_api_endpoint_for_specific_champion()
+    {
+        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'test_column', ['Test Data']);
+        $this->requestFormat(Request::TYPE_JSON);
+        $this->query()->shouldReturn('static-data/v3/champions/1');
+    }
+
     public function it_returns_the_correct_query_for_an_sql_request()
     {
         $this->requestFormat(Request::TYPE_SQL);
         $this->query()->shouldReturn('SELECT test_column FROM champions WHERE region = :region');
     }
 
-    public function it_can_process_the_request_parameters()
+    public function it_can_process_the_request_parameters_for_sql()
     {
         $this->requestFormat(Request::TYPE_SQL);
         $this->where()->shouldReturn(['region' => 'na']);
     }
 
-    public function it_adds_api_defaults_to_where()
+    public function it_adds_api_defaults_to_request_parameters_for_api()
     {
         $this->requestFormat(Request::TYPE_JSON);
         $this->where()->shouldReturn(['region' => 'na', 'champListData' => 'all']);
     }
 
-    public function it_can_validate_a_correct_id_parameter()
+    public function it_ignores_champion_id_for_where()
+    {
+        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'test_column', ['Test Data']);
+        $this->requestFormat(Request::TYPE_JSON);
+        $this->where()->shouldReturn(['region' => 'na', 'champListData' => 'all']);
+    }
+
+    public function it_can_validate_parameters()
     {
         $this->shouldNotThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
-            ->during('validate', [['id' => 1, 'champion_id' => 1]]);
-    }
-
-    public function it_can_validate_an_incorrect_id_parameter()
-    {
-        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
-            ->during('validate', [['id' => 'test']]);
-        $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
-            ->during('validate', [['id' => 1.2]]);
-    }
-
-    public function it_can_validate_an_incorrect_champion_id_parameter()
-    {
+            ->during('validate', [['champion_id' => 1]]);
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
             ->during('validate', [['champion_id' => 'test']]);
         $this->shouldThrow(new \InvalidArgumentException('Invalid ID supplied for Champion request'))
