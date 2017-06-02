@@ -7,40 +7,62 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
+use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 
 /**
  * Champion object SQL factory.
+ *
  * @package LeagueOfData\Service\Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 final class SqlChampions implements ChampionServiceInterface
 {
-    /* @var AdapterInterface DB adapter */
+    /**
+     * @var AdapterInterface DB adapter
+     */
     private $dbAdapter;
-    /* @var LoggerInterface Logger */
+
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var JsonChampionStats Champion Stat factory */
+
+    /**
+     * @var ChampionStatsServiceInterface Champion Stat factory
+     */
     private $statService;
-    /* @var array Champion objects */
+
+    /**
+     * @var ChampionSpellsServiceInterface Champion Spell factory
+     */
+    private $spellService;
+
+    /**
+     * @var array Champion objects
+     */
     private $champions = [];
 
     /**
      * Setup champion factory service
      *
-     * @param AdapterInterface $adapter
-     * @param LoggerInterface  $log
+     * @param AdapterInterface               $adapter
+     * @param LoggerInterface                $log
+     * @param ChampionStatsServiceInterface  $statService
+     * @param ChampionSpellsServiceInterface $spellService
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log,
-        ChampionStatsServiceInterface $statBuilder)
+        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService)
     {
         $this->dbAdapter = $adapter;
         $this->log = $log;
-        $this->statService = $statBuilder;
+        $this->statService = $statService;
+        $this->spellService = $spellService;
     }
 
     /**
@@ -91,6 +113,7 @@ final class SqlChampions implements ChampionServiceInterface
             );
 
             $this->statService->add([$champion->getStats()]);
+            $this->spellService->add($champion->getSpells());
 
             if ($this->dbAdapter->fetch($request)) {
                 $this->dbAdapter->update($request);
@@ -101,6 +124,7 @@ final class SqlChampions implements ChampionServiceInterface
         }
 
         $this->statService->store();
+        $this->spellService->store();
     }
 
     /**
@@ -117,7 +141,6 @@ final class SqlChampions implements ChampionServiceInterface
      * Create the champion object from array data
      *
      * @param array $champion
-     *
      * @return ChampionInterface
      */
     public function create(array $champion) : ChampionInterface
@@ -128,6 +151,12 @@ final class SqlChampions implements ChampionServiceInterface
             'champion_id' => $champion['champion_id'],
         ], '*');
         $stats = $this->statService->fetch($request);
+        $request = new ChampionSpellRequest([
+            'version' => $champion['version'],
+            'region' => $champion['region'],
+            'champion_id' => $champion['champion_id']
+        ], '*');
+        $spells = $this->spellService->fetch($request);
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],
@@ -135,6 +164,7 @@ final class SqlChampions implements ChampionServiceInterface
             $champion['resource_type'],
             explode('|', $champion['tags']),
             $stats[$champion['champion_id']],
+            $spells[$champion['champion_id']],
             $champion['image_name'],
             $champion['version'],
             $champion['region']
@@ -145,7 +175,6 @@ final class SqlChampions implements ChampionServiceInterface
      * Converts Champion object into SQL data array
      *
      * @param ChampionInterface $champion
-     *
      * @return array
      */
     private function convertChampionToArray(ChampionInterface $champion) : array

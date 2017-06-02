@@ -12,7 +12,6 @@ class ChampionSpellSpec extends ObjectBehavior
     {
         $this->beConstructedWith(
             1, // Champion ID
-            2, // Spell ID
             "Disintegrate", // Spell Name
             "Q", // Spell control key
             "Disintegrate", // Icon image filename
@@ -39,7 +38,6 @@ class ChampionSpellSpec extends ObjectBehavior
     public function it_has_all_required_data(ChampionSpellResourceInterface $resource)
     {
         $this->getChampionID()->shouldReturn(1);
-        $this->getSpellID()->shouldReturn(2);
         $this->getSpellName()->shouldReturn("Disintegrate");
         $this->getKey()->shouldReturn("Q");
         $this->getImageName()->shouldReturn("Disintegrate");

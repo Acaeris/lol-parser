@@ -39,6 +39,11 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $stats;
 
     /**
+     * @var array Champion spells
+     */
+    private $spells;
+
+    /**
      * @var array Champion type tags
      */
     private $tags;
@@ -67,6 +72,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      * @param string                 $resourceType Champion Resource Type
      * @param string                 $tags         Class tags
      * @param ChampionStatsInterface $stats        Statistics
+     * @param array                  $spells       Spells
      * @param string                 $imageName    Champion Image Name
      * @param string                 $version      Full version number
      * @param string                 $region       Region data is for
@@ -78,6 +84,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         string $resourceType,
         array $tags,
         ChampionStatsInterface $stats,
+        array $spells,
         string $imageName,
         string $version,
         string $region
@@ -90,6 +97,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         $this->resourceType = $resourceType;
         $this->version = $version;
         $this->stats = $stats;
+        $this->spells = $spells;
         $this->tags = $tags;
         $this->region = $region;
         $this->imageName = $imageName;
@@ -143,6 +151,16 @@ final class Champion implements ChampionInterface, ImmutableInterface
     public function getStats() : ChampionStatsInterface
     {
         return $this->stats;
+    }
+
+    /**
+     * Champion Spells
+     *
+     * @return array
+     */
+    public function getSpells() : array
+    {
+        return $this->spells;
     }
 
     /**
@@ -226,101 +244,6 @@ final class Champion implements ChampionInterface, ImmutableInterface
             "key" => "passive",
             "file" => str_replace(' ', '', $this->name)."_Passive",
             "description" => "Test Passive's description"
-        ];
-    }
-
-    public function getSpells() : array
-    {
-        return [
-            [
-                "id" => 1,
-                "name" => "Test Q",
-                "key" => "Q",
-                "file" => str_replace(' ', '', $this->name)."Q",
-                "description" => "Test Q's description",
-                "maxrank" => 5,
-                "tooltip" => "Test Q's tooltip {{ e1 }} <span class=\"color99FF99\">(+{{ a1 }})</span>",
-                "cooldown" => [4, 4, 4, 4, 4],
-                "range" => [625, 625, 625, 625, 625],
-                "effect" => [null,[80,115,150,185,220],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-                "vars" => [
-                    [
-                        "link" => "spelldamage",
-                        "coeff" => [0.8, 0.8, 0.8, 0.8, 0.8],
-                        "key" => "a1"
-                    ]
-                ],
-                "resource" => [
-                    "name" => "Mana",
-                    "values" => [60, 65, 70, 75, 80]
-                ]
-            ], [
-                "id" => 1,
-                "name" => "Test W",
-                "key" => "W",
-                "file" => str_replace(' ', '', $this->name)."W",
-                "description" => "Test W's description",
-                "maxrank" => 5,
-                "tooltip" => "Test W's tooltip",
-                "cooldown" => [4, 4, 4, 4, 4],
-                "range" => [625, 625, 625, 625, 625],
-                "effect" => [null,[80,115,150,185,220],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-                "vars" => [
-                    [
-                        "link" => "spelldamage",
-                        "coeff" => [0.8, 0.8, 0.8, 0.8, 0.8],
-                        "key" => "a1"
-                    ]
-                ],
-                "resource" => [
-                    "name" => "Mana",
-                    "values" => [60, 65, 70, 75, 80]
-                ]
-            ], [
-                "id" => 1,
-                "name" => "Test E",
-                "key" => "E",
-                "file" => str_replace(' ', '', $this->name)."E",
-                "description" => "Test E's description",
-                "maxrank" => 5,
-                "tooltip" => "Test E's tooltip",
-                "cooldown" => [4, 4, 4, 4, 4],
-                "range" => [625, 625, 625, 625, 625],
-                "effect" => [null,[80,115,150,185,220],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-                "vars" => [
-                    [
-                        "link" => "spelldamage",
-                        "coeff" => [0.8, 0.8, 0.8, 0.8, 0.8],
-                        "key" => "a1"
-                    ]
-                ],
-                "resource" => [
-                    "name" => "Mana",
-                    "values" => [60, 65, 70, 75, 80]
-                ]
-            ], [
-                "id" => 1,
-                "name" => "Test R",
-                "key" => "R",
-                "file" => str_replace(' ', '', $this->name)."R",
-                "description" => "Test R's description",
-                "maxrank" => 3,
-                "tooltip" => "Test R's tooltip",
-                "cooldown" => [4, 4, 4],
-                "range" => [625, 625, 625],
-                "effect" => [null,[80,115,150],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                "vars" => [
-                    [
-                        "link" => "spelldamage",
-                        "coeff" => [0.8, 0.8, 0.8],
-                        "key" => "a1"
-                    ]
-                ],
-                "resource" => [
-                    "name" => "Mana",
-                    "values" => [60, 65, 70]
-                ]
-            ]
         ];
     }
 

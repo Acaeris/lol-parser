@@ -19,7 +19,7 @@ services:
         arguments: ['@api-adapter', '@logger']
     champion-api:
         class: LeagueOfData\Service\Json\JsonChampions
-        arguments: ['@api-adapter', '@logger', '@champion-stat-api']
+        arguments: ['@api-adapter', '@logger', '@champion-stat-api', '@champion-spell-api']
     item-api:
         class: LeagueOfData\Service\Json\JsonItems
         arguments: ['@api-adapter', '@logger']
@@ -37,7 +37,7 @@ services:
         arguments: ['@sql-adapter', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions
-        arguments: ['@sql-adapter', '@logger', '@champion-stat-db']
+        arguments: ['@sql-adapter', '@logger', '@champion-stat-db', '@champion-spell-db']
     item-db:
         class: LeagueOfData\Service\Sql\SqlItems
         arguments: ['@sql-adapter', '@logger']

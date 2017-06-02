@@ -37,6 +37,25 @@ CREATE TABLE IF NOT EXISTS champion_stats (
   region      varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS champion_spells (
+  PRIMARY KEY (champion_id, version, spell_name),
+          KEY spell_names (spell_name),
+  champion_id int         NOT NULL,
+  spell_name  varchar(45) NOT NULL,
+  spell_key   varchar(1)  NOT NULL,
+  image_name  varchar(45) NOT NULL,
+  max_rank    int         NOT NULL,
+  description mediumtext  DEFAULT NULL,
+  tooltip     mediumtext  DEFAULT NULL,
+  cooldowns   json        DEFAULT NULL,
+  ranges      json        DEFAULT NULL,
+  effects     json        DEFAULT NULL,
+  variables   json        DEFAULT NULL,
+  resource    json        DEFAULT NULL,
+  version     varchar(16) NOT NULL,
+  region      varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS items (
   PRIMARY KEY (item_id, version),
           KEY item_names (item_name),

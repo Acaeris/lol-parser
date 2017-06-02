@@ -7,6 +7,7 @@ use LeagueOfData\Models\Champion\Champion;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 
@@ -19,27 +20,46 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class JsonChampions implements ChampionServiceInterface
 {
-    /* @var AdapterInterface API adapter */
+    /**
+     * @var AdapterInterface API adapter
+     */
     private $adapter;
-    /* @var LoggerInterface logger */
+
+    /**
+     * @var LoggerInterface logger
+     */
     private $log;
-    /* @var JsonChampionStats Champion Stat factory */
+
+    /**
+     * @var ChampionStatsServiceInterface Champion Stat factory
+     */
     private $statService;
-    /* @var array Champion Objects */
+
+    /**
+     * @var ChampionSpellsServiceInterface Spell factory
+     */
+    private $spellService;
+
+    /**
+     * @var array Champion Objects
+     */
     private $champions;
 
     /**
      * Setup champion factory service
      *
-     * @param AdapterInterface $adapter
-     * @param LoggerInterface  $log
+     * @param AdapterInterface               $adapter
+     * @param LoggerInterface                $log
+     * @param ChampionStatsServiceInterface  $statService
+     * @param ChampionSpellsServiceInterface $spellService
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log,
-        ChampionStatsServiceInterface $statService)
+        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService)
     {
         $this->adapter = $adapter;
         $this->log = $log;
         $this->statService = $statService;
+        $this->spellService = $spellService;
     }
 
     /**
@@ -62,6 +82,15 @@ final class JsonChampions implements ChampionServiceInterface
      */
     public function create(array $champion) : ChampionInterface
     {
+        $spells = [];
+
+        foreach ($champion['spells'] as $spell) {
+            $spell['id'] = $champion['id'];
+            $spell['version'] = $champion['version'];
+            $spell['region'] = $champion['region'];
+            $spells[] = $this->spellService->create($spell);
+        }
+
         return new Champion(
             $champion['id'],
             $champion['name'],
@@ -69,6 +98,7 @@ final class JsonChampions implements ChampionServiceInterface
             $champion['partype'],
             $champion['tags'],
             $this->statService->create($champion),
+            $spells,
             preg_replace('/\\.[^.\\s]{3,4}$/', '', $champion['image']['full']),
             $champion['version'],
             $champion['region']

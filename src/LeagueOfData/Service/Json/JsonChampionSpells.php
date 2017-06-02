@@ -3,8 +3,13 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
+use LeagueOfData\Library\Mapper\KeyMapper;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
+use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Models\Champion\ChampionSpell;
+use LeagueOfData\Models\Champion\ChampionSpellResource;
 
 /**
  * Champion Spells object JSON factory
@@ -29,12 +34,27 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
     /**
      * Factory to create Champion Spells objects from JSON
      *
-     * @param array $champion
-     * @return array
+     * @param array $spell
+     * @return ChampionSpellInterface
      */
-    public function create(array $champion) : array
+    public function create(array $spell) : ChampionSpellInterface
     {
-        return [new ChampionSpell()];
+        return new ChampionSpell(
+            $spell['id'],
+            $spell['name'],
+            KeyMapper::getKeyForSpell($spell['key']),
+            $spell['image']['full'],
+            $spell['maxrank'],
+            $spell['description'],
+            $spell['tooltip'],
+            $spell['cooldown'],
+            $spell['range'],
+            $spell['effect'],
+            $spell['vars'],
+            new ChampionSpellResource($spell['costType'], $spell['cost']),
+            $spell['version'],
+            $spell['region']
+        );
     }
 
     /**

@@ -4,11 +4,13 @@ namespace spec\LeagueOfData\Models\Champion;
 
 use PhpSpec\ObjectBehavior;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
 
 class ChampionSpec extends ObjectBehavior
 {
     public function let(
-        ChampionStatsInterface $stats
+        ChampionStatsInterface $stats,
+        ChampionSpellInterface $spell
     ) {
         $this->beConstructedWith(
             1, // Champion ID
@@ -17,6 +19,7 @@ class ChampionSpec extends ObjectBehavior
             "mp", // Resource Type
             ["Fighter", "Mage"], // Tags
             $stats, // Stats
+            [$spell], // Spells
             "Test", // Image Name
             "6.21.1", // Version
             "euw" // Region
@@ -44,11 +47,26 @@ class ChampionSpec extends ObjectBehavior
         $this->getVersion()->shouldReturn('6.21.1');
         $this->getTags()->shouldReturn(['Fighter', 'Mage']);
         $this->getStats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+        $this->getSpells()->shouldReturnArrayOfSpells();
         $this->getRegion()->shouldReturn('euw');
     }
 
     public function it_can_return_tags_as_simple_string()
     {
         $this->getTagsAsString()->shouldReturn("Fighter|Mage");
+    }
+
+    public function getMatchers()
+    {
+        return [
+            'returnArrayOfSpells' => function($spells) {
+                foreach ($spells as $spell) {
+                    if (!$spell instanceof ChampionSpellInterface) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        ];
     }
 }

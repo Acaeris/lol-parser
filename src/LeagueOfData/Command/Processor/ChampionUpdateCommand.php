@@ -76,7 +76,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         ];
 
         if (null !== $input->getOption('championId')) {
-            $where['champion_id'] = $this->getOption('championId');
+            $where['champion_id'] = $input->getOption('championId');
         }
 
         return new ChampionRequest($where, '*');

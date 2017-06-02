@@ -6,9 +6,12 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
+use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
 
 class SqlChampionsSpec extends ObjectBehavior
 {
@@ -22,31 +25,24 @@ class SqlChampionsSpec extends ObjectBehavior
             "resource_type" => "Blood Well",
             "version" => "7.9.1",
             "region" => "euw"
-        ], [
-            "champion_id" => 412,
-            "champion_name" => "Thresh",
-            "image_name" => "Aatrox",
-            "title" => "the Chain Warden",
-            "tags" => "Support",
-            "resource_type" => "Mana",
-            "version" => "7.9.1",
-            "region" => "euw"
         ]
     ];
 
     public function let(
         AdapterInterface $adapter,
         LoggerInterface $logger,
-        ChampionStatsServiceInterface $statBuilder,
+        ChampionStatsServiceInterface $statService,
         ChampionStatsInterface $stats,
+        ChampionSpellsServiceInterface $spellService,
+        ChampionSpellInterface $spell,
         RequestInterface $request)
     {
-        $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $threshStatRequest = new ChampionStatsRequest(['champion_id' => 412, 'version' => '7.9.1', 'region' => 'euw']);
         $adapter->fetch($request)->willReturn($this->mockData);
-        $statBuilder->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
-        $statBuilder->fetch($threshStatRequest)->willReturn([412 => $stats]);
-        $this->beConstructedWith($adapter, $logger, $statBuilder);
+        $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
+        $statService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
+        $aatroxSpellRequest = new ChampionSpellRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
+        $spellService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
+        $this->beConstructedWith($adapter, $logger, $statService, $spellService);
     }
 
     public function it_should_be_initializable()

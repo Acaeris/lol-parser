@@ -19,10 +19,6 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      */
     private $championId;
     /**
-     * @var int Spell ID
-     */
-    private $spellId;
-    /**
      * @var string Spell Name
      */
     private $spellName;
@@ -81,7 +77,6 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
 
     public function __construct(
         int $championId,
-        int $spellId,
         string $spellName,
         string $key,
         string $imageName,
@@ -99,7 +94,6 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
         $this->constructImmutable();
 
         $this->championId = $championId;
-        $this->spellId = $spellId;
         $this->spellName = $spellName;
         $this->key = $key;
         $this->imageName = $imageName;
@@ -123,16 +117,6 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     public function getChampionID() : int
     {
         return $this->championId;
-    }
-
-    /**
-     * Get Spell ID
-     *
-     * @return int
-     */
-    public function getSpellID() : int
-    {
-        return $this->spellId;
     }
 
     /**

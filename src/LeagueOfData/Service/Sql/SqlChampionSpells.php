@@ -50,7 +50,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     {
         foreach ($spells as $spell) {
             if ($spell instanceof ChampionSpellInterface) {
-                $this->spells[$spell->getSpellID()] = $spell;
+                $this->spells[$spell->getSpellName()] = $spell;
                 continue;
             }
             $this->log->error('Incorrect object supplied to Champion Spells service', [$spell]);
@@ -67,7 +67,6 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     {
         return new ChampionSpell(
             $champion['champion_id'],
-            $champion['spell_id'],
             $champion['spell_name'],
             $champion['spell_key'],
             $champion['image_name'],
@@ -113,12 +112,11 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
                 [
                     'champion_id' => $spell->getChampionID(),
                     'version' => $spell->getVersion(),
-                    'spell_id' => $spell->getSpellID()
+                    'spell_name' => $spell->getSpellName()
                 ],
-                'spell_id',
+                'spell_name',
                 [
                     'champion_id' => $spell->getChampionID(),
-                    'spell_id' => $spell->getSpellID(),
                     'spell_name' => $spell->getSpellName(),
                     'spell_key' => $spell->getKey(),
                     'image_name' => $spell->getImageName(),
@@ -163,7 +161,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     {
         if ($results !== false) {
             foreach ($results as $spell) {
-                $this->spell[$spell['spell_id']] = $this->create($spell);
+                $this->spell[$spell['spell_name']] = $this->create($spell);
             }
         }
     }

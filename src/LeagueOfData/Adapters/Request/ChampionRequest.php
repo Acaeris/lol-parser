@@ -13,8 +13,10 @@ use LeagueOfData\Adapters\Request;
  */
 final class ChampionRequest extends Request
 {
-    /** @var array Default parameters for API query */
-    private $apiDefaults = [ 'region' => 'euw', 'champListData' => 'all' ];
+    /**
+     * @var array Default parameters for API query
+     */
+    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all' ];
 
     /**
      * Validate request parameters

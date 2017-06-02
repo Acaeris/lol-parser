@@ -17,11 +17,6 @@ interface ChampionSpellInterface
     public function getChampionID() : int;
 
     /**
-     * Get Spell ID
-     */
-    public function getSpellID() : int;
-
-    /**
      * Get Spell Name
      */
     public function getSpellName() : string;

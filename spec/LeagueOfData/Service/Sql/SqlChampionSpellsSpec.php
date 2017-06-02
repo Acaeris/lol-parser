@@ -13,7 +13,6 @@ class SqlChampionSpellsSpec extends ObjectBehavior
     private $mockData = [
         [
             'champion_id' => 266,
-            'spell_id' => 1,
             'spell_name' => 'Disintegrate',
             'spell_key' => 'Q',
             'image_name' => 'Disintegrate',
@@ -54,7 +53,7 @@ class SqlChampionSpellsSpec extends ObjectBehavior
 
     public function it_can_add_and_retrieve_spell_objects_from_collection(ChampionSpellInterface $spell)
     {
-        $spell->getSpellID()->willReturn(1);
+        $spell->getSpellName()->willReturn('Disintigrate');
         $this->add([$spell]);
         $this->transfer()->shouldReturnArrayOfChampionSpells();
     }

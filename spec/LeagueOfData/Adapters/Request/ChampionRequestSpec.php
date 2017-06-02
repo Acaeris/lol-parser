@@ -9,7 +9,7 @@ class ChampionRequestSpec extends ObjectBehavior
 {
     public function let()
     {
-        $this->beConstructedWith(['region' => 'na'], 'test_column', ['Test Data']);
+        $this->beConstructedWith(['region' => 'na'], 'title', ['Test Data']);
     }
 
     public function it_should_be_initializable()
@@ -32,7 +32,7 @@ class ChampionRequestSpec extends ObjectBehavior
 
     public function it_returns_the_api_endpoint_for_specific_champion()
     {
-        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'test_column', ['Test Data']);
+        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'title', ['Test Data']);
         $this->requestFormat(Request::TYPE_JSON);
         $this->query()->shouldReturn('static-data/v3/champions/1');
     }
@@ -40,7 +40,7 @@ class ChampionRequestSpec extends ObjectBehavior
     public function it_returns_the_correct_query_for_an_sql_request()
     {
         $this->requestFormat(Request::TYPE_SQL);
-        $this->query()->shouldReturn('SELECT test_column FROM champions WHERE region = :region');
+        $this->query()->shouldReturn('SELECT title FROM champions WHERE region = :region');
     }
 
     public function it_can_process_the_request_parameters_for_sql()
@@ -52,14 +52,14 @@ class ChampionRequestSpec extends ObjectBehavior
     public function it_adds_api_defaults_to_request_parameters_for_api()
     {
         $this->requestFormat(Request::TYPE_JSON);
-        $this->where()->shouldReturn(['region' => 'na', 'champListData' => 'all']);
+        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all']);
     }
 
     public function it_ignores_champion_id_for_where()
     {
-        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'test_column', ['Test Data']);
+        $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'title', ['Test Data']);
         $this->requestFormat(Request::TYPE_JSON);
-        $this->where()->shouldReturn(['region' => 'na', 'champListData' => 'all']);
+        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all']);
     }
 
     public function it_can_validate_parameters()
