@@ -3,7 +3,6 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Library\Mapper\KeyMapper;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
@@ -39,19 +38,24 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
      */
     public function create(array $spell) : ChampionSpellInterface
     {
+        $keys = ["Q", "W", "E", "R"];
+        
         return new ChampionSpell(
             $spell['id'],
             $spell['name'],
-            KeyMapper::getKeyForSpell($spell['key']),
+            $keys[$spell['number']],
             $spell['image']['full'],
             $spell['maxrank'],
             $spell['description'],
-            $spell['tooltip'],
+            str_replace('"', "'", isset($spell['tooltip']) ? $spell['tooltip'] : ''),
             $spell['cooldown'],
             $spell['range'],
             $spell['effect'],
             isset($spell['vars']) ? $spell['vars'] : [],
-            new ChampionSpellResource($spell['costType'], $spell['cost']),
+            new ChampionSpellResource(
+                isset($spell['costType']) ? $spell['costType'] : '',
+                isset($spell['cost']) ? $spell['cost'] : []
+            ),
             $spell['version'],
             $spell['region']
         );

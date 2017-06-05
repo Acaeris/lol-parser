@@ -16,7 +16,7 @@ final class ChampionRequest extends Request
     /**
      * @var array Default parameters for API query
      */
-    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all' ];
+    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all', 'champListData' => 'all' ];
 
     /**
      * Validate request parameters
@@ -63,7 +63,7 @@ final class ChampionRequest extends Request
 
         $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
 
-        return "SELECT {$this->columns} FROM champions".$where;
+        return "SELECT {$this->columns} FROM champions" . $where;
     }
 
     /**

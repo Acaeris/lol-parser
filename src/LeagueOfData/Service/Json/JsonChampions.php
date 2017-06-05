@@ -84,7 +84,8 @@ final class JsonChampions implements ChampionServiceInterface
     {
         $spells = [];
 
-        foreach ($champion['spells'] as $spell) {
+        foreach ($champion['spells'] as $id => $spell) {
+            $spell['number'] = $id;
             $spell['id'] = $champion['id'];
             $spell['version'] = $champion['version'];
             $spell['region'] = $champion['region'];

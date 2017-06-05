@@ -12,7 +12,7 @@ class ChampionController extends Controller
     public function byIdAction(Request $request)
     {
         $championId = $request->query->get('id');
-        $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.2';
+        $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.1';
         $database = $this->get('champion-db');
         $champion = $database->fetch(new ChampionRequest([
             'champion_id' => $championId,

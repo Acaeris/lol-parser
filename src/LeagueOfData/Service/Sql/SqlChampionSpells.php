@@ -10,7 +10,6 @@ use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
 use LeagueOfData\Models\Champion\ChampionSpell;
-use LeagueOfData\Models\Champion\ChampionSpellVars;
 use LeagueOfData\Models\Champion\ChampionSpellResource;
 
 /**
@@ -76,7 +75,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
             json_decode($champion['cooldowns']),
             json_decode($champion['ranges']),
             json_decode($champion['effects']),
-            $this->createVariables(json_decode($champion['variables'], true)),
+            json_decode($champion['variables']),
             $this->createResource(json_decode($champion['resource'], true)),
             $champion['version'],
             $champion['region']
@@ -167,23 +166,6 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
                 $this->spells[$spell['spell_name']] = $this->create($spell);
             }
         }
-    }
-
-    /**
-     * Create Champion Spell Variables objects
-     *
-     * @param array $variables
-     * @return array ChampionSpellVars
-     */
-    private function createVariables(array $variables) : array
-    {
-        $output = [];
-
-        foreach ($variables as $var) {
-            $output[] = new ChampionSpellVars($var['link'], $var['coeff'], $var['key']);
-        }
-
-        return $output;
     }
 
     /**

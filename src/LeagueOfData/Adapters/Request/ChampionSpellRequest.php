@@ -25,7 +25,11 @@ class ChampionSpellRequest extends Request
             $parts[] = "{$key} = :{$key}";
         }
 
-        return "SELECT {$this->columns} FROM champion_spells WHERE ".implode(" AND ", $parts);
+        return "SELECT {$this->columns} FROM champion_spells WHERE " . implode(" AND ", $parts)
+            . " ORDER BY CASE WHEN spell_key = 'Q' THEN 0"
+            . " WHEN spell_key = 'W' THEN 1"
+            . " WHEN spell_key = 'E' THEN 2"
+            . " ELSE 3 END";
     }
 
     /**
