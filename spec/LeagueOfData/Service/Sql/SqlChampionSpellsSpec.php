@@ -57,7 +57,7 @@ class SqlChampionSpellsSpec extends ObjectBehavior
         $this->add([$spell]);
         $this->transfer()->shouldReturnArrayOfChampionSpells();
     }
-    
+
     public function getMatchers()
     {
         return [

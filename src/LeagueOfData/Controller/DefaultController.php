@@ -13,10 +13,10 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $db = $this->get('champion-db');
+        $championDB = $this->get('champion-db');
         $serializer = $this->get('serializer');
 
-        $annie = $db->fetch('7.9.1', 1);
+        $annie = $championDB->fetch('7.9.1', 1);
 
         return new Response(
             $serializer->serialize($annie[1], 'json'),

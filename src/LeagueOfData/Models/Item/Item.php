@@ -47,7 +47,7 @@ class Item implements ItemInterface, ImmutableInterface
         string $version,
         string $region
     ) {
-    
+
         $this->constructImmutable();
 
         $this->name = $name;

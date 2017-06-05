@@ -9,7 +9,7 @@ use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
 
 /**
  * Champion Spell model
- * 
+ *
  * @author caitlyn.osborne
  */
 class ChampionSpell implements ChampionSpellInterface, ImmutableInterface

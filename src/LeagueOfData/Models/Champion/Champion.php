@@ -213,7 +213,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
     {
         return $this->region;
     }
-    
+
     /**
      * MOVE THE FOLLOWING TO MORE APPROPRIATE MODELS ONCE IMPLEMENTED
      */

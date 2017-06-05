@@ -39,7 +39,7 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
     public function create(array $spell) : ChampionSpellInterface
     {
         $keys = ["Q", "W", "E", "R"];
-        
+
         return new ChampionSpell(
             $spell['id'],
             $spell['name'],

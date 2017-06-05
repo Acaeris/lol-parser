@@ -156,7 +156,7 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             if (!is_array($results)) {
                 throw new \Exception('Stat Results in unexpected format');
             }
-            
+
             $champions = [];
 
             foreach ($results as $stat) {
