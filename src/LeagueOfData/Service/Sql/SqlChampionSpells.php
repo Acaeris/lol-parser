@@ -127,7 +127,10 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
                     'ranges' => json_encode($spell->getRanges()),
                     'effects' => json_encode($spell->getEffects()),
                     'variables' => json_encode($spell->getVars()),
-                    'resource' => json_encode($spell->getResource()),
+                    'resource' => json_encode([
+                        'name' => $spell->getResource()->getName(),
+                        'values' => $spell->getResource()->getValues()
+                    ]),
                     'version' => $spell->getVersion(),
                     'region' => $spell->getRegion()
                 ]
@@ -161,7 +164,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     {
         if ($results !== false) {
             foreach ($results as $spell) {
-                $this->spell[$spell['spell_name']] = $this->create($spell);
+                $this->spells[$spell['spell_name']] = $this->create($spell);
             }
         }
     }

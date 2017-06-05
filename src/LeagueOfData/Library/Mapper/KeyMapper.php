@@ -10,10 +10,18 @@ class KeyMapper {
         'Disintegrate' => 'Q',
         'Incinerate' => 'W',
         'MoltenShield' => 'E',
-        'InfernalGuardian' => 'R'
+        'InfernalGuardian' => 'R',
+        'OlafAxeThrowCast' => 'Q',
+        'OlafFrenziedStrikes' => 'W',
+        'OlafRecklessStrike' => 'E',
+        'OlafRagnarok' => 'R',
+        'GalioQ' => 'Q',
+        'GalioW' => 'W',
+        'GalioE' => 'E',
+        'GalioR' => 'R'
     ];
 
-    static function getKeyForSpell(string $spell) : string
+    public static function getKeyForSpell(string $spell) : string
     {
         if (strlen($spell) === 1) {
             return $spell;

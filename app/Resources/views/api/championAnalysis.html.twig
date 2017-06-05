@@ -27,6 +27,18 @@
         "magicResist": {{ champion.stats.magicResist.baseValue }},
         "magicResistPerLevel": {{ champion.stats.magicResist.increasePerLevel }}
     },
+    "spells": [
+        {% for spell in champion.spells %}[
+            "name": "{{ spell.spellName }}",
+            "key": "{{ spell.key }}",
+            "image": "{{ spell.imageName }}",
+            "maxRank": "{{ spell.maxRank }}",
+            "description": "{{ spell.description }}",
+            "tooltip": '{{ spell.tooltip | raw }}',
+            "cooldowns": {{ spell.cooldowns | json_encode | raw }}
+        ]{% if not loop.last %},{% endif %}{% endfor %}
+
+    ],
     "version": "{{ champion.version }}",
     "region": "{{ champion.region }}"
 }

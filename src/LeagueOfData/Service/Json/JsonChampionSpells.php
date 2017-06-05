@@ -50,7 +50,7 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
             $spell['cooldown'],
             $spell['range'],
             $spell['effect'],
-            $spell['vars'],
+            isset($spell['vars']) ? $spell['vars'] : [],
             new ChampionSpellResource($spell['costType'], $spell['cost']),
             $spell['version'],
             $spell['region']

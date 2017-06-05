@@ -42,7 +42,7 @@ class JsonChampionSpellsSpec extends ObjectBehavior
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0]
         ],
-        "tooltip" => "Deals {{ e1 }} (+{{ a1 }}) magic damage. Mana cost and half the cooldown are refunded if Disintegrate kills the target.",
+        "tooltip" => "Test Tooltip.",
         "maxrank" => 5,
         "costBurn" => "60/65/70/75/80",
         "rangeBurn" => "625",

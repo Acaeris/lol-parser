@@ -164,7 +164,7 @@ final class SqlChampions implements ChampionServiceInterface
             $champion['resource_type'],
             explode('|', $champion['tags']),
             $stats[$champion['champion_id']],
-            $spells[$champion['champion_id']],
+            $spells,
             $champion['image_name'],
             $champion['version'],
             $champion['region']
