@@ -3,9 +3,10 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Models\Champion\ChampionStats;
 use LeagueOfData\Models\Champion\ChampionDefense;
@@ -26,22 +27,24 @@ use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
 class SqlChampionStats implements ChampionStatsServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var Connection DB connection
      */
-    private $dbAdapter;
+    private $dbConn;
+
     /**
      * @var LoggerInterface
      */
     private $log;
+
     /**
      * @var array Champion objects
      */
     private $champions = [];
 
-    public function __construct(AdapterInterface $adapter, LoggerInterface $log)
+    public function __construct(Connection $connection, LoggerInterface $log)
     {
         $this->log = $log;
-        $this->dbAdapter = $adapter;
+        $this->dbConn = $connection;
     }
 
     /**
@@ -90,7 +93,8 @@ class SqlChampionStats implements ChampionStatsServiceInterface
     public function fetch(RequestInterface $request) : array
     {
         $this->log->debug("Fetching champion stats from DB");
-        $results = $this->dbAdapter->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->champions = [];
         $this->processResults($results);
         $this->log->debug(count($this->champions)." champions' stats fetched from DB");
@@ -109,28 +113,23 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             $stats = $this->convertStatsToArray($champion);
 
             foreach ($stats as $key => $value) {
-                $request = new ChampionStatsRequest(
-                    [
-                        'champion_id' => $champion->getChampionID(),
-                        'version' => $champion->getVersion(),
-                        'stat_name' => $key
-                    ],
-                    'champion_id',
-                    [
-                        'champion_id' => $champion->getChampionID(),
-                        'stat_name' => $key,
-                        'stat_value' => $value,
-                        'version' => $champion->getVersion(),
-                        'region' => $champion->getRegion()
-                    ]
-                );
+                $select = 'SELECT champion_id FROM champion_stats WHERE champion_id = :champion_id '
+                    . 'AND version = :version AND stat_name = :stat_name AND region = :region';
+                $where = [
+                    'champion_id' => $champion->getChampionID(),
+                    'version' => $champion->getVersion(),
+                    'stat_name' => $key,
+                    'region' => $champion->getRegion()
+                ];
+                $data = array_merge($where, ['stat_value' => $value]);
 
-                if ($this->dbAdapter->fetch($request)) {
-                    $this->dbAdapter->update($request);
+                if ($this->dbConn->fetchAll($select, $where)) {
+                    $this->dbConn->update('champion_stats', $data, $where);
 
                     continue;
                 }
-                $this->dbAdapter->insert($request);
+
+                $this->dbConn->insert('champion_stats', $data);
             }
         }
     }

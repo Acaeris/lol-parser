@@ -90,32 +90,6 @@ class ApiAdapter implements AdapterInterface
     }
 
     /**
-     * Insert object via API
-     *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
-     *
-     * @return int Insert response
-     */
-    public function insert(RequestInterface $request) : int
-    {
-        $this->log->error("API is read-only", ['request' => $request]);
-        return -1;
-    }
-
-    /**
-     * Update object via API
-     *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
-     *
-     * @return int Update response.
-     */
-    public function update(RequestInterface $request) : int
-    {
-        $this->log->error("API is read-only", ['request' => $request]);
-        return -1;
-    }
-
-    /**
      * Checks the response code from the API
      *
      * @param ResponseInterface $response

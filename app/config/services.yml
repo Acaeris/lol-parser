@@ -5,9 +5,6 @@ services:
     api-adapter:
         class: LeagueOfData\Adapters\ApiAdapter
         arguments: ['@logger', '@guzzle', '%apiKey%']
-    sql-adapter:
-        class: LeagueOfData\Adapters\SqlAdapter
-        arguments: ['@logger', '@database_connection']
     rabbitmq:
         class: LeagueOfData\Service\RabbitMQ
         arguments: ['@logger']
@@ -31,7 +28,7 @@ services:
         arguments: ['@api-adapter', '@logger']
     champion-stat-db:
         class: LeagueOfData\Service\Sql\SqlChampionStats
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@database_connection', '@logger']
     champion-spell-db:
         class: LeagueOfData\Service\Sql\SqlChampionSpells
         arguments: ['@database_connection', '@logger']

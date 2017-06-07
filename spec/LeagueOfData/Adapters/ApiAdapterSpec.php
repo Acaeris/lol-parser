@@ -15,18 +15,6 @@ class ApiAdapterSpec extends ObjectBehavior
         $this->beConstructedWith($log, $client, 'TEST');
     }
 
-    public function it_should_fail_an_insert_call(LoggerInterface $log, RequestInterface $request)
-    {
-        $log->error("API is read-only", ['request' => $request])->shouldBeCalled();
-        $this->insert($request)->shouldReturn(-1);
-    }
-
-    public function it_should_fail_an_update_call(LoggerInterface $log, RequestInterface $request)
-    {
-        $log->error("API is read-only", ['request' => $request])->shouldBeCalled();
-        $this->update($request)->shouldReturn(-1);
-    }
-
     public function it_can_build_the_api_query(RequestInterface $request)
     {
         $request->where()->willReturn([

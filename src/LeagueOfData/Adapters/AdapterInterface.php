@@ -15,28 +15,6 @@ interface AdapterInterface
 {
     /**
      * Fetch data interface
-     *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
-     *
-     * @return array Fetch response
      */
     public function fetch(RequestInterface $request) : array;
-
-    /**
-     * Insert object interface
-     *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
-     *
-     * @return int Insert response
-     */
-    public function insert(RequestInterface $request) : int;
-
-    /**
-     * Update object interface
-     *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
-     *
-     * @return int Update response.
-     */
-    public function update(RequestInterface $request) : int;
 }
