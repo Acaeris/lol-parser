@@ -101,7 +101,8 @@ class JsonChampionsSpec extends ObjectBehavior
                         "cooldown" => [4, 4, 4, 4, 4],
                         "name" => "Disintegrate",
                         "version" => "7.9.1",
-                        "region" => "euw"
+                        "region" => "euw",
+                        "number" => 0
                     ]
                 ],
                 "version" => "7.9.1",

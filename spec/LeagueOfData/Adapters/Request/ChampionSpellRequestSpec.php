@@ -35,7 +35,8 @@ class ChampionSpellRequestSpec extends ObjectBehavior
     public function it_returns_the_correct_query_for_an_sql_request()
     {
         $this->requestFormat(Request::TYPE_SQL);
-        $this->query()->shouldReturn('SELECT test_column FROM champion_spells WHERE region = :region');
+        $this->query()->shouldReturn("SELECT test_column FROM champion_spells WHERE region = :region"
+            . " ORDER BY CASE WHEN spell_key = 'Q' THEN 0 WHEN spell_key = 'W' THEN 1 WHEN spell_key = 'E' THEN 2 ELSE 3 END");
     }
 
     public function it_can_validate_parameters()

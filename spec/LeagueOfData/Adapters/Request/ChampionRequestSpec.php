@@ -52,14 +52,14 @@ class ChampionRequestSpec extends ObjectBehavior
     public function it_adds_api_defaults_to_request_parameters_for_api()
     {
         $this->requestFormat(Request::TYPE_JSON);
-        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all']);
+        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all', 'champListData' => 'all']);
     }
 
     public function it_ignores_champion_id_for_where()
     {
         $this->beConstructedWith(['region' => 'na', 'champion_id' => 1], 'title', ['Test Data']);
         $this->requestFormat(Request::TYPE_JSON);
-        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all']);
+        $this->where()->shouldReturn(['region' => 'na', 'champData' => 'all', 'champListData' => 'all']);
     }
 
     public function it_can_validate_parameters()

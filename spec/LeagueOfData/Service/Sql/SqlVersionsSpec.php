@@ -4,7 +4,7 @@ namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Adapters\AdapterInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Interfaces\VersionInterface;
 
@@ -18,10 +18,10 @@ class SqlVersionsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(Connection $database, LoggerInterface $logger, RequestInterface $request)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
-        $this->beConstructedWith($adapter, $logger);
+        $database->fetchAll("", [])->willReturn($this->mockData);
+        $this->beConstructedWith($database, $logger);
     }
 
     public function it_should_be_initializable()
@@ -32,6 +32,9 @@ class SqlVersionsSpec extends ObjectBehavior
 
     public function it_should_find_all_version_data(RequestInterface $request)
     {
+        $request->query()->shouldBeCalled();
+        $request->where()->shouldBeCalled();
+        $request->requestFormat('sql')->shouldBeCalled();
         $this->fetch($request)->shouldReturnArrayOfVersions();
     }
 

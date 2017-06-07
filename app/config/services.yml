@@ -43,7 +43,7 @@ services:
         arguments: ['@sql-adapter', '@logger']
     version-db:
         class: LeagueOfData\Service\Sql\SqlVersions
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@database_connection', '@logger']
     realm-db:
         class: LeagueOfData\Service\Sql\SqlRealms
         arguments: ['@sql-adapter', '@logger']

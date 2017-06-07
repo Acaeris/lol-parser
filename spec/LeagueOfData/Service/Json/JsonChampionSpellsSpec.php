@@ -61,7 +61,8 @@ class JsonChampionSpellsSpec extends ObjectBehavior
         "cooldown" => [4, 4, 4, 4, 4],
         "name" => "Disintegrate",
         "version" => "7.9.1",
-        "region" => "euw"
+        "region" => "euw",
+        "number" => 0
     ];
 
     public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)

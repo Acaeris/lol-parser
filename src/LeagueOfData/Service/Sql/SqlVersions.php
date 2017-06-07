@@ -3,12 +3,13 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\Interfaces\VersionServiceInterface;
 use LeagueOfData\Models\Version;
 use LeagueOfData\Models\Interfaces\VersionInterface;
-use LeagueOfData\Adapters\Request\VersionRequest;
 
 /**
  * Version object SQL factory.
@@ -20,9 +21,9 @@ use LeagueOfData\Adapters\Request\VersionRequest;
 final class SqlVersions implements VersionServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var Connection DB connection
      */
-    private $dbAdapter;
+    private $dbConn;
     /**
      * @var LoggerInterface Logger
      */
@@ -35,12 +36,12 @@ final class SqlVersions implements VersionServiceInterface
     /**
      * Setup version factory service
      *
-     * @param AdapterInterface $adapter
+     * @param AdapterInterface $connection
      * @param LoggerInterface  $log
      */
-    public function __construct(AdapterInterface $adapter, LoggerInterface $log)
+    public function __construct(Connection $connection, LoggerInterface $log)
     {
-        $this->dbAdapter = $adapter;
+        $this->dbConn = $connection;
         $this->log = $log;
     }
 
@@ -81,7 +82,8 @@ final class SqlVersions implements VersionServiceInterface
     {
         $this->log->debug("Fetch versions from DB");
         $this->versions = [];
-        $results = $this->dbAdapter->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->processResults($results);
         $this->log->debug(count($this->versions)." versions fetch from DB");
 
@@ -96,15 +98,12 @@ final class SqlVersions implements VersionServiceInterface
         $this->log->debug("Storing ".count($this->versions)." new/updated versions");
 
         foreach ($this->versions as $version) {
-            $request = new VersionRequest(
-                [ 'full_version' => $version->getFullVersion() ],
-                'full_version',
-                $version->toArray()
-            );
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
+            $select = 'SELECT full_version FROM versions WHERE full_version = :full_version';
+            $where = [ 'full_version' => $version->getFullVersion() ];
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('versions', $version->toArray(), $where);
             } else {
-                $this->dbAdapter->insert($request);
+                $this->dbConn->insert('versions', $version->toArray());
             }
         }
     }

@@ -3,12 +3,11 @@
 namespace spec\LeagueOfData\Models\Champion;
 
 use PhpSpec\ObjectBehavior;
-use LeagueOfData\Models\Interfaces\ChampionSpellVarsInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
 
 class ChampionSpellSpec extends ObjectBehavior
 {
-    public function let(ChampionSpellVarsInterface $variables, ChampionSpellResourceInterface $resource)
+    public function let(ChampionSpellResourceInterface $resource)
     {
         $this->beConstructedWith(
             1, // Champion ID
@@ -21,7 +20,7 @@ class ChampionSpellSpec extends ObjectBehavior
             [4, 5, 6, 7, 8], // Cooldowns
             [625, 630, 635, 640, 645], // Ranges
             [null, [0, 1, 2, 3, 4]], // Effects
-            [$variables], // Variables
+            [["coeff" => [0.8], "link" => "spelldamage", "key" => "a1"]], // Variables
             $resource, // Resource
             '7.9.1', // Version
             'euw' // Region
@@ -47,7 +46,7 @@ class ChampionSpellSpec extends ObjectBehavior
         $this->getCooldowns()->shouldReturn([4, 5, 6, 7, 8]);
         $this->getRanges()->shouldReturn([625, 630, 635, 640, 645]);
         $this->getEffects()->shouldReturn([null, [0, 1, 2, 3, 4]]);
-        $this->getVars()->shouldReturnArrayOfSpellVars();
+        $this->getVars()->shouldReturn([["coeff" => [0.8], "link" => "spelldamage", "key" => "a1"]]);
         $this->getResource()->shouldReturn($resource);
         $this->getVersion()->shouldReturn('7.9.1');
         $this->getRegion()->shouldReturn('euw');
@@ -83,19 +82,5 @@ class ChampionSpellSpec extends ObjectBehavior
         $this->shouldThrow('InvalidArgumentException')->during('getCooldownByRank', [6]);
         $this->shouldThrow('InvalidArgumentException')->during('getRangeByRank', [6]);
         $this->shouldThrow('InvalidArgumentException')->during('getEffectValue', [1, 6]);
-    }
-
-    public function getMatchers()
-    {
-        return [
-            'returnArrayOfSpellVars' => function($spellVars) {
-                foreach ($spellVars as $variable) {
-                    if (!$variable instanceof ChampionSpellVarsInterface) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        ];
     }
 }
