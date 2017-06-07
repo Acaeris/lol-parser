@@ -3,10 +3,10 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request\ChampionSpellRequest;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
 use LeagueOfData\Models\Champion\ChampionSpell;
@@ -25,18 +25,20 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      * @var LoggerInterface
      */
     private $log;
+
     /**
-     * @var AdapterInterface
+     * @var Connection
      */
-    private $dbAdapter;
+    private $dbConn;
+
     /**
      * @var array
      */
     private $spells;
 
-    public function __construct(AdapterInterface $adapter, LoggerInterface $logger)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
-        $this->dbAdapter = $adapter;
+        $this->dbConn = $connection;
         $this->log = $logger;
     }
 
@@ -91,7 +93,8 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     public function fetch(RequestInterface $request) : array
     {
         $this->log->debug("Fetch champion spells from DB");
-        $results = $this->dbAdapter->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->spells = [];
         $this->processResults($results);
         $this->log->debug(count($this->spells)." spells fetched from DB");
@@ -107,40 +110,22 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
         $this->log->debug("Storing ".count($this->spells)." new/updated spells");
 
         foreach ($this->spells as $spell) {
-            $request = new ChampionSpellRequest(
-                [
-                    'champion_id' => $spell->getChampionID(),
-                    'version' => $spell->getVersion(),
-                    'spell_name' => $spell->getSpellName()
-                ],
-                'spell_name',
-                [
-                    'champion_id' => $spell->getChampionID(),
-                    'spell_name' => $spell->getSpellName(),
-                    'spell_key' => $spell->getKey(),
-                    'image_name' => $spell->getImageName(),
-                    'max_rank' => $spell->getMaxRank(),
-                    'description' => $spell->getDescription(),
-                    'tooltip' => $spell->getTooltip(),
-                    'cooldowns' => json_encode($spell->getCooldowns()),
-                    'ranges' => json_encode($spell->getRanges()),
-                    'effects' => json_encode($spell->getEffects()),
-                    'variables' => json_encode($spell->getVars()),
-                    'resource' => json_encode([
-                        'name' => $spell->getResource()->getName(),
-                        'values' => $spell->getResource()->getValues()
-                    ]),
-                    'version' => $spell->getVersion(),
-                    'region' => $spell->getRegion()
-                ]
-            );
+            $select = 'SELECT spell_name FROM champion_spells WHERE champion_id = :champion_id AND version = :version'
+                . ' AND spell_name = :spell_name AND region = :region';
+            $where = [
+                'champion_id' => $spell->getChampionID(),
+                'version' => $spell->getVersion(),
+                'spell_name' => $spell->getSpellName(),
+                'region' => $spell->getRegion()
+            ];
 
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('champion_spells', $this->convertSpellToArray($spell), $where);
 
                 continue;
             }
-            $this->dbAdapter->insert($request);
+
+            $this->dbConn->insert('champion_spells', $this->convertSpellToArray($spell));
         }
     }
 
@@ -177,5 +162,34 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     private function createResource(array $resource) : ChampionSpellResourceInterface
     {
         return new ChampionSpellResource($resource['name'], $resource['values']);
+    }
+
+    /**
+     * Converts Spell object into SQL data array
+     *
+     * @param ChampionSpell $spell
+     * @return array
+     */
+    private function convertSpellToArray(ChampionSpell $spell) : array
+    {
+        return [
+            'champion_id' => $spell->getChampionID(),
+            'spell_name' => $spell->getSpellName(),
+            'spell_key' => $spell->getKey(),
+            'image_name' => $spell->getImageName(),
+            'max_rank' => $spell->getMaxRank(),
+            'description' => $spell->getDescription(),
+            'tooltip' => $spell->getTooltip(),
+            'cooldowns' => json_encode($spell->getCooldowns()),
+            'ranges' => json_encode($spell->getRanges()),
+            'effects' => json_encode($spell->getEffects()),
+            'variables' => json_encode($spell->getVars()),
+            'resource' => json_encode([
+                'name' => $spell->getResource()->getName(),
+                'values' => $spell->getResource()->getValues()
+            ]),
+            'version' => $spell->getVersion(),
+            'region' => $spell->getRegion()
+        ];
     }
 }

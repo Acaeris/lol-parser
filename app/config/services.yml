@@ -34,7 +34,7 @@ services:
         arguments: ['@sql-adapter', '@logger']
     champion-spell-db:
         class: LeagueOfData\Service\Sql\SqlChampionSpells
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@database_connection', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions
         arguments: ['@database_connection', '@logger', '@champion-stat-db', '@champion-spell-db']
