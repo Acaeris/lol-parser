@@ -3,8 +3,9 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Adapters\AdapterInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
@@ -24,9 +25,9 @@ use LeagueOfData\Models\Interfaces\ChampionInterface;
 final class SqlChampions implements ChampionServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var Connection DB connection
      */
-    private $dbAdapter;
+    private $dbConn;
 
     /**
      * @var LoggerInterface Logger
@@ -51,15 +52,15 @@ final class SqlChampions implements ChampionServiceInterface
     /**
      * Setup champion factory service
      *
-     * @param AdapterInterface               $adapter
+     * @param Connection                     $connection
      * @param LoggerInterface                $log
      * @param ChampionStatsServiceInterface  $statService
      * @param ChampionSpellsServiceInterface $spellService
      */
-    public function __construct(AdapterInterface $adapter, LoggerInterface $log,
+    public function __construct(Connection $connection, LoggerInterface $log,
         ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService)
     {
-        $this->dbAdapter = $adapter;
+        $this->dbConn = $connection;
         $this->log = $log;
         $this->statService = $statService;
         $this->spellService = $spellService;
@@ -90,7 +91,8 @@ final class SqlChampions implements ChampionServiceInterface
     public function fetch(RequestInterface $request) : array
     {
         $this->log->debug("Fetching champions from DB");
-        $results = $this->dbAdapter->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->champions = [];
         $this->processResults($results);
         $this->log->debug(count($this->champions)." champions fetched from DB");
@@ -106,21 +108,23 @@ final class SqlChampions implements ChampionServiceInterface
         $this->log->debug("Storing ".count($this->champions)." new/updated champions");
 
         foreach ($this->champions as $champion) {
-            $request = new ChampionRequest(
-                ['champion_id' => $champion->getChampionID(), 'version' => $champion->getVersion()],
-                'champion_name',
-                $this->convertChampionToArray($champion)
-            );
+            $select = "SELECT champion_name FROM champions WHERE champion_id = :champion_id AND version = :version"
+                . " AND region = :region";
+            $where = [
+                'champion_id' => $champion->getChampionID(),
+                'version' => $champion->getVersion(),
+                'region' => $champion->getRegion()
+            ];
 
             $this->statService->add([$champion->getStats()]);
             $this->spellService->add($champion->getSpells());
 
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('champions', $this->convertChampionToArray($champion), $where);
 
                 continue;
             }
-            $this->dbAdapter->insert($request);
+            $this->dbConn->insert('champion', $this->convertChampionToArray($champion));
         }
 
         $this->statService->store();

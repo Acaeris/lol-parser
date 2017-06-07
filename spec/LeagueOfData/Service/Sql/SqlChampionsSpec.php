@@ -3,6 +3,7 @@ namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
@@ -29,20 +30,19 @@ class SqlChampionsSpec extends ObjectBehavior
     ];
 
     public function let(
-        AdapterInterface $adapter,
+        Connection $dbConn,
         LoggerInterface $logger,
         ChampionStatsServiceInterface $statService,
         ChampionStatsInterface $stats,
         ChampionSpellsServiceInterface $spellService,
-        ChampionSpellInterface $spell,
-        RequestInterface $request)
+        ChampionSpellInterface $spell)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $dbConn->fetchAll('', [])->willReturn($this->mockData);
         $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $statService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
         $aatroxSpellRequest = new ChampionSpellRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $spellService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
-        $this->beConstructedWith($adapter, $logger, $statService, $spellService);
+        $this->beConstructedWith($dbConn, $logger, $statService, $spellService);
     }
 
     public function it_should_be_initializable()
@@ -53,6 +53,9 @@ class SqlChampionsSpec extends ObjectBehavior
 
     public function it_should_fetch_champions(RequestInterface $request)
     {
+        $request->query()->shouldBeCalled();
+        $request->where()->shouldBeCalled();
+        $request->requestFormat('sql')->shouldBeCalled();
         $this->fetch($request)->shouldReturnArrayOfChampions();
     }
 
