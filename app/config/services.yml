@@ -40,7 +40,7 @@ services:
         arguments: ['@sql-adapter', '@logger', '@champion-stat-db', '@champion-spell-db']
     item-db:
         class: LeagueOfData\Service\Sql\SqlItems
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@database_connection', '@logger']
     version-db:
         class: LeagueOfData\Service\Sql\SqlVersions
         arguments: ['@database_connection', '@logger']

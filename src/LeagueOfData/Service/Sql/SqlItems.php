@@ -3,14 +3,13 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\Interfaces\ItemServiceInterface;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Models\Item\Item;
 use LeagueOfData\Models\Item\ItemStat;
 use LeagueOfData\Models\Interfaces\ItemInterface;
-use LeagueOfData\Adapters\Request\ItemRequest;
-use LeagueOfData\Adapters\Request\ItemStatsRequest;
 
 /**
  * Item object SQL factory.
@@ -22,9 +21,9 @@ use LeagueOfData\Adapters\Request\ItemStatsRequest;
 final class SqlItems implements ItemServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var Connection DB connection
      */
-    private $dbAdapter;
+    private $dbConn;
     /**
      * @var LoggerInterface Logger
      */
@@ -37,12 +36,12 @@ final class SqlItems implements ItemServiceInterface
     /**
      * Setup item factory service
      *
-     * @param AdapterInterface $adapter
-     * @param LoggerInterface  $log
+     * @param Connection      $connection
+     * @param LoggerInterface $log
      */
-    public function __construct(AdapterInterface $adapter, LoggerInterface $log)
+    public function __construct(Connection $connection, LoggerInterface $log)
     {
-        $this->dbAdapter = $adapter;
+        $this->dbConn = $connection;
         $this->log = $log;
     }
 
@@ -87,20 +86,17 @@ final class SqlItems implements ItemServiceInterface
         $this->log->debug("Storing ".count($this->items)." new/updated items");
 
         foreach ($this->items as $item) {
-            $request = new ItemRequest(
-                [ 'item_id' => $item->getItemID(), 'version' => $item->getVersion() ],
-                'item_id',
-                $this->convertItemToArray($item)
-            );
+            $select = "SELECT item_id FROM items WHERE item_id = :item_id AND version = :version";
+            $where = [ 'item_id' => $item->getItemID(), 'version' => $item->getVersion() ];
 
             $this->storeStats($item);
 
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('items', $this->convertItemToArray($item), $where);
                 continue;
             }
 
-            $this->dbAdapter->insert($request);
+            $this->dbConn->insert('items', $this->convertItemToArray($item));
         }
     }
 
@@ -123,7 +119,8 @@ final class SqlItems implements ItemServiceInterface
     public function fetch(RequestInterface $request): array
     {
         $this->log->debug("Fetching items from DB");
-        $results = $this->dbAdapter->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->items = [];
         $this->processResults($results);
         $this->log->debug(count($this->items)." items fetched from DB");
@@ -140,12 +137,10 @@ final class SqlItems implements ItemServiceInterface
      */
     private function fetchStats(array $item) : array
     {
-        $request = new ItemStatsRequest(
-            ['item_id' => $item['item_id'], 'version' => $item['version'], 'region' => $item['region']],
-            '*'
-        );
+        $select = "SELECT * FROM item_stats WHERE item_id = :item_id AND version = :version AND region = :region";
+        $where = ['item_id' => $item['item_id'], 'version' => $item['version'], 'region' => $item['region']];
         $stats = [];
-        $results = $this->dbAdapter->fetch($request);
+        $results = $this->dbConn->fetchAll($select, $where);
 
         if ($results !== false) {
             foreach ($results as $stat) {
@@ -164,24 +159,23 @@ final class SqlItems implements ItemServiceInterface
     private function storeStats(Item $item)
     {
         foreach ($item->getStats() as $key => $value) {
-            $request = new ItemStatsRequest(
-                ['item_id' => $item->getItemID(), 'version' => $item->getVersion(), 'stat_name' => $key],
-                'item_id',
-                [
-                    'item_id' => $item->getItemID(),
-                    'stat_name' => $key,
-                    'stat_value' => $value,
-                    'version' => $item->getVersion(),
-                    'region' => $item->getRegion()
-                ]
-            );
+            $select = "SELECT item_id FROM item_stats WHERE item_id = :item_id AND version = :version "
+                . "AND stat_name = :stat_name AND region = :region";
+            $where = [
+                'item_id' => $item->getItemID(),
+                'version' => $item->getVersion(),
+                'stat_name' => $key,
+                'region' => $item->getRegion()
+            ];
+            $data = array_merge($where, ['stat_value' => $value]);
 
-            if ($this->dbAdapter->fetch($request)) {
-                $this->dbAdapter->update($request);
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('item_stats', $data, $where);
 
                 return;
             }
-            $this->dbAdapter->insert($request);
+
+            $this->dbConn->insert('item_stats', $data);
         }
     }
 

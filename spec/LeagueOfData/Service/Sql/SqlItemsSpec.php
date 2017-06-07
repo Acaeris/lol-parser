@@ -4,9 +4,8 @@ namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Adapters\AdapterInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request\ItemStatsRequest;
 use LeagueOfData\Models\Interfaces\ItemInterface;
 
 class SqlItemsSpec extends ObjectBehavior
@@ -47,14 +46,15 @@ class SqlItemsSpec extends ObjectBehavior
         ]]
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(Connection $dbConn, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $dbConn->fetchAll('', [])->willReturn($this->mockData);
+        $select = 'SELECT * FROM item_stats WHERE item_id = :item_id AND version = :version AND region = :region';
         $statRequest = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
-        $adapter->fetch(new ItemStatsRequest($statRequest, '*'))->willReturn($this->mockStats[0]);
+        $dbConn->fetchAll($select, $statRequest)->willReturn($this->mockStats[0]);
         $statRequest['item_id'] = 1002;
-        $adapter->fetch(new ItemStatsRequest($statRequest, '*'))->willReturn($this->mockStats[1]);
-        $this->beConstructedWith($adapter, $logger);
+        $dbConn->fetchAll($select, $statRequest)->willReturn($this->mockStats[1]);
+        $this->beConstructedWith($dbConn, $logger);
     }
 
     public function it_should_be_initializable()
@@ -65,6 +65,9 @@ class SqlItemsSpec extends ObjectBehavior
 
     public function it_should_fetch_item_data(RequestInterface $request)
     {
+        $request->query()->shouldBeCalled();
+        $request->where()->shouldBeCalled();
+        $request->requestFormat('sql')->shouldBeCalled();
         $this->fetch($request)->shouldReturnArrayOfItems();
     }
 

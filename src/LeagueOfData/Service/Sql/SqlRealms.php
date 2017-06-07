@@ -96,11 +96,13 @@ class SqlRealms implements RealmServiceInterface
         foreach ($this->realms as $realm) {
             $select = 'SELECT version FROM realms WHERE version = :version';
             $where = [ 'version' => $realm->getVersion() ];
+
             if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('realms', $realm->toArray(), $where);
-            } else {
-                $this->dbConn->insert('realms', $realm->toArray());
+                $this->dbConn->update('realms', $this->convertRealmToArray($realm), $where);
+                continue;
             }
+
+            $this->dbConn->insert('realms', $this->convertRealmToArray($realm));
         }
     }
 
@@ -131,5 +133,19 @@ class SqlRealms implements RealmServiceInterface
                 $this->realms[$realm['version']] = $this->create($realm);
             }
         }
+    }
+
+    /**
+     * Converts Realm object into SQL data array
+     *
+     * @param Realm $realm
+     * @return array
+     */
+    private function convertRealmToArray(Realm $realm) : array
+    {
+        return [
+            'version' => $realm->getVersion(),
+            'cdn' => $this->getSourceUrl()
+        ];
     }
 }

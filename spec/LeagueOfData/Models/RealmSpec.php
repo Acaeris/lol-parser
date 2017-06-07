@@ -26,12 +26,4 @@ class RealmSpec extends ObjectBehavior
         $this->getSourceUrl()->shouldReturn('http://ddragon.leagueoflegends.com/cdn');
         $this->getVersion()->shouldReturn('7.4.3');
     }
-
-    public function it_can_be_converted_to_array_for_storage()
-    {
-        $this->toArray()->shouldReturn([
-            'version' => '7.4.3',
-            'cdn' => 'http://ddragon.leagueoflegends.com/cdn'
-        ]);
-    }
 }

@@ -99,11 +99,13 @@ final class SqlVersions implements VersionServiceInterface
         foreach ($this->versions as $version) {
             $select = 'SELECT full_version FROM versions WHERE full_version = :full_version';
             $where = [ 'full_version' => $version->getFullVersion() ];
+
             if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('versions', $version->toArray(), $where);
-            } else {
-                $this->dbConn->insert('versions', $version->toArray());
+                $this->dbConn->update('versions', $this->convertVersionToArray($version), $where);
+                continue;
             }
+
+            $this->dbConn->insert('versions', $this->convertVersionToArray($version));
         }
     }
 
@@ -130,5 +132,21 @@ final class SqlVersions implements VersionServiceInterface
                 $this->versions[$version['full_version']] = $this->create($version);
             }
         }
+    }
+
+    /**
+     * Converts Version object into SQL data array
+     *
+     * @param Version $version
+     * @return array
+     */
+    private function convertVersionToArray(Version $version) : array
+    {
+        return [
+            'full_version' => $version->getFullVersion(),
+            'season' => $version->getSeason(),
+            'version' => $version->getMajorVersion(),
+            'hotfix' => $version->getHotfix(),
+        ];
     }
 }
