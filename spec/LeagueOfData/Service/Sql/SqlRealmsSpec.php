@@ -4,7 +4,7 @@ namespace spec\LeagueOfData\Service\Sql;
 
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Adapters\AdapterInterface;
+use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Interfaces\RealmInterface;
 
@@ -15,10 +15,10 @@ class SqlRealmsSpec extends ObjectBehavior
         'version' => '7.4.3'
     ]];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(Connection $dbConn, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
-        $this->beConstructedWith($adapter, $logger);
+        $dbConn->fetchAll('', [])->willReturn($this->mockData);
+        $this->beConstructedWith($dbConn, $logger);
     }
 
     public function it_should_be_initializable()
@@ -29,6 +29,9 @@ class SqlRealmsSpec extends ObjectBehavior
 
     public function it_should_find_all_realm_data(RequestInterface $request)
     {
+        $request->query()->shouldBeCalled();
+        $request->where()->shouldBeCalled();
+        $request->requestFormat('sql')->shouldBeCalled();
         $this->fetch($request)->shouldReturnArrayOfRealms();
     }
 

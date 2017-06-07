@@ -5,6 +5,7 @@ namespace LeagueOfData\Command\Processor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use LeagueOfData\Adapters\Request\RealmRequest;
 
 class RealmUpdateCommand extends ContainerAwareCommand
 {
@@ -30,7 +31,7 @@ class RealmUpdateCommand extends ContainerAwareCommand
         $this->database = $this->getContainer()->get('realm-db');
 
         $this->log->info('Updating Realm data');
-        $this->database->add($this->service->fetch());
+        $this->database->add($this->service->fetch(new RealmRequest([], '*')));
         $this->database->store();
     }
 }

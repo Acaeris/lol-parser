@@ -5,7 +5,6 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\Interfaces\VersionServiceInterface;
 use LeagueOfData\Models\Version;
@@ -36,8 +35,8 @@ final class SqlVersions implements VersionServiceInterface
     /**
      * Setup version factory service
      *
-     * @param AdapterInterface $connection
-     * @param LoggerInterface  $log
+     * @param Connection      $connection
+     * @param LoggerInterface $log
      */
     public function __construct(Connection $connection, LoggerInterface $log)
     {

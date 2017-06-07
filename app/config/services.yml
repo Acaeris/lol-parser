@@ -46,4 +46,4 @@ services:
         arguments: ['@database_connection', '@logger']
     realm-db:
         class: LeagueOfData\Service\Sql\SqlRealms
-        arguments: ['@sql-adapter', '@logger']
+        arguments: ['@database_connection', '@logger']

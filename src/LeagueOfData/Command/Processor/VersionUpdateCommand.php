@@ -40,26 +40,14 @@ class VersionUpdateCommand extends ContainerAwareCommand
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
 
         $this->log->notice('Checking version data for update');
-        $request = $this->buildRequest($input);
 
-        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
+        if (count($this->database->fetch(new VersionRequest([], '*'))) == 0 || $input->getOption('force')) {
             $this->log->notice("Update required");
             $this->updateData($input);
             return;
         }
 
         $this->log->info("Skipping update");
-    }
-
-    /**
-     * Build a request object
-     *
-     * @param InputInterface $input
-     * @return RequestInterface
-     */
-    private function buildRequest(InputInterface $input) : RequestInterface
-    {
-        return new VersionRequest([], '*');
     }
 
     /**
@@ -70,7 +58,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->service->fetch($this->buildRequest($input));
+            $this->service->fetch(new VersionRequest([], '*'));
             $this->log->info("Storing version data");
 
             $this->database->add($this->service->transfer());

@@ -3,8 +3,9 @@
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Connection;
+use LeagueOfData\Adapters\Request;
 use LeagueOfData\Service\Interfaces\RealmServiceInterface;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\RealmRequest;
 use LeagueOfData\Models\Realm;
@@ -20,9 +21,9 @@ use LeagueOfData\Models\Interfaces\RealmInterface;
 class SqlRealms implements RealmServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var Connection DB connection
      */
-    private $db;
+    private $dbConn;
     /**
      * @var LoggerInterface Logger
      */
@@ -35,12 +36,12 @@ class SqlRealms implements RealmServiceInterface
     /**
      * Setup Realm factory service
      *
-     * @param AdapterInterface $adapter
-     * @param LoggerInterface  $logger
+     * @param Connection      $connection
+     * @param LoggerInterface $logger
      */
-    public function __construct(AdapterInterface $adapter, LoggerInterface $logger)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
-        $this->db = $adapter;
+        $this->dbConn = $connection;
         $this->log = $logger;
     }
 
@@ -80,7 +81,8 @@ class SqlRealms implements RealmServiceInterface
     public function fetch(RequestInterface $request) : array
     {
         $this->realms = [];
-        $response = $this->db->fetch($request);
+        $request->requestFormat(Request::TYPE_SQL);
+        $response = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->processResults($response);
 
         return $this->realms;
@@ -92,17 +94,12 @@ class SqlRealms implements RealmServiceInterface
     public function store()
     {
         foreach ($this->realms as $realm) {
-            $request = new RealmRequest(
-                [
-                    'version' => $realm->version(),
-                ],
-                'SELECT version FROM realms WHERE version = :version',
-                $realm->toArray()
-            );
-            if ($this->db->fetch($request)) {
-                $this->db->update($request);
+            $select = 'SELECT version FROM realms WHERE version = :version';
+            $where = [ 'version' => $realm->getVersion() ];
+            if ($this->dbConn->fetchAll($select, $where)) {
+                $this->dbConn->update('realms', $realm->toArray(), $where);
             } else {
-                $this->db->insert($request);
+                $this->dbConn->insert('realms', $realm->toArray());
             }
         }
     }

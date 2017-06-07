@@ -18,7 +18,7 @@ class SqlVersionsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(Connection $database, LoggerInterface $logger, RequestInterface $request)
+    public function let(Connection $database, LoggerInterface $logger)
     {
         $database->fetchAll("", [])->willReturn($this->mockData);
         $this->beConstructedWith($database, $logger);
