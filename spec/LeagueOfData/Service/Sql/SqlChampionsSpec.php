@@ -4,15 +4,17 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
+use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
 
 class SqlChampionsSpec extends ObjectBehavior
 {
@@ -33,16 +35,20 @@ class SqlChampionsSpec extends ObjectBehavior
         Connection $dbConn,
         LoggerInterface $logger,
         ChampionStatsServiceInterface $statService,
-        ChampionStatsInterface $stats,
         ChampionSpellsServiceInterface $spellService,
-        ChampionSpellInterface $spell)
+        ChampionPassivesServiceInterface $passiveService,
+        ChampionStatsInterface $stats,
+        ChampionSpellInterface $spell,
+        ChampionPassiveInterface $passive)
     {
         $dbConn->fetchAll('', [])->willReturn($this->mockData);
         $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $statService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
         $aatroxSpellRequest = new ChampionSpellRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
         $spellService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
-        $this->beConstructedWith($dbConn, $logger, $statService, $spellService);
+        $aatroxPassiveRequest = new ChampionPassiveRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
+        $passiveService->fetch($aatroxPassiveRequest)->willReturn([266 => $passive]);
+        $this->beConstructedWith($dbConn, $logger, $statService, $spellService, $passiveService);
     }
 
     public function it_should_be_initializable()

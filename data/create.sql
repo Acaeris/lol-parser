@@ -56,6 +56,17 @@ CREATE TABLE IF NOT EXISTS champion_spells (
   region      varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS champion_passives (
+  PRIMARY KEY (champion_id, version, passive_name),
+          KEY passive_names (passive_name),
+  champion_id  int         NOT NULL,
+  passive_name varchar(45) NOT NULL,
+  image_name   varchar(45) NOT NULL,
+  description  mediumtext  DEFAULT NULL,
+  version      varchar(16) NOT NULL,
+  region       varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS items (
   PRIMARY KEY (item_id, version),
           KEY item_names (item_name),

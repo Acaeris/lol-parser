@@ -9,8 +9,10 @@ use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
 
 class JsonChampionsSpec extends ObjectBehavior
 {
@@ -47,6 +49,20 @@ class JsonChampionsSpec extends ObjectBehavior
                     "crit" => 0,
                     "hpregenperlevel" => 0.5,
                     "armorperlevel" => 3.8
+                ],
+                "passive" => [
+                    "image" => [
+                        "full" => "Annie_Passive.png",
+                        "group" => "passive",
+                        "sprite" => "passive0.png",
+                        "h" => 48,
+                        "w" => 48,
+                        "y" => 0,
+                        "x" => 288
+                    ],
+                    "sanitizedDescription" => "Test Sanitised Description",
+                    "name" => "Pyromania",
+                    "description" => "Test Description"
                 ],
                 "spells" => [
                     [
@@ -117,14 +133,17 @@ class JsonChampionsSpec extends ObjectBehavior
         RequestInterface $request,
         ChampionStatsServiceInterface $statService,
         ChampionSpellsServiceInterface $spellService,
+        ChampionPassivesServiceInterface $passiveService,
         ChampionStatsInterface $stats,
-        ChampionSpellInterface $spell)
+        ChampionSpellInterface $spell,
+        ChampionPassiveInterface $passive)
     {
         $request->where()->willReturn(['version' => '7.9.1', 'region' => 'euw']);
         $adapter->fetch($request)->willReturn($this->mockData);
         $statService->create($this->mockData['data']['Aatrox'])->willReturn($stats);
+        $passiveService->create($this->mockData['data']['Aatrox'])->willReturn($passive);
         $spellService->create($this->mockData['data']['Aatrox']['spells'][0])->willReturn($spell);
-        $this->beConstructedWith($adapter, $logger, $statService, $spellService);
+        $this->beConstructedWith($adapter, $logger, $statService, $spellService, $passiveService);
     }
 
     public function it_should_be_initializable()

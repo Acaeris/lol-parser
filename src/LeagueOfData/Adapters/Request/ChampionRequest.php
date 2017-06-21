@@ -55,15 +55,7 @@ final class ChampionRequest extends Request
                 . (isset($this->where['champion_id']) ? '/' . $this->where['champion_id'] : '');
         }
 
-        $parts = [];
-
-        while (list($key, ) = each($this->where)) {
-            $parts[] = "{$key} = :{$key}";
-        }
-
-        $where = count($parts) > 0 ? " WHERE ".implode(" AND ", $parts) : '';
-
-        return "SELECT {$this->columns} FROM champions" . $where;
+        return $this->columns;
     }
 
     /**

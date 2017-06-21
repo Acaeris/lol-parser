@@ -70,6 +70,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
      */
     private function buildRequest(InputInterface $input) : RequestInterface
     {
+        $select = "SELECT * FROM champions WHERE version = :version AND region = :region";
         $where = [
             'version' => $input->getArgument('release'),
             'region' => $input->getOption('region')
@@ -77,9 +78,10 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
         if (null !== $input->getOption('championId')) {
             $where['champion_id'] = $input->getOption('championId');
+            $select .= " AND champion_id = :champion_id";
         }
 
-        return new ChampionRequest($where, '*');
+        return new ChampionRequest($where, $select);
     }
 
     /**

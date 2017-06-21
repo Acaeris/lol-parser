@@ -1,5 +1,4 @@
 <?php
-
 namespace LeagueOfData\Models\Champion;
 
 use LeagueOfData\Library\Immutable\ImmutableInterface;
@@ -14,58 +13,72 @@ use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
  */
 class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
 {
+
     /**
      * @var int Champion ID
      */
     private $championId;
+
     /**
      * @var string Spell Name
      */
     private $spellName;
+
     /**
      * @var string Control key
      */
     private $key;
+
     /**
      * @var string Image Name
      */
     private $imageName;
+
     /**
      * @var int
      */
     private $maxRank;
+
     /**
      * @var string
      */
     private $description;
+
     /**
      * @var string
      */
     private $tooltip;
+
     /**
      * @var array
      */
     private $cooldowns;
+
     /**
      * @var array
      */
     private $ranges;
+
     /**
      * @var array
      */
     private $effects;
+
     /**
      * @var array
      */
     private $variables;
+
     /**
      * @var ChampionSpellResourceInterface
      */
     private $resource;
+
     /**
      * @var string
      */
     private $version;
+
     /**
      * @var string
      */
@@ -114,7 +127,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getChampionID() : int
+    public function getChampionID(): int
     {
         return $this->championId;
     }
@@ -124,7 +137,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getSpellName() : string
+    public function getSpellName(): string
     {
         return $this->spellName;
     }
@@ -134,7 +147,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getKey() : string
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -144,7 +157,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * 
      * @return string
      */
-    public function getImageName() : string
+    public function getImageName(): string
     {
         return $this->imageName;
     }
@@ -154,7 +167,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return int
      */
-    public function getMaxRank() : int
+    public function getMaxRank(): int
     {
         return $this->maxRank;
     }
@@ -164,7 +177,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -174,7 +187,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getTooltip() : string
+    public function getTooltip(): string
     {
         return $this->tooltip;
     }
@@ -184,7 +197,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return array
      */
-    public function getCooldowns() : array
+    public function getCooldowns(): array
     {
         return $this->cooldowns;
     }
@@ -196,7 +209,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @return int
      * @throws \InvalidArgumentException
      */
-    public function getCooldownByRank(int $rank) : int
+    public function getCooldownByRank(int $rank): int
     {
         if (!isset($this->cooldowns[$rank - 1])) {
             throw new \InvalidArgumentException('Rank too high for spell.');
@@ -209,7 +222,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return array
      */
-    public function getRanges() : array
+    public function getRanges(): array
     {
         return $this->ranges;
     }
@@ -221,7 +234,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @return int
      * @throws \InvalidArgumentException
      */
-    public function getRangeByRank(int $rank) : int
+    public function getRangeByRank(int $rank): int
     {
         if (!isset($this->ranges[$rank - 1])) {
             throw new \InvalidArgumentException('Rank too high for spell.');
@@ -234,7 +247,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return array
      */
-    public function getEffects() : array
+    public function getEffects(): array
     {
         return $this->effects;
     }
@@ -246,7 +259,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function getEffectByKey(int $key) : array
+    public function getEffectByKey(int $key): array
     {
         if (!isset($this->effects[$key])) {
             throw new \InvalidArgumentException('Effect not available');
@@ -262,7 +275,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      * @return float
      * @throws \InvalidArgumentException
      */
-    public function getEffectValue(int $key, int $rank) : float
+    public function getEffectValue(int $key, int $rank): float
     {
         if (!isset($this->effects[$key]) || !isset($this->effects[$key][$rank])) {
             throw new \InvalidArgumentException('Effect not available or rank to high for spell.');
@@ -275,7 +288,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return array
      */
-    public function getVars() : array
+    public function getVars(): array
     {
         return $this->variables;
     }
@@ -285,7 +298,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return ChampionSpellResourceInterface
      */
-    public function getResource() : ChampionSpellResourceInterface
+    public function getResource(): ChampionSpellResourceInterface
     {
         return $this->resource;
     }
@@ -295,7 +308,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getVersion() : string
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -305,7 +318,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getRegion() : string
+    public function getRegion(): string
     {
         return $this->region;
     }

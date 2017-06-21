@@ -1,5 +1,4 @@
 <?php
-
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
@@ -19,10 +18,21 @@ use LeagueOfData\Models\Champion\ChampionSpellResource;
  */
 final class JsonChampionSpells implements ChampionSpellsServiceInterface
 {
-    /** @var AdapterInterface **/
+
+    /**
+     * @var AdapterInterface
+     */
     private $adapter;
-    /** @var LoggerInterface **/
+
+    /**
+     * @var LoggerInterface
+     */
     private $log;
+
+    /**
+     * @var array
+     */
+    private $spells;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
@@ -36,7 +46,7 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
      * @param array $spell
      * @return ChampionSpellInterface
      */
-    public function create(array $spell) : ChampionSpellInterface
+    public function create(array $spell): ChampionSpellInterface
     {
         $keys = ["Q", "W", "E", "R"];
 
@@ -69,7 +79,7 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
     public function add(array $spells)
     {
         foreach ($spells as $spell) {
-            $this->spells[$spell->getID()] = $spell;
+            $this->spells[$spell->getSpellName()] = $spell;
         }
     }
 
@@ -79,7 +89,7 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
      * @param RequestInterface $request
      * @throws Exception
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(RequestInterface $request): array
     {
         throw new \Exception("Fetch method for Champion Spells from API is not currently implemented");
     }
@@ -97,8 +107,8 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
      *
      * @return array ChampionStats objects
      */
-    public function transfer() : array
+    public function transfer(): array
     {
-        return $this->champions;
+        return $this->spells;
     }
 }

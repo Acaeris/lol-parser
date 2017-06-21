@@ -24,7 +24,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     /**
      * @var LoggerInterface
      */
-    private $log;
+    private $logger;
 
     /**
      * @var Connection
@@ -36,10 +36,10 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      */
     private $spells;
 
-    public function __construct(Connection $connection, LoggerInterface $logger)
+    public function __construct(Connection $dbConn, LoggerInterface $logger)
     {
-        $this->dbConn = $connection;
-        $this->log = $logger;
+        $this->dbConn = $dbConn;
+        $this->logger = $logger;
     }
 
     /**
@@ -54,33 +54,33 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
                 $this->spells[$spell->getSpellName()] = $spell;
                 continue;
             }
-            $this->log->error('Incorrect object supplied to Champion Spells service', [$spell]);
+            $this->logger->error('Incorrect object supplied to Champion Spells service', [$spell]);
         }
     }
 
     /**
      * Factory to create Champion Spell objects from SQL
      *
-     * @param array $champion
+     * @param array $spell
      * @return ChampionSpellInterface
      */
-    public function create(array $champion) : ChampionSpellInterface
+    public function create(array $spell) : ChampionSpellInterface
     {
         return new ChampionSpell(
-            $champion['champion_id'],
-            $champion['spell_name'],
-            $champion['spell_key'],
-            $champion['image_name'],
-            $champion['max_rank'],
-            $champion['description'],
-            $champion['tooltip'],
-            json_decode($champion['cooldowns']),
-            json_decode($champion['ranges']),
-            json_decode($champion['effects']),
-            json_decode($champion['variables']),
-            $this->createResource(json_decode($champion['resource'], true)),
-            $champion['version'],
-            $champion['region']
+            $spell['champion_id'],
+            $spell['spell_name'],
+            $spell['spell_key'],
+            $spell['image_name'],
+            $spell['max_rank'],
+            $spell['description'],
+            $spell['tooltip'],
+            json_decode($spell['cooldowns']),
+            json_decode($spell['ranges']),
+            json_decode($spell['effects']),
+            json_decode($spell['variables']),
+            $this->createResource(json_decode($spell['resource'], true)),
+            $spell['version'],
+            $spell['region']
         );
     }
 
@@ -92,12 +92,12 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      */
     public function fetch(RequestInterface $request) : array
     {
-        $this->log->debug("Fetch champion spells from DB");
+        $this->logger->debug("Fetch champion spells from DB");
         $request->requestFormat(Request::TYPE_SQL);
         $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->spells = [];
         $this->processResults($results);
-        $this->log->debug(count($this->spells)." spells fetched from DB");
+        $this->logger->debug(count($this->spells)." spells fetched from DB");
 
         return $this->spells;
     }
@@ -107,7 +107,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      */
     public function store()
     {
-        $this->log->debug("Storing ".count($this->spells)." new/updated spells");
+        $this->logger->debug("Storing ".count($this->spells)." new/updated spells");
 
         foreach ($this->spells as $spell) {
             $select = 'SELECT spell_name FROM champion_spells WHERE champion_id = :champion_id AND version = :version'
@@ -140,7 +140,7 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
     }
 
     /**
-     * Convert result data into ChampionStats objects
+     * Convert result data into ChampionSpells objects
      *
      * @param array $results
      */

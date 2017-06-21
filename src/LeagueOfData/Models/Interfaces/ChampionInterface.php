@@ -36,6 +36,11 @@ interface ChampionInterface
     public function getStats() : ChampionStatsInterface;
 
     /**
+     * Champion passive
+     */
+    public function getPassive() : ChampionPassiveInterface;
+
+    /**
      * Champion spells
      */
     public function getSpells() : array;

@@ -1,5 +1,4 @@
 <?php
-
 namespace spec\LeagueOfData\Adapters\Request;
 
 use PhpSpec\ObjectBehavior;
@@ -7,9 +6,14 @@ use LeagueOfData\Adapters\Request;
 
 class ChampionRequestSpec extends ObjectBehavior
 {
+
     public function let()
     {
-        $this->beConstructedWith(['region' => 'na'], 'title', ['Test Data']);
+        $this->beConstructedWith(
+            ['region' => 'na'],
+            'SELECT title FROM champions WHERE region = :region',
+            ['Test Data']
+        );
     }
 
     public function it_should_be_initializable()

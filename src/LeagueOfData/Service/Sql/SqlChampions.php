@@ -1,17 +1,17 @@
 <?php
-
 namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\Request\ChampionRequest;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
+use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
 use LeagueOfData\Models\Champion\Champion;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 
@@ -24,6 +24,7 @@ use LeagueOfData\Models\Interfaces\ChampionInterface;
  */
 final class SqlChampions implements ChampionServiceInterface
 {
+
     /**
      * @var Connection DB connection
      */
@@ -45,6 +46,11 @@ final class SqlChampions implements ChampionServiceInterface
     private $spellService;
 
     /**
+     * @var ChampionPassivesServiceInterface Champion Passive factory
+     */
+    private $passiveService;
+
+    /**
      * @var array Champion objects
      */
     private $champions = [];
@@ -52,18 +58,23 @@ final class SqlChampions implements ChampionServiceInterface
     /**
      * Setup champion factory service
      *
-     * @param Connection                     $connection
-     * @param LoggerInterface                $log
-     * @param ChampionStatsServiceInterface  $statService
-     * @param ChampionSpellsServiceInterface $spellService
+     * @param Connection                      $connection
+     * @param LoggerInterface                 $log
+     * @param ChampionStatsServiceInterface   $statService
+     * @param ChampionSpellsServiceInterface  $spellService
+     * @param ChampionPassiveServiceInterface $passiveService
      */
-    public function __construct(Connection $connection, LoggerInterface $log,
-        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService)
+    public function __construct(Connection $connection,
+        LoggerInterface $log,
+        ChampionStatsServiceInterface $statService,
+        ChampionSpellsServiceInterface $spellService,
+        ChampionPassivesServiceInterface $passiveService)
     {
         $this->dbConn = $connection;
         $this->log = $log;
         $this->statService = $statService;
         $this->spellService = $spellService;
+        $this->passiveService = $passiveService;
     }
 
     /**
@@ -88,14 +99,14 @@ final class SqlChampions implements ChampionServiceInterface
      * @param RequestInterface $request
      * @return array Champion Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(RequestInterface $request): array
     {
         $this->log->debug("Fetching champions from DB");
         $request->requestFormat(Request::TYPE_SQL);
         $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->champions = [];
         $this->processResults($results);
-        $this->log->debug(count($this->champions)." champions fetched from DB");
+        $this->log->debug(count($this->champions) . " champions fetched from DB");
 
         return $this->champions;
     }
@@ -105,7 +116,7 @@ final class SqlChampions implements ChampionServiceInterface
      */
     public function store()
     {
-        $this->log->debug("Storing ".count($this->champions)." new/updated champions");
+        $this->log->debug("Storing " . count($this->champions) . " new/updated champions");
 
         foreach ($this->champions as $champion) {
             $select = "SELECT champion_name FROM champions WHERE champion_id = :champion_id AND version = :version"
@@ -118,17 +129,19 @@ final class SqlChampions implements ChampionServiceInterface
 
             $this->statService->add([$champion->getStats()]);
             $this->spellService->add($champion->getSpells());
+            $this->passiveService->add([$champion->getPassive()]);
 
             if ($this->dbConn->fetchAll($select, $where)) {
                 $this->dbConn->update('champions', $this->convertChampionToArray($champion), $where);
 
                 continue;
             }
-            $this->dbConn->insert('champion', $this->convertChampionToArray($champion));
+            $this->dbConn->insert('champions', $this->convertChampionToArray($champion));
         }
 
         $this->statService->store();
         $this->spellService->store();
+        $this->passiveService->store();
     }
 
     /**
@@ -136,7 +149,7 @@ final class SqlChampions implements ChampionServiceInterface
      *
      * @return array Champion objects
      */
-    public function transfer() : array
+    public function transfer(): array
     {
         return $this->champions;
     }
@@ -147,20 +160,26 @@ final class SqlChampions implements ChampionServiceInterface
      * @param array $champion
      * @return ChampionInterface
      */
-    public function create(array $champion) : ChampionInterface
+    public function create(array $champion): ChampionInterface
     {
         $request = new ChampionStatsRequest([
             'version' => $champion['version'],
             'region' => $champion['region'],
             'champion_id' => $champion['champion_id'],
-        ], '*');
+            ], '*');
         $stats = $this->statService->fetch($request);
         $request = new ChampionSpellRequest([
             'version' => $champion['version'],
             'region' => $champion['region'],
             'champion_id' => $champion['champion_id']
-        ], '*');
+            ], '*');
         $spells = $this->spellService->fetch($request);
+        $request = new ChampionPassiveRequest([
+            'version' => $champion['version'],
+            'region' => $champion['region'],
+            'champion_id' => $champion['champion_id']
+            ], '*');
+        $passive = $this->passiveService->fetch($request);
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],
@@ -168,6 +187,7 @@ final class SqlChampions implements ChampionServiceInterface
             $champion['resource_type'],
             explode('|', $champion['tags']),
             $stats[$champion['champion_id']],
+            $passive[$champion['champion_id']],
             $spells,
             $champion['image_name'],
             $champion['version'],
@@ -181,7 +201,7 @@ final class SqlChampions implements ChampionServiceInterface
      * @param ChampionInterface $champion
      * @return array
      */
-    private function convertChampionToArray(ChampionInterface $champion) : array
+    private function convertChampionToArray(ChampionInterface $champion): array
     {
         return [
             'champion_id' => $champion->getChampionID(),
@@ -204,7 +224,7 @@ final class SqlChampions implements ChampionServiceInterface
     {
         if ($results !== false) {
             if (!is_array($results)) {
-                $results = [ $results ];
+                $results = [$results];
             }
 
             foreach ($results as $champion) {

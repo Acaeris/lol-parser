@@ -27,6 +27,11 @@
         "magicResist": {{ champion.stats.magicResist.baseValue }},
         "magicResistPerLevel": {{ champion.stats.magicResist.increasePerLevel }}
     },
+    "passive": {
+        "name": "{{ champion.passive.passiveName }}",
+        "image": "{{ champion.passive.imageName }}",
+        "description": "{{ champion.passive.description }}"
+    },
     "spells": [
         {% for spell in champion.spells %}{
             "name": "{{ spell.spellName }}",
@@ -46,6 +51,11 @@
         }{% if not loop.last %},{% endif %}{% endfor %}
 
     ],
+    "rating": {
+        "early": 1,
+        "mid": 2,
+        "late": 3
+    },
     "version": "{{ champion.version }}",
     "region": "{{ champion.region }}"
 }

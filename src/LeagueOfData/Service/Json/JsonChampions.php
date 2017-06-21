@@ -8,6 +8,7 @@ use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
 use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 
@@ -41,6 +42,11 @@ final class JsonChampions implements ChampionServiceInterface
     private $spellService;
 
     /**
+     * @var ChampionPassivesServiceInterface Passive factory
+     */
+    private $passiveService;
+
+    /**
      * @var array Champion Objects
      */
     private $champions;
@@ -48,18 +54,21 @@ final class JsonChampions implements ChampionServiceInterface
     /**
      * Setup champion factory service
      *
-     * @param AdapterInterface               $adapter
-     * @param LoggerInterface                $log
-     * @param ChampionStatsServiceInterface  $statService
-     * @param ChampionSpellsServiceInterface $spellService
+     * @param AdapterInterface                 $adapter
+     * @param LoggerInterface                  $log
+     * @param ChampionStatsServiceInterface    $statService
+     * @param ChampionSpellsServiceInterface   $spellService
+     * @param ChampionPassivesServiceInterface $passiveService
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log,
-        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService)
+        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService,
+        ChampionPassivesServiceInterface $passiveService)
     {
         $this->adapter = $adapter;
         $this->log = $log;
         $this->statService = $statService;
         $this->spellService = $spellService;
+        $this->passiveService = $passiveService;
     }
 
     /**
@@ -99,6 +108,7 @@ final class JsonChampions implements ChampionServiceInterface
             $champion['partype'],
             $champion['tags'],
             $this->statService->create($champion),
+            $this->passiveService->create($champion),
             $spells,
             preg_replace('/\\.[^.\\s]{3,4}$/', '', $champion['image']['full']),
             $champion['version'],

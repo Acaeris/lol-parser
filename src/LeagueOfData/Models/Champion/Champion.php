@@ -6,6 +6,7 @@ use LeagueOfData\Library\Immutable\ImmutableInterface;
 use LeagueOfData\Library\Immutable\ImmutableTrait;
 use LeagueOfData\Models\Interfaces\ChampionInterface;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
 
 final class Champion implements ChampionInterface, ImmutableInterface
 {
@@ -34,9 +35,14 @@ final class Champion implements ChampionInterface, ImmutableInterface
     private $version;
 
     /**
-     * @var ChampionStats Champion statistics
+     * @var ChampionStatsInterface Champion statistics
      */
     private $stats;
+
+    /**
+     * @var ChampionPassiveInterface Champion Passive
+     */
+    private $passive;
 
     /**
      * @var array Champion spells
@@ -66,16 +72,17 @@ final class Champion implements ChampionInterface, ImmutableInterface
     /**
      * Construct a Champion object
      *
-     * @param int                    $championId   Champion ID
-     * @param string                 $name         Champion Name
-     * @param string                 $title        Champion Title
-     * @param string                 $resourceType Champion Resource Type
-     * @param string                 $tags         Class tags
-     * @param ChampionStatsInterface $stats        Statistics
-     * @param array                  $spells       Spells
-     * @param string                 $imageName    Champion Image Name
-     * @param string                 $version      Full version number
-     * @param string                 $region       Region data is for
+     * @param int                      $championId   Champion ID
+     * @param string                   $name         Champion Name
+     * @param string                   $title        Champion Title
+     * @param string                   $resourceType Champion Resource Type
+     * @param string                   $tags         Class tags
+     * @param ChampionStatsInterface   $stats        Statistics
+     * @param ChampionPassiveInterface $passive      Passive
+     * @param array                    $spells       Spells
+     * @param string                   $imageName    Champion Image Name
+     * @param string                   $version      Full version number
+     * @param string                   $region       Region data is for
      */
     public function __construct(
         int $championId,
@@ -84,6 +91,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         string $resourceType,
         array $tags,
         ChampionStatsInterface $stats,
+        ChampionPassiveInterface $passive,
         array $spells,
         string $imageName,
         string $version,
@@ -97,6 +105,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
         $this->resourceType = $resourceType;
         $this->version = $version;
         $this->stats = $stats;
+        $this->passive = $passive;
         $this->spells = $spells;
         $this->tags = $tags;
         $this->region = $region;
@@ -151,6 +160,16 @@ final class Champion implements ChampionInterface, ImmutableInterface
     public function getStats() : ChampionStatsInterface
     {
         return $this->stats;
+    }
+
+    /**
+     * Champion Passive
+     *
+     * @return ChampionPassiveInterface
+     */
+    public function getPassive() : ChampionPassiveInterface
+    {
+        return $this->passive;
     }
 
     /**
@@ -233,17 +252,6 @@ final class Champion implements ChampionInterface, ImmutableInterface
             "early" => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 5),
             "mid" => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 5),
             "late" => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 5)
-        ];
-    }
-
-    public function getPassive() : array
-    {
-        return [
-            "id" => 1,
-            "name" => "Test Passive",
-            "key" => "passive",
-            "file" => str_replace(' ', '', $this->name)."_Passive",
-            "description" => "Test Passive's description"
         ];
     }
 

@@ -11,12 +11,15 @@ services:
     champion-stat-api:
         class: LeagueOfData\Service\Json\JsonChampionStats
         arguments: ['@api-adapter', '@logger']
+    champion-passive-api:
+        class: LeagueOfData\Service\Json\JsonChampionPassives
+        arguments: ['@api-adapter', '@logger']
     champion-spell-api:
         class: LeagueOfData\Service\Json\JsonChampionSpells
         arguments: ['@api-adapter', '@logger']
     champion-api:
         class: LeagueOfData\Service\Json\JsonChampions
-        arguments: ['@api-adapter', '@logger', '@champion-stat-api', '@champion-spell-api']
+        arguments: ['@api-adapter', '@logger', '@champion-stat-api', '@champion-spell-api', '@champion-passive-api']
     item-api:
         class: LeagueOfData\Service\Json\JsonItems
         arguments: ['@api-adapter', '@logger']
@@ -29,12 +32,15 @@ services:
     champion-stat-db:
         class: LeagueOfData\Service\Sql\SqlChampionStats
         arguments: ['@database_connection', '@logger']
+    champion-passive-db:
+        class: LeagueOfData\Service\Sql\SqlChampionPassives
+        arguments: ['@database_connection', '@logger']
     champion-spell-db:
         class: LeagueOfData\Service\Sql\SqlChampionSpells
         arguments: ['@database_connection', '@logger']
     champion-db:
         class: LeagueOfData\Service\Sql\SqlChampions
-        arguments: ['@database_connection', '@logger', '@champion-stat-db', '@champion-spell-db']
+        arguments: ['@database_connection', '@logger', '@champion-stat-db', '@champion-spell-db', '@champion-passive-db']
     item-db:
         class: LeagueOfData\Service\Sql\SqlItems
         arguments: ['@database_connection', '@logger']

@@ -5,12 +5,14 @@ namespace spec\LeagueOfData\Models\Champion;
 use PhpSpec\ObjectBehavior;
 use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
 use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
 
 class ChampionSpec extends ObjectBehavior
 {
     public function let(
         ChampionStatsInterface $stats,
-        ChampionSpellInterface $spell
+        ChampionSpellInterface $spell,
+        ChampionPassiveInterface $passive
     ) {
         $this->beConstructedWith(
             1, // Champion ID
@@ -19,6 +21,7 @@ class ChampionSpec extends ObjectBehavior
             "mp", // Resource Type
             ["Fighter", "Mage"], // Tags
             $stats, // Stats
+            $passive, // Passive
             [$spell], // Spells
             "Test", // Image Name
             "6.21.1", // Version
@@ -47,6 +50,7 @@ class ChampionSpec extends ObjectBehavior
         $this->getVersion()->shouldReturn('6.21.1');
         $this->getTags()->shouldReturn(['Fighter', 'Mage']);
         $this->getStats()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+        $this->getPassive()->shouldReturnAnInstanceOf('LeagueOfData\Models\Interfaces\ChampionPassiveInterface');
         $this->getSpells()->shouldReturnArrayOfSpells();
         $this->getRegion()->shouldReturn('euw');
     }
