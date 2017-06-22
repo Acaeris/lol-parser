@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ItemInterface;
+use LeagueOfData\Entity\Item\ItemInterface;
 
 class SqlItemsSpec extends ObjectBehavior
 {
@@ -60,7 +60,7 @@ class SqlItemsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlItems');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_fetch_item_data(RequestInterface $request)
@@ -73,8 +73,8 @@ class SqlItemsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_item_objects()
     {
-        $this->create($this->mockData[0], $this->mockStats[0])
-            ->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
+        $data = array_merge($this->mockData[0], ['stats' => $this->mockStats[0]]);
+        $this->create($data)->shouldImplement('LeagueOfData\Entity\Item\ItemInterface');
     }
 
     public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)

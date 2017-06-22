@@ -4,13 +4,14 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request;
-use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
-use LeagueOfData\Models\Interfaces\ChampionSpellResourceInterface;
-use LeagueOfData\Models\Champion\ChampionSpell;
-use LeagueOfData\Models\Champion\ChampionSpellResource;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionSpellInterface;
+use LeagueOfData\Entity\Champion\ChampionSpellResourceInterface;
+use LeagueOfData\Entity\Champion\ChampionSpell;
+use LeagueOfData\Entity\Champion\ChampionSpellResource;
 
 /**
  * Champion Spells object SQL factory
@@ -19,7 +20,7 @@ use LeagueOfData\Models\Champion\ChampionSpellResource;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-class SqlChampionSpells implements ChampionSpellsServiceInterface
+class SqlChampionSpells implements StoreServiceInterface
 {
     /**
      * @var LoggerInterface
@@ -62,9 +63,9 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
      * Factory to create Champion Spell objects from SQL
      *
      * @param array $spell
-     * @return ChampionSpellInterface
+     * @return EntityInterface
      */
-    public function create(array $spell) : ChampionSpellInterface
+    public function create(array $spell) : EntityInterface
     {
         return new ChampionSpell(
             $spell['champion_id'],
@@ -112,15 +113,9 @@ class SqlChampionSpells implements ChampionSpellsServiceInterface
         foreach ($this->spells as $spell) {
             $select = 'SELECT spell_name FROM champion_spells WHERE champion_id = :champion_id AND version = :version'
                 . ' AND spell_name = :spell_name AND region = :region';
-            $where = [
-                'champion_id' => $spell->getChampionID(),
-                'version' => $spell->getVersion(),
-                'spell_name' => $spell->getSpellName(),
-                'region' => $spell->getRegion()
-            ];
 
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('champion_spells', $this->convertSpellToArray($spell), $where);
+            if ($this->dbConn->fetchAll($select, $spell->getKeyData())) {
+                $this->dbConn->update('champion_spells', $this->convertSpellToArray($spell), $spell->getKeyData());
 
                 continue;
             }

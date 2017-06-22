@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\VersionInterface;
+use LeagueOfData\Entity\Version\VersionInterface;
 
 class SqlVersionsSpec extends ObjectBehavior
 {
@@ -27,7 +27,7 @@ class SqlVersionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlVersions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_find_all_version_data(RequestInterface $request)
@@ -40,7 +40,7 @@ class SqlVersionsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_version_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\VersionInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Version\VersionInterface');
     }
 
     public function it_can_add_and_retrieve_version_objects_from_collection(VersionInterface $version)

@@ -2,12 +2,12 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
+use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
-use LeagueOfData\Models\Champion\ChampionSpell;
-use LeagueOfData\Models\Champion\ChampionSpellResource;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionSpell;
+use LeagueOfData\Entity\Champion\ChampionSpellResource;
 
 /**
  * Champion Spells object JSON factory
@@ -16,7 +16,7 @@ use LeagueOfData\Models\Champion\ChampionSpellResource;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonChampionSpells implements ChampionSpellsServiceInterface
+final class JsonChampionSpells implements FetchServiceInterface
 {
 
     /**
@@ -44,19 +44,19 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
      * Factory to create Champion Spells objects from JSON
      *
      * @param array $spell
-     * @return ChampionSpellInterface
+     * @return EntityInterface
      */
-    public function create(array $spell): ChampionSpellInterface
+    public function create(array $spell): EntityInterface
     {
         $keys = ["Q", "W", "E", "R"];
 
         return new ChampionSpell(
             $spell['id'],
-            $spell['name'],
+            isset($spell['name']) ? $spell['name'] : "Missing Data",
             $keys[$spell['number']],
             $spell['image']['full'],
             $spell['maxrank'],
-            $spell['description'],
+            isset($spell['description']) ? $spell['description'] : "",
             str_replace('"', "'", isset($spell['tooltip']) ? $spell['tooltip'] : ''),
             $spell['cooldown'],
             $spell['range'],
@@ -72,18 +72,6 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
     }
 
     /**
-     * Add all champion spells objects to internal array
-     *
-     * @param array $spells ChampionSpell objects
-     */
-    public function add(array $spells)
-    {
-        foreach ($spells as $spell) {
-            $this->spells[$spell->getSpellName()] = $spell;
-        }
-    }
-
-    /**
      * Fetch Champion spells
      *
      * @param RequestInterface $request
@@ -92,14 +80,6 @@ final class JsonChampionSpells implements ChampionSpellsServiceInterface
     public function fetch(RequestInterface $request): array
     {
         throw new \Exception("Fetch method for Champion Spells from API is not currently implemented");
-    }
-
-    /**
-     * Store the champion spells in the database
-     */
-    public function store()
-    {
-        throw new \Exception("Store method not available for API");
     }
 
     /**

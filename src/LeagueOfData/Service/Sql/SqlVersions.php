@@ -6,18 +6,19 @@ use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Service\Interfaces\VersionServiceInterface;
-use LeagueOfData\Models\Version;
-use LeagueOfData\Models\Interfaces\VersionInterface;
+use LeagueOfData\Service\StoreServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Version\Version;
+use LeagueOfData\Entity\Version\VersionInterface;
 
 /**
  * Version object SQL factory.
  *
- * @package LeagueOfData\Service|Sql
+ * @package LeagueOfData\Service\Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class SqlVersions implements VersionServiceInterface
+final class SqlVersions implements StoreServiceInterface
 {
     /**
      * @var Connection DB connection
@@ -64,9 +65,9 @@ final class SqlVersions implements VersionServiceInterface
      * Factory for creating version objects
      *
      * @param string $version
-     * @return VersionInterface
+     * @return EntityInterface
      */
-    public function create(array $version) : VersionInterface
+    public function create(array $version) : EntityInterface
     {
         return new Version($version['full_version']);
     }
@@ -98,10 +99,9 @@ final class SqlVersions implements VersionServiceInterface
 
         foreach ($this->versions as $version) {
             $select = 'SELECT full_version FROM versions WHERE full_version = :full_version';
-            $where = [ 'full_version' => $version->getFullVersion() ];
 
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('versions', $this->convertVersionToArray($version), $where);
+            if ($this->dbConn->fetchAll($select, $version->getKeyData())) {
+                $this->dbConn->update('versions', $this->convertVersionToArray($version), $version->getKeyData());
                 continue;
             }
 
@@ -137,10 +137,10 @@ final class SqlVersions implements VersionServiceInterface
     /**
      * Converts Version object into SQL data array
      *
-     * @param Version $version
+     * @param VersionInterface $version
      * @return array
      */
-    private function convertVersionToArray(Version $version) : array
+    private function convertVersionToArray(VersionInterface $version) : array
     {
         return [
             'full_version' => $version->getFullVersion(),

@@ -3,15 +3,15 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Champion\ChampionStats;
-use LeagueOfData\Models\Champion\ChampionDefense;
-use LeagueOfData\Models\Champion\ChampionRegenResource;
-use LeagueOfData\Models\Champion\ChampionAttack;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
-use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionStats;
+use LeagueOfData\Entity\Champion\ChampionDefense;
+use LeagueOfData\Entity\Champion\ChampionRegenResource;
+use LeagueOfData\Entity\Champion\ChampionAttack;
+use LeagueOfData\Entity\Champion\ChampionRegenResourceInterface;
 
 /**
  * Champion Stats object JSON factory
@@ -20,7 +20,7 @@ use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonChampionStats implements ChampionStatsServiceInterface
+final class JsonChampionStats implements FetchServiceInterface
 {
     /**
      * @var AdapterInterface
@@ -45,9 +45,9 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
      * Factory to create Champion Stats objects from JSON
      *
      * @param array $champion
-     * @return ChampionStatsInterface
+     * @return EntityInterface
      */
-    public function create(array $champion) : ChampionStatsInterface
+    public function create(array $champion) : EntityInterface
     {
         return new ChampionStats(
             $champion['id'],
@@ -63,18 +63,6 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
     }
 
     /**
-     * Add all champion stats objects to internal array
-     *
-     * @param array $champions ChampionStats objects
-     */
-    public function add(array $champions)
-    {
-        foreach ($champions as $champion) {
-            $this->champions[$champion->getID()] = $champion;
-        }
-    }
-
-    /**
      * Fetch Champions Stats
      *
      * @param RequestInterface $request
@@ -83,14 +71,6 @@ final class JsonChampionStats implements ChampionStatsServiceInterface
     public function fetch(RequestInterface $request) : array
     {
         throw new \Exception("Fetch method for Champion Stats from API is not currently implemented");
-    }
-
-    /**
-     * Store the champion stats in the database
-     */
-    public function store()
-    {
-        throw new \Exception("Store method not available for API");
     }
 
     /**

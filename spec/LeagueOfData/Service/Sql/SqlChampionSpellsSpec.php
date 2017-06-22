@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
+use LeagueOfData\Entity\Champion\ChampionSpellInterface;
 
 class SqlChampionSpellsSpec extends ObjectBehavior
 {
@@ -38,7 +38,7 @@ class SqlChampionSpellsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlChampionSpells');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_fetch_champion_spells(RequestInterface $request)
@@ -51,7 +51,7 @@ class SqlChampionSpellsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_spell_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionSpellInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Champion\ChampionSpellInterface');
     }
 
     public function it_can_add_and_retrieve_spell_objects_from_collection(ChampionSpellInterface $spell)

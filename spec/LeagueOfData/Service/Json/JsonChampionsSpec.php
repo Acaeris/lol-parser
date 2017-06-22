@@ -6,13 +6,11 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ChampionInterface;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
-use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
-use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
+use LeagueOfData\Entity\Champion\ChampionInterface;
+use LeagueOfData\Entity\Champion\ChampionStatsInterface;
+use LeagueOfData\Entity\Champion\ChampionSpellInterface;
+use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
+use LeagueOfData\Service\FetchServiceInterface;
 
 class JsonChampionsSpec extends ObjectBehavior
 {
@@ -131,9 +129,9 @@ class JsonChampionsSpec extends ObjectBehavior
         AdapterInterface $adapter,
         LoggerInterface $logger,
         RequestInterface $request,
-        ChampionStatsServiceInterface $statService,
-        ChampionSpellsServiceInterface $spellService,
-        ChampionPassivesServiceInterface $passiveService,
+        FetchServiceInterface $statService,
+        FetchServiceInterface $passiveService,
+        FetchServiceInterface $spellService,
         ChampionStatsInterface $stats,
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive)
@@ -149,7 +147,7 @@ class JsonChampionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
     public function it_should_fetch_champions(RequestInterface $request)
@@ -160,14 +158,7 @@ class JsonChampionsSpec extends ObjectBehavior
     public function it_can_convert_data_to_champion_object()
     {
         $this->create($this->mockData['data']['Aatrox'])
-            ->shouldImplement('LeagueOfData\Models\Interfaces\ChampionInterface');
-    }
-
-    public function it_can_add_and_retrieve_champion_objects_from_collection(ChampionInterface $champion)
-    {
-        $champion->getChampionID()->willReturn(1);
-        $this->add([$champion]);
-        $this->transfer()->shouldReturnArrayOfChampions();
+            ->shouldImplement('LeagueOfData\Entity\Champion\ChampionInterface');
     }
 
     public function getMatchers()

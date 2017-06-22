@@ -8,12 +8,10 @@ use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
-use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
-use LeagueOfData\Models\Champion\Champion;
-use LeagueOfData\Models\Interfaces\ChampionInterface;
+use LeagueOfData\Service\StoreServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\Champion;
+use LeagueOfData\Entity\Champion\ChampionInterface;
 
 /**
  * Champion object SQL factory.
@@ -22,7 +20,7 @@ use LeagueOfData\Models\Interfaces\ChampionInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class SqlChampions implements ChampionServiceInterface
+final class SqlChampions implements StoreServiceInterface
 {
 
     /**
@@ -36,17 +34,17 @@ final class SqlChampions implements ChampionServiceInterface
     private $log;
 
     /**
-     * @var ChampionStatsServiceInterface Champion Stat factory
+     * @var StoreServiceInterface Champion Stat factory
      */
     private $statService;
 
     /**
-     * @var ChampionSpellsServiceInterface Champion Spell factory
+     * @var StoreServiceInterface Champion Spell factory
      */
     private $spellService;
 
     /**
-     * @var ChampionPassivesServiceInterface Champion Passive factory
+     * @var StoreServiceInterface Champion Passive factory
      */
     private $passiveService;
 
@@ -58,17 +56,17 @@ final class SqlChampions implements ChampionServiceInterface
     /**
      * Setup champion factory service
      *
-     * @param Connection                      $connection
-     * @param LoggerInterface                 $log
-     * @param ChampionStatsServiceInterface   $statService
-     * @param ChampionSpellsServiceInterface  $spellService
-     * @param ChampionPassiveServiceInterface $passiveService
+     * @param Connection            $connection
+     * @param LoggerInterface       $log
+     * @param StoreServiceInterface $statService
+     * @param StoreServiceInterface $spellService
+     * @param StoreServiceInterface $passiveService
      */
     public function __construct(Connection $connection,
         LoggerInterface $log,
-        ChampionStatsServiceInterface $statService,
-        ChampionSpellsServiceInterface $spellService,
-        ChampionPassivesServiceInterface $passiveService)
+        StoreServiceInterface $statService,
+        StoreServiceInterface $spellService,
+        StoreServiceInterface $passiveService)
     {
         $this->dbConn = $connection;
         $this->log = $log;
@@ -121,18 +119,13 @@ final class SqlChampions implements ChampionServiceInterface
         foreach ($this->champions as $champion) {
             $select = "SELECT champion_name FROM champions WHERE champion_id = :champion_id AND version = :version"
                 . " AND region = :region";
-            $where = [
-                'champion_id' => $champion->getChampionID(),
-                'version' => $champion->getVersion(),
-                'region' => $champion->getRegion()
-            ];
 
             $this->statService->add([$champion->getStats()]);
             $this->spellService->add($champion->getSpells());
             $this->passiveService->add([$champion->getPassive()]);
 
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('champions', $this->convertChampionToArray($champion), $where);
+            if ($this->dbConn->fetchAll($select, $champion->getKeyData())) {
+                $this->dbConn->update('champions', $this->convertChampionToArray($champion), $champion->getKeyData());
 
                 continue;
             }
@@ -158,9 +151,9 @@ final class SqlChampions implements ChampionServiceInterface
      * Create the champion object from array data
      *
      * @param array $champion
-     * @return ChampionInterface
+     * @return EntityInterface
      */
-    public function create(array $champion): ChampionInterface
+    public function create(array $champion): EntityInterface
     {
         $request = new ChampionStatsRequest([
             'version' => $champion['version'],

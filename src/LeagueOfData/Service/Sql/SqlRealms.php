@@ -5,20 +5,20 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\Request;
-use LeagueOfData\Service\Interfaces\RealmServiceInterface;
+use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request\RealmRequest;
-use LeagueOfData\Models\Realm;
-use LeagueOfData\Models\Interfaces\RealmInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Realm\Realm;
+use LeagueOfData\Entity\Realm\RealmInterface;
 
 /**
  * Realm object SQL factory.
  *
- * @package LeagueOfData\Service|Sql
+ * @package LeagueOfData\Service\Sql
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-class SqlRealms implements RealmServiceInterface
+class SqlRealms implements StoreServiceInterface
 {
     /**
      * @var Connection DB connection
@@ -65,9 +65,9 @@ class SqlRealms implements RealmServiceInterface
      * Factory to create realm objects
      *
      * @param array $realm
-     * @return RealmInterface
+     * @return EntityInterface
      */
-    public function create(array $realm) : RealmInterface
+    public function create(array $realm) : EntityInterface
     {
         return new Realm($realm['cdn'], $realm['version']);
     }
@@ -95,10 +95,9 @@ class SqlRealms implements RealmServiceInterface
     {
         foreach ($this->realms as $realm) {
             $select = 'SELECT version FROM realms WHERE version = :version';
-            $where = [ 'version' => $realm->getVersion() ];
 
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('realms', $this->convertRealmToArray($realm), $where);
+            if ($this->dbConn->fetchAll($select, $realm->getKeyData())) {
+                $this->dbConn->update('realms', $this->convertRealmToArray($realm), $realm->getKeyData());
                 continue;
             }
 

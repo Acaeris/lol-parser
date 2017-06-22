@@ -8,13 +8,11 @@ use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
-use LeagueOfData\Models\Interfaces\ChampionSpellInterface;
-use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
-use LeagueOfData\Models\Interfaces\ChampionInterface;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
+use LeagueOfData\Entity\Champion\ChampionInterface;
+use LeagueOfData\Entity\Champion\ChampionStatsInterface;
+use LeagueOfData\Entity\Champion\ChampionSpellInterface;
+use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
+use LeagueOfData\Service\StoreServiceInterface;
 
 class SqlChampionsSpec extends ObjectBehavior
 {
@@ -34,27 +32,25 @@ class SqlChampionsSpec extends ObjectBehavior
     public function let(
         Connection $dbConn,
         LoggerInterface $logger,
-        ChampionStatsServiceInterface $statService,
-        ChampionSpellsServiceInterface $spellService,
-        ChampionPassivesServiceInterface $passiveService,
+        StoreServiceInterface $mockService,
         ChampionStatsInterface $stats,
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive)
     {
         $dbConn->fetchAll('', [])->willReturn($this->mockData);
         $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $statService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
+        $mockService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
         $aatroxSpellRequest = new ChampionSpellRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $spellService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
+        $mockService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
         $aatroxPassiveRequest = new ChampionPassiveRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $passiveService->fetch($aatroxPassiveRequest)->willReturn([266 => $passive]);
-        $this->beConstructedWith($dbConn, $logger, $statService, $spellService, $passiveService);
+        $mockService->fetch($aatroxPassiveRequest)->willReturn([266 => $passive]);
+        $this->beConstructedWith($dbConn, $logger, $mockService, $mockService, $mockService);
     }
 
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlChampions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_fetch_champions(RequestInterface $request)
@@ -67,7 +63,7 @@ class SqlChampionsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_champion_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Champion\ChampionInterface');
     }
 
     public function it_can_add_and_retrieve_champion_objects_from_collection(ChampionInterface $champion)

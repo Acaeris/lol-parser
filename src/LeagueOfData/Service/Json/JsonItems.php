@@ -3,10 +3,11 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Interfaces\ItemServiceInterface;
-use LeagueOfData\Models\Item\Item;
-use LeagueOfData\Models\Item\ItemStat;
-use LeagueOfData\Models\Interfaces\ItemInterface;
+use LeagueOfData\Service\FetchServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Item\Item;
+use LeagueOfData\Entity\Item\ItemStat;
+use LeagueOfData\Entity\Item\ItemInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 
@@ -17,13 +18,21 @@ use LeagueOfData\Adapters\RequestInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonItems implements ItemServiceInterface
+final class JsonItems implements FetchServiceInterface
 {
-    /* @var AdapterInterface API adapter */
+    /**
+     * @var AdapterInterface API adapter
+     */
     private $source;
-    /* @var LoggerInterface logger */
+
+    /**
+     * @var LoggerInterface logger
+     */
     private $log;
-    /* @var array Item Objects */
+
+    /**
+     * @var array Item Objects
+     */
     private $items;
 
     /**
@@ -54,10 +63,9 @@ final class JsonItems implements ItemServiceInterface
      * Create the item object from JSON data
      *
      * @param array $item
-     * @param array $stats
      * @return ItemInterface
      */
-    public function create(array $item, array $stats) : ItemInterface
+    public function create(array $item) : EntityInterface
     {
         return new Item(
             $item['id'],

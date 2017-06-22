@@ -38,11 +38,11 @@ class JsonChampionPassivesSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampionPassives');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
     public function it_can_convert_data_to_spell_object()
     {
-        $this->create($this->mockData)->shouldImplement('LeagueOfData\Models\Interfaces\ChampionPassiveInterface');
+        $this->create($this->mockData)->shouldImplement('LeagueOfData\Entity\Champion\ChampionPassiveInterface');
     }
 }

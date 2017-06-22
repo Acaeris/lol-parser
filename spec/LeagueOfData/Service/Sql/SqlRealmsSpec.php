@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\RealmInterface;
+use LeagueOfData\Entity\Realm\RealmInterface;
 
 class SqlRealmsSpec extends ObjectBehavior
 {
@@ -24,7 +24,7 @@ class SqlRealmsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlRealms');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\RealmServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_find_all_realm_data(RequestInterface $request)
@@ -37,7 +37,7 @@ class SqlRealmsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_realm_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\RealmInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Realm\RealmInterface');
     }
 
     public function it_can_add_and_retrieve_spell_objects_from_collection(RealmInterface $realm)

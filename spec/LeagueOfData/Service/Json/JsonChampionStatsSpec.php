@@ -20,6 +20,6 @@ class JsonChampionStatsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampionStats');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 }

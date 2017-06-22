@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
+use LeagueOfData\Entity\Champion\ChampionStatsInterface;
 
 class SqlChampionStatsSpec extends ObjectBehavior
 {
@@ -29,7 +29,7 @@ class SqlChampionStatsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlChampionStats');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_fetch_champion_stats(RequestInterface $request)
@@ -42,7 +42,7 @@ class SqlChampionStatsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_stat_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionStatsInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Champion\ChampionStatsInterface');
     }
 
     public function it_can_add_and_retrieve_stat_objects_from_collection(ChampionStatsInterface $stats)

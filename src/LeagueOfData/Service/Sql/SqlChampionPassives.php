@@ -6,9 +6,10 @@ use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\Request;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
-use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
-use LeagueOfData\Models\Champion\ChampionPassive;
+use LeagueOfData\Service\StoreServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
+use LeagueOfData\Entity\Champion\ChampionPassive;
 
 /**
  * Champion Passive object SQL factory
@@ -17,7 +18,7 @@ use LeagueOfData\Models\Champion\ChampionPassive;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-class SqlChampionPassives implements ChampionPassivesServiceInterface
+class SqlChampionPassives implements StoreServiceInterface
 {
     /**
      * @var Connection
@@ -60,9 +61,9 @@ class SqlChampionPassives implements ChampionPassivesServiceInterface
      * Factory to create Champion Passive objects from SQL
      *
      * @param array $passive
-     * @return ChampionPassiveInterface
+     * @return EntityInterface
      */
-    public function create(array $passive) : ChampionPassiveInterface
+    public function create(array $passive) : EntityInterface
     {
         return new ChampionPassive(
             $passive['champion_id'],
@@ -102,15 +103,10 @@ class SqlChampionPassives implements ChampionPassivesServiceInterface
         foreach ($this->passives as $passive) {
             $select = 'SELECT passive_name FROM champion_passives WHERE champion_id = :champion_id'
                 . ' AND version = :version AND passive_name = :passive_name AND region = :region';
-            $where = [
-                'champion_id' => $passive->getChampionID(),
-                'version' => $passive->getVersion(),
-                'passive_name' => $passive->getPassiveName(),
-                'region' => $passive->getRegion()
-            ];
 
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('champion_passives', $this->convertPassiveToArray($passive), $where);
+            if ($this->dbConn->fetchAll($select, $passive->getKeyData())) {
+                $this->dbConn->update('champion_passives', $this->convertPassiveToArray($passive),
+                    $passive->getKeyData());
 
                 continue;
             }

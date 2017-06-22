@@ -5,18 +5,18 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Version;
-use LeagueOfData\Models\Interfaces\VersionInterface;
-use LeagueOfData\Service\Interfaces\VersionServiceInterface;
+use LeagueOfData\Service\FetchServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Version\Version;
 
 /**
  * Version object JSON factory.
  *
- * @package LeagueOfData\Service\Sql
+ * @package LeagueOfData\Service\Json
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonVersions implements VersionServiceInterface
+final class JsonVersions implements FetchServiceInterface
 {
     /**
      * @var AdapterInterface DB adapter
@@ -44,28 +44,12 @@ final class JsonVersions implements VersionServiceInterface
     }
 
     /**
-     * Add version objects to internal array
-     *
-     * @param array $versions Version objects
-     */
-    public function add(array $versions)
-    {
-        foreach ($versions as $version) {
-            if ($version instanceof VersionInterface) {
-                $this->versions[$version->getFullVersion()] = $version;
-                continue;
-            }
-            $this->log->error('Incorrect object supplied to Version service', [$version]);
-        }
-    }
-
-    /**
      * Factory for creating version objects
      *
      * @param string $version
-     * @return VersionInterface
+     * @return EntityInterface
      */
-    public function create(array $version) : VersionInterface
+    public function create(array $version) : EntityInterface
     {
         return new Version($version[0]);
     }
@@ -95,14 +79,6 @@ final class JsonVersions implements VersionServiceInterface
     public function transfer() : array
     {
         return $this->versions;
-    }
-
-    /**
-     * Store the version objects in the DB
-     */
-    public function store()
-    {
-        $this->log->error("Attempting to store data via API. Not available.");
     }
 
     /**

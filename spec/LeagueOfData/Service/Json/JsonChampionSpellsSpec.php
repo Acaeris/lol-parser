@@ -74,11 +74,11 @@ class JsonChampionSpellsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonChampionSpells');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
     public function it_can_convert_data_to_spell_object()
     {
-        $this->create($this->mockData)->shouldImplement('LeagueOfData\Models\Interfaces\ChampionSpellInterface');
+        $this->create($this->mockData)->shouldImplement('LeagueOfData\Entity\Champion\ChampionSpellInterface');
     }
 }

@@ -3,12 +3,9 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Models\Champion\Champion;
-use LeagueOfData\Models\Interfaces\ChampionInterface;
-use LeagueOfData\Service\Interfaces\ChampionServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionSpellsServiceInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
+use LeagueOfData\Entity\Champion\Champion;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
 
@@ -19,7 +16,7 @@ use LeagueOfData\Adapters\RequestInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonChampions implements ChampionServiceInterface
+final class JsonChampions implements FetchServiceInterface
 {
     /**
      * @var AdapterInterface API adapter
@@ -32,17 +29,17 @@ final class JsonChampions implements ChampionServiceInterface
     private $log;
 
     /**
-     * @var ChampionStatsServiceInterface Champion Stat factory
+     * @var FetchServiceInterface Champion Stat factory
      */
     private $statService;
 
     /**
-     * @var ChampionSpellsServiceInterface Spell factory
+     * @var FetchServiceInterface Spell factory
      */
     private $spellService;
 
     /**
-     * @var ChampionPassivesServiceInterface Passive factory
+     * @var FetchServiceInterface Passive factory
      */
     private $passiveService;
 
@@ -54,15 +51,14 @@ final class JsonChampions implements ChampionServiceInterface
     /**
      * Setup champion factory service
      *
-     * @param AdapterInterface                 $adapter
-     * @param LoggerInterface                  $log
-     * @param ChampionStatsServiceInterface    $statService
-     * @param ChampionSpellsServiceInterface   $spellService
-     * @param ChampionPassivesServiceInterface $passiveService
+     * @param AdapterInterface      $adapter
+     * @param LoggerInterface       $log
+     * @param FetchServiceInterface $statService
+     * @param FetchServiceInterface $spellService
+     * @param FetchServiceInterface $passiveService
      */
-    public function __construct(AdapterInterface $adapter, LoggerInterface $log,
-        ChampionStatsServiceInterface $statService, ChampionSpellsServiceInterface $spellService,
-        ChampionPassivesServiceInterface $passiveService)
+    public function __construct(AdapterInterface $adapter, LoggerInterface $log, FetchServiceInterface $statService,
+        FetchServiceInterface $spellService, FetchServiceInterface $passiveService)
     {
         $this->adapter = $adapter;
         $this->log = $log;
@@ -72,24 +68,12 @@ final class JsonChampions implements ChampionServiceInterface
     }
 
     /**
-     * Add champion objects to internal array
-     *
-     * @param array $champions Champion objects
-     */
-    public function add(array $champions)
-    {
-        foreach ($champions as $champion) {
-            $this->champions[$champion->getChampionID()] = $champion;
-        }
-    }
-
-    /**
      * Create the champion object from array data
      *
      * @param array $champion
-     * @return Champion
+     * @return EntityInterface
      */
-    public function create(array $champion) : ChampionInterface
+    public function create(array $champion) : EntityInterface
     {
         $spells = [];
 
@@ -133,14 +117,6 @@ final class JsonChampions implements ChampionServiceInterface
         $this->log->debug(count($this->champions)." champions fetched from API");
 
         return $this->champions;
-    }
-
-    /**
-     * Not implemented in JSON API calls
-     */
-    public function store()
-    {
-        throw new \Exception("Request to store data through JSON API not available.");
     }
 
     /**

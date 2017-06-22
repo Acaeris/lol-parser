@@ -3,11 +3,11 @@
 namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Interfaces\RealmServiceInterface;
+use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Realm;
-use LeagueOfData\Models\Interfaces\RealmInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Realm\Realm;
 
 /**
  * Realm object JSON factory.
@@ -16,13 +16,21 @@ use LeagueOfData\Models\Interfaces\RealmInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonRealms implements RealmServiceInterface
+final class JsonRealms implements FetchServiceInterface
 {
-    /* @var LeagueOfData\Adapters\AdapterInterface API adapter */
+    /**
+     * @var AdapterInterface API adapter
+     */
     private $source;
-    /* @var Psr\Log\LoggerInterface Logger */
+
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var array Realm objects */
+
+    /**
+     * @var array Realm objects
+     */
     private $realms;
 
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
@@ -32,24 +40,12 @@ final class JsonRealms implements RealmServiceInterface
     }
 
     /**
-     * Add all realm objects to internal array
-     *
-     * @param array $realms Realm objects
-     */
-    public function add(array $realms)
-    {
-        foreach ($realms as $realm) {
-            $this->realms[$realm->getVersion()] = $realm;
-        }
-    }
-
-    /**
      * Factory for creating Realm objects
      *
      * @param array $realm
-     * @return RealmInterface
+     * @return EntityInterface
      */
-    public function create(array $realm) : RealmInterface
+    public function create(array $realm) : EntityInterface
     {
         return new Realm($realm['cdn'], $realm['v']);
     }
@@ -66,14 +62,6 @@ final class JsonRealms implements RealmServiceInterface
         $response = $this->source->fetch($request);
         $this->realms[$response['v']] = new Realm($response['cdn'], $response['v']);
         return $this->realms;
-    }
-
-    /**
-     * Not implemented in JSON API calls
-     */
-    public function store()
-    {
-        throw new \Exception("Request to store data through JSON API not available.");
     }
 
     /**

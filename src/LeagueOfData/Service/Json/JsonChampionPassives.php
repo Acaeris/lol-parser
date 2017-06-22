@@ -5,9 +5,9 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Champion\ChampionPassive;
-use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
-use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
+use LeagueOfData\Service\FetchServiceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionPassive;
 
 /**
  * Champion Passives object JSON factory
@@ -16,7 +16,7 @@ use LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class JsonChampionPassives implements ChampionPassivesServiceInterface
+final class JsonChampionPassives implements FetchServiceInterface
 {
 
     /**
@@ -44,9 +44,9 @@ final class JsonChampionPassives implements ChampionPassivesServiceInterface
      * Factory to create Champion Passive object from JSON
      *
      * @param array $champion
-     * @return ChampionPassiveInterface
+     * @return EntityInterface
      */
-    public function create(array $champion): ChampionPassiveInterface
+    public function create(array $champion): EntityInterface
     {
         return new ChampionPassive(
             $champion['id'],
@@ -59,18 +59,6 @@ final class JsonChampionPassives implements ChampionPassivesServiceInterface
     }
 
     /**
-     * Add all champion passives objects to internal array
-     *
-     * @param array $passives ChampionPassive objects
-     */
-    public function add(array $passives)
-    {
-        foreach ($passives as $passive) {
-            $this->passives[$passive->getPassiveName()] = $passive;
-        }
-    }
-
-    /**
      * Fetch Champion passives
      *
      * @param RequestInterface $request
@@ -79,14 +67,6 @@ final class JsonChampionPassives implements ChampionPassivesServiceInterface
     public function fetch(RequestInterface $request): array
     {
         throw new \Exception("Fetch method for Champion Passives from API is not currently implemented");
-    }
-
-    /**
-     * Store the champion passive in the database
-     */
-    public function store()
-    {
-        throw new \Exception("Store method not available for API");
     }
 
     /**

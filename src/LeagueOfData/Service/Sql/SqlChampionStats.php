@@ -4,18 +4,18 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Service\Interfaces\ChampionStatsServiceInterface;
+use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\Request\ChampionStatsRequest;
-use LeagueOfData\Models\Champion\ChampionStats;
-use LeagueOfData\Models\Champion\ChampionDefense;
-use LeagueOfData\Models\Champion\ChampionRegenResource;
-use LeagueOfData\Models\Champion\ChampionAttack;
-use LeagueOfData\Models\Interfaces\ChampionStatsInterface;
-use LeagueOfData\Models\Interfaces\ChampionDefenseInterface;
-use LeagueOfData\Models\Interfaces\ChampionAttackInterface;
-use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
+use LeagueOfData\Entity\EntityInterface;
+use LeagueOfData\Entity\Champion\ChampionStats;
+use LeagueOfData\Entity\Champion\ChampionDefense;
+use LeagueOfData\Entity\Champion\ChampionRegenResource;
+use LeagueOfData\Entity\Champion\ChampionAttack;
+use LeagueOfData\Entity\Champion\ChampionStatsInterface;
+use LeagueOfData\Entity\Champion\ChampionDefenseInterface;
+use LeagueOfData\Entity\Champion\ChampionAttackInterface;
+use LeagueOfData\Entity\Champion\ChampionRegenResourceInterface;
 
 /**
  * Champion Stats object SQL factory
@@ -24,7 +24,7 @@ use LeagueOfData\Models\Interfaces\ChampionRegenResourceInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-class SqlChampionStats implements ChampionStatsServiceInterface
+class SqlChampionStats implements StoreServiceInterface
 {
     /**
      * @var Connection DB connection
@@ -67,9 +67,9 @@ class SqlChampionStats implements ChampionStatsServiceInterface
      * Factory to create Champion Stats objects from SQL
      *
      * @param array $champion
-     * @return ChampionStats
+     * @return EntityInterface
      */
-    public function create(array $champion) : ChampionStatsInterface
+    public function create(array $champion) : EntityInterface
     {
         return new ChampionStats(
             $champion['champion_id'],
@@ -115,12 +115,8 @@ class SqlChampionStats implements ChampionStatsServiceInterface
             foreach ($stats as $key => $value) {
                 $select = 'SELECT champion_id FROM champion_stats WHERE champion_id = :champion_id '
                     . 'AND version = :version AND stat_name = :stat_name AND region = :region';
-                $where = [
-                    'champion_id' => $champion->getChampionID(),
-                    'version' => $champion->getVersion(),
-                    'stat_name' => $key,
-                    'region' => $champion->getRegion()
-                ];
+                $where = $champion->getKeyData();
+                $where['stat_name'] = $key;
                 $data = array_merge($where, ['stat_value' => $value]);
 
                 if ($this->dbConn->fetchAll($select, $where)) {

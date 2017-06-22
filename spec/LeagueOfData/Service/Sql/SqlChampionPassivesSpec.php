@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ChampionPassiveInterface;
+use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
 
 class SqlChampionPassivesSpec extends ObjectBehavior
 {
@@ -30,7 +30,7 @@ class SqlChampionPassivesSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Sql\SqlChampionPassives');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ChampionPassivesServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
     public function it_should_fetch_champion_passives(RequestInterface $request)
@@ -43,7 +43,7 @@ class SqlChampionPassivesSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_passive_object()
     {
-        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Models\Interfaces\ChampionPassiveInterface');
+        $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Champion\ChampionPassiveInterface');
     }
 
     public function it_can_add_and_retrieve_spell_objects_from_collection(ChampionPassiveInterface $passive)

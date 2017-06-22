@@ -7,7 +7,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\VersionInterface;
+use LeagueOfData\Entity\Version\VersionInterface;
 
 class JsonVersionsSpec extends ObjectBehavior
 {
@@ -22,7 +22,7 @@ class JsonVersionsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonVersions');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\VersionServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
     public function it_should_find_all_version_data(RequestInterface $request)

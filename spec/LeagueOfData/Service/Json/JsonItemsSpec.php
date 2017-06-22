@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Models\Interfaces\ItemInterface;
+use LeagueOfData\Entity\Item\ItemInterface;
 
 class JsonItemsSpec extends ObjectBehavior
 {
@@ -53,7 +53,7 @@ class JsonItemsSpec extends ObjectBehavior
     public function it_should_be_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Service\Json\JsonItems');
-        $this->shouldImplement('LeagueOfData\Service\Interfaces\ItemServiceInterface');
+        $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
     public function it_should_fetch_item_data(RequestInterface $request)
@@ -64,7 +64,7 @@ class JsonItemsSpec extends ObjectBehavior
     public function it_can_convert_data_to_item_object()
     {
         $this->create($this->mockData['data']['1001'], [])
-            ->shouldImplement('LeagueOfData\Models\Interfaces\ItemInterface');
+            ->shouldImplement('LeagueOfData\Entity\Item\ItemInterface');
     }
 
     public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)
