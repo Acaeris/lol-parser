@@ -87,14 +87,14 @@ class SqlChampionStats implements StoreServiceInterface
     /**
      * Fetch Champions Stats
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL Where parameters
      * @return array ChampionStats Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $query, array $where = []) : array
     {
         $this->log->debug("Fetching champion stats from DB");
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->champions = [];
         $this->processResults($results);
         $this->log->debug(count($this->champions)." champions' stats fetched from DB");

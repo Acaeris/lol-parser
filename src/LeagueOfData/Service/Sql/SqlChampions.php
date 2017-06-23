@@ -3,11 +3,6 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\Request\ChampionStatsRequest;
-use LeagueOfData\Adapters\Request\ChampionSpellRequest;
-use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
 use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\Champion;
@@ -94,14 +89,14 @@ final class SqlChampions implements StoreServiceInterface
     /**
      * Fetch Champions
      *
-     * @param RequestInterface $request
+     * @param string $query SQL query
+     * @param array  $where SQL where parameters
      * @return array Champion Objects
      */
-    public function fetch(RequestInterface $request): array
+    public function fetch(string $query, array $where = []): array
     {
         $this->log->debug("Fetching champions from DB");
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->champions = [];
         $this->processResults($results);
         $this->log->debug(count($this->champions) . " champions fetched from DB");
@@ -155,24 +150,17 @@ final class SqlChampions implements StoreServiceInterface
      */
     public function create(array $champion): EntityInterface
     {
-        $request = new ChampionStatsRequest([
+        $where = [
             'version' => $champion['version'],
             'region' => $champion['region'],
             'champion_id' => $champion['champion_id'],
-            ], '*');
-        $stats = $this->statService->fetch($request);
-        $request = new ChampionSpellRequest([
-            'version' => $champion['version'],
-            'region' => $champion['region'],
-            'champion_id' => $champion['champion_id']
-            ], '*');
-        $spells = $this->spellService->fetch($request);
-        $request = new ChampionPassiveRequest([
-            'version' => $champion['version'],
-            'region' => $champion['region'],
-            'champion_id' => $champion['champion_id']
-            ], '*');
-        $passive = $this->passiveService->fetch($request);
+        ];
+        $stats = $this->statService->fetch("SELECT * FROM champion_stats WHERE version = :version AND region = :region"
+            . " AND champion_id = :champion_id", $where);
+        $spells = $this->spellService->fetch("SELECT * FROM champion_spells WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where);
+        $passive = $this->passiveService->fetch("SELECT * FROM champion_passives WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where);
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],

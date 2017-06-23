@@ -128,7 +128,6 @@ class JsonChampionsSpec extends ObjectBehavior
     public function let(
         AdapterInterface $adapter,
         LoggerInterface $logger,
-        RequestInterface $request,
         FetchServiceInterface $statService,
         FetchServiceInterface $passiveService,
         FetchServiceInterface $spellService,
@@ -136,8 +135,8 @@ class JsonChampionsSpec extends ObjectBehavior
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive)
     {
-        $request->where()->willReturn(['version' => '7.9.1', 'region' => 'euw']);
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $params = ['region' => 'euw', "champData" => "all", "champListData" => "all", 'version' => '7.9.1'];
+        $adapter->fetch("static-data/v3/champions", $params)->willReturn($this->mockData);
         $statService->create($this->mockData['data']['Aatrox'])->willReturn($stats);
         $passiveService->create($this->mockData['data']['Aatrox'])->willReturn($passive);
         $spellService->create($this->mockData['data']['Aatrox']['spells'][0])->willReturn($spell);
@@ -150,9 +149,9 @@ class JsonChampionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
-    public function it_should_fetch_champions(RequestInterface $request)
+    public function it_should_fetch_champions()
     {
-        $this->fetch($request)->shouldReturnArrayOfChampions();
+        $this->fetch(["version" => "7.9.1"])->shouldReturnArrayOfChampions();
     }
 
     public function it_can_convert_data_to_champion_object()

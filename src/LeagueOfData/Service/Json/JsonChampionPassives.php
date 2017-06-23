@@ -4,7 +4,6 @@ namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionPassive;
@@ -61,10 +60,10 @@ final class JsonChampionPassives implements FetchServiceInterface
     /**
      * Fetch Champion passives
      *
-     * @param RequestInterface $request
+     * @param array $params API Parameters
      * @throws Exception
      */
-    public function fetch(RequestInterface $request): array
+    public function fetch(array $params): array
     {
         throw new \Exception("Fetch method for Champion Passives from API is not currently implemented");
     }

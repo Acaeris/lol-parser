@@ -4,7 +4,6 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionSpell;
 use LeagueOfData\Entity\Champion\ChampionSpellResource;
@@ -74,10 +73,10 @@ final class JsonChampionSpells implements FetchServiceInterface
     /**
      * Fetch Champion spells
      *
-     * @param RequestInterface $request
+     * @param array $params API Parameters
      * @throws Exception
      */
-    public function fetch(RequestInterface $request): array
+    public function fetch(array $params): array
     {
         throw new \Exception("Fetch method for Champion Spells from API is not currently implemented");
     }

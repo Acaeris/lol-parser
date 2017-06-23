@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Json;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Realm\RealmInterface;
 
 class JsonRealmsSpec extends ObjectBehavior
@@ -15,9 +14,9 @@ class JsonRealmsSpec extends ObjectBehavior
         'v' => '7.4.3'
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $adapter->fetch("static-data/v3/realms", ["region" => "euw"])->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -27,9 +26,9 @@ class JsonRealmsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
-    public function it_should_find_all_realm_data(RequestInterface $request)
+    public function it_should_find_all_realm_data()
     {
-        $this->fetch($request)->shouldReturnArrayOfRealms();
+        $this->fetch([])->shouldReturnArrayOfRealms();
     }
 
     public function getMatchers()

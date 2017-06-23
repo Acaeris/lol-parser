@@ -253,7 +253,10 @@ final class Champion implements ChampionInterface, ImmutableInterface
             ['label' => 'Win Rate', 'value' => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 100, 2)."%"],
             ['label' => 'Popularity', 'value' => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 100, 2)."%"],
             ['label' => 'Ban Rate', 'value' => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 100, 2)."%"],
-            ['label' => 'AVG Matches Played', 'value' => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 10, 2)]
+            [
+                'label' => 'AVG Matches Played',
+                'value' => round(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() * 10, 2)
+            ]
         ];
     }
 

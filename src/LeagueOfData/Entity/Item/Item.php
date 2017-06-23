@@ -88,7 +88,7 @@ class Item implements ItemInterface, ImmutableInterface
             'region' => $this->region
         ];
     }
-    
+
     /**
      * Item ID
      *

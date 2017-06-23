@@ -1,12 +1,11 @@
 <?php
 namespace LeagueOfData\Service;
 
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 
 /**
  * Interface for services that fetch and store data
- * 
+ *
  * @package LeagueOfData\Service
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
@@ -26,7 +25,7 @@ interface StoreServiceInterface
     /**
      * Find all data
      */
-    public function fetch(RequestInterface $request): array;
+    public function fetch(string $query, array $params = []): array;
 
     /**
      * Transfer object out to another service

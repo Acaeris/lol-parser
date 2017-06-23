@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Json;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Item\ItemInterface;
 
 class JsonItemsSpec extends ObjectBehavior
@@ -43,10 +42,10 @@ class JsonItemsSpec extends ObjectBehavior
         ]
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $request->where()->willReturn(['version' => '7.9.1', 'region' => 'euw']);
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $params = ["region" => "euw", "itemListData" => "all", "itemData" => "all", "version" => "7.9.1"];
+        $adapter->fetch("static-data/v3/items", $params)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -56,22 +55,15 @@ class JsonItemsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
-    public function it_should_fetch_item_data(RequestInterface $request)
+    public function it_should_fetch_item_data()
     {
-        $this->fetch($request)->shouldReturnArrayOfItems();
+        $this->fetch(['version' => '7.9.1'])->shouldReturnArrayOfItems();
     }
 
     public function it_can_convert_data_to_item_object()
     {
         $this->create($this->mockData['data']['1001'], [])
             ->shouldImplement('LeagueOfData\Entity\Item\ItemInterface');
-    }
-
-    public function it_can_add_and_retrieve_item_objects_from_collection(ItemInterface $item)
-    {
-        $item->getItemID()->willReturn(1);
-        $this->add([$item]);
-        $this->transfer()->shouldReturnArrayOfItems();
     }
 
     public function getMatchers()

@@ -4,7 +4,6 @@ namespace LeagueOfData\Service\Json;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Version\Version;
@@ -19,9 +18,19 @@ use LeagueOfData\Entity\Version\Version;
 final class JsonVersions implements FetchServiceInterface
 {
     /**
-     * @var AdapterInterface DB adapter
+     * @var array Default parameters for API query
      */
-    private $dbAdapter;
+    private $apiDefaults = [ 'region' => 'euw' ];
+
+    /**
+     * @var string API Endpoint
+     */
+    private $apiEndpoint = 'static-data/v3/versions';
+
+    /**
+     * @var AdapterInterface API adapter
+     */
+    private $apiAdapter;
     /**
      * @var LoggerInterface Logger
      */
@@ -39,7 +48,7 @@ final class JsonVersions implements FetchServiceInterface
      */
     public function __construct(AdapterInterface $adapter, LoggerInterface $log)
     {
-        $this->dbAdapter = $adapter;
+        $this->apiAdapter = $adapter;
         $this->log = $log;
     }
 
@@ -57,13 +66,13 @@ final class JsonVersions implements FetchServiceInterface
     /**
      * Find all Version data
      *
-     * @param RequestInterface $request
+     * @param array Fetch parameters
      * @return array Version objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(array $params) : array
     {
         $this->log->debug("Fetch versions from API");
-        $response = $this->dbAdapter->fetch($request);
+        $response = $this->apiAdapter->fetch($this->apiEndpoint, array_merge($this->apiDefaults, $params));
         $this->versions = [];
         $this->processResults($response);
         $this->log->debug(count($this->versions)." versions fetch from API");

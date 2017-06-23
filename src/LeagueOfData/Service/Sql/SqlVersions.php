@@ -4,8 +4,6 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Version\Version;
@@ -75,15 +73,15 @@ final class SqlVersions implements StoreServiceInterface
     /**
      * Fetch Version data
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL parameters
      * @return array Version objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $query, array $where = []) : array
     {
         $this->log->debug("Fetch versions from DB");
         $this->versions = [];
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->processResults($results);
         $this->log->debug(count($this->versions)." versions fetch from DB");
 

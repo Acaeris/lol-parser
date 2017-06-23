@@ -44,32 +44,24 @@ class ApiAdapter implements AdapterInterface
     /**
      * Fetch data from API
      *
-     * @param LeagueOfData\Adapters\RequestInterface $request Request object
+     * @param string $apiEndpoint API Endpoint
+     * @param array $params API parameters
      *
      * @return array Fetch response
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $apiEndpoint, array $params) : array
     {
         $this->attempts++;
-        $request->requestFormat(Request::TYPE_JSON);
         try {
-            $response = $this->client->get($this->buildQuery($request), [
-                'query' => array_merge($request->where(), ['api_key' => $this->apiKey]),
+            $response = $this->client->get($this->buildQuery($apiEndpoint, $params), [
+                'query' => array_merge($params, ['api_key' => $this->apiKey]),
                 'headers' => [ 'Content-type' => 'application/json' ],
             ]);
         } catch (ServerException $e) {
-            $this->log->error('Guzzle Server Exception:', [
-                'status' => $e->getResponse()->getStatusCode(),
-                'request' => $e->getRequest()->getUri(),
-                'response' => $e->getResponse()->getBody(),
-            ]);
+            $this->handleApiException('Server', $e);
             $response = $e->getResponse();
         } catch (ClientException $e) {
-            $this->log->error('Guzzle Client Exception:', [
-                'status' => $e->getResponse()->getStatusCode(),
-                'request' => $e->getRequest()->getUri(),
-                'response' => $e->getResponse()->getBody(),
-            ]);
+            $this->handleApiException('Client', $e);
             $response = $e->getResponse();
         }
         $state = $this->checkResponse($response);
@@ -80,13 +72,28 @@ class ApiAdapter implements AdapterInterface
             case self::API_REPEAT:
                 sleep(1);
 
-                return $this->fetch($request);
+                return $this->fetch($apiEndpoint, $params);
             case self::API_SKIP:
                 $this->attempts = 0;
                 return [];
             case self::API_FAIL:
                 exit;
         }
+    }
+
+    /**
+     * Handle API exceptions
+     *
+     * @param string $type
+     * @param \Exception $e
+     */
+    private function handleApiException(string $type, \Exception $e)
+    {
+        $this->log->error('Guzzle '.$type.' Exception:', [
+            'status' => $e->getResponse()->getStatusCode(),
+            'request' => $e->getRequest()->getUri(),
+            'response' => $e->getResponse()->getBody(),
+        ]);
     }
 
     /**
@@ -122,16 +129,16 @@ class ApiAdapter implements AdapterInterface
     /**
      * Builds the API query
      *
-     * @param RequestInterface $request
+     * @param string $apiEndpoint API Endpoint
+     * @param array  $params      API Parameters
      * @return string
      */
-    public function buildQuery(RequestInterface $request) : string
+    public function buildQuery(string $apiEndpoint, array $params) : string
     {
-        $params = $request->where();
         $region = $params['region'] . (in_array($params['region'], ['ru', 'kr']) ? '' : '1');
         $url = str_replace('{region}', $region, self::API_URL).(
             isset($params['id']) ? '/'.$params['id'] : ''
         );
-        return str_replace('{endpoint}', $request->query(), $url);
+        return str_replace('{endpoint}', $apiEndpoint, $url);
     }
 }

@@ -4,7 +4,6 @@ namespace LeagueOfData\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use LeagueOfData\Adapters\Request\ChampionRequest;
 
 class ChampionController extends Controller
 {
@@ -14,10 +13,8 @@ class ChampionController extends Controller
         $championId = $request->query->get('id');
         $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.1';
         $database = $this->get('champion-db');
-        $champion = $database->fetch(new ChampionRequest([
-            'champion_id' => $championId,
-            'version' => $version
-            ], 'SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version'));
+        $champion = $database->fetch('SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version',
+            [ 'champion_id' => $championId, 'version' => $version ]);
 
         return new Response(
             $this->renderView('api/championAnalysis.html.twig', ['champion' => $champion[$championId]]),
@@ -39,7 +36,7 @@ class ChampionController extends Controller
         }
         $select .= " ORDER BY champion_name ASC";
         $database = $this->get('champion-db');
-        $champions = $database->fetch(new ChampionRequest($params, $select));
+        $champions = $database->fetch($select, $params);
 
         return new Response(
             $this->renderView('api/championList.html.twig', ['champions' => $champions]),

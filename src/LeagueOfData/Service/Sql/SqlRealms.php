@@ -4,9 +4,7 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\Request;
 use LeagueOfData\Service\StoreServiceInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Realm\Realm;
 use LeagueOfData\Entity\Realm\RealmInterface;
@@ -75,15 +73,14 @@ class SqlRealms implements StoreServiceInterface
     /**
      * Find all Realm data
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL Where parameters
      * @return array Realm objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $query, array $where = []) : array
     {
         $this->realms = [];
-        $request->requestFormat(Request::TYPE_SQL);
-        $response = $this->dbConn->fetchAll($request->query(), $request->where());
-        $this->processResults($response);
+        $this->processResults($this->dbConn->fetchAll($query, $where));
 
         return $this->realms;
     }

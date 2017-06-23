@@ -6,16 +6,15 @@ use PhpSpec\ObjectBehavior;
 
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Version\VersionInterface;
 
 class JsonVersionsSpec extends ObjectBehavior
 {
     private $mockData = ['7.5.2', '7.5.1', '7.4.3'];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
+        $adapter->fetch('static-data/v3/versions', ["region" => "euw"])->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 
@@ -25,9 +24,9 @@ class JsonVersionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\FetchServiceInterface');
     }
 
-    public function it_should_find_all_version_data(RequestInterface $request)
+    public function it_should_find_all_version_data()
     {
-        $this->fetch($request)->shouldReturnArrayOfVersions();
+        $this->fetch([])->shouldReturnArrayOfVersions();
     }
 
     public function getMatchers()

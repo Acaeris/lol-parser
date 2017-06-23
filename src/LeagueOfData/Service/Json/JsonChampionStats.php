@@ -5,7 +5,6 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionStats;
 use LeagueOfData\Entity\Champion\ChampionDefense;
@@ -65,10 +64,10 @@ final class JsonChampionStats implements FetchServiceInterface
     /**
      * Fetch Champions Stats
      *
-     * @param RequestInterface $request
+     * @param array $params
      * @return array ChampionStats Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(array $params) : array
     {
         throw new \Exception("Fetch method for Champion Stats from API is not currently implemented");
     }

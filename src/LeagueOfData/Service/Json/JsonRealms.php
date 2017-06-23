@@ -5,7 +5,6 @@ namespace LeagueOfData\Service\Json;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Realm\Realm;
 
@@ -18,6 +17,16 @@ use LeagueOfData\Entity\Realm\Realm;
  */
 final class JsonRealms implements FetchServiceInterface
 {
+    /**
+     * @var array Default parameters for API query
+     */
+    private $apiDefaults = [ 'region' => 'euw' ];
+
+    /**
+     * @var string API Endpoint
+     */
+    private $apiEndpoint = 'static-data/v3/realms';
+
     /**
      * @var AdapterInterface API adapter
      */
@@ -53,13 +62,13 @@ final class JsonRealms implements FetchServiceInterface
     /**
      * Find all Realm data
      *
-     * @param RequestInterface $request
+     * @param array $params API parameters
      * @return array Realm objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(array $params) : array
     {
         $this->realms = [];
-        $response = $this->source->fetch($request);
+        $response = $this->source->fetch($this->apiEndpoint, array_merge($this->apiDefaults, $params));
         $this->realms[$response['v']] = new Realm($response['cdn'], $response['v']);
         return $this->realms;
     }

@@ -4,8 +4,6 @@ namespace LeagueOfData\Service\Sql;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\Request;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
@@ -78,14 +76,14 @@ class SqlChampionPassives implements StoreServiceInterface
     /**
      * Fetch Champions Passives
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL Where parameters
      * @return array ChampionPassive Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $query, array $where = []) : array
     {
         $this->logger->debug('Fetch champion passives from DB');
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->passives = [];
         $this->processResults($results);
         $this->logger->debug(count($this->passives)." passives fetch from DB");

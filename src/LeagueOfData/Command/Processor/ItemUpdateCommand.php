@@ -7,9 +7,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request\ItemRequest;
 
 class ItemUpdateCommand extends ContainerAwareCommand
 {
@@ -17,18 +14,31 @@ class ItemUpdateCommand extends ContainerAwareCommand
      * @var LoggerInterface Logger
      */
     private $log;
+
     /**
      * @var ItemService API Service
      */
     private $service;
+
     /**
      * @var ItemService DB Service
      */
     private $database;
+
     /**
      * @var object Messsage Queue Service
      */
     private $messageQueue;
+
+    /**
+     * @var string Select Query
+     */
+    private $select;
+
+    /**
+     * @var array Where parameters
+     */
+    private $where;
 
     /**
      * Configure the command
@@ -53,41 +63,53 @@ class ItemUpdateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->log = $this->getContainer()->get('logger');
-        $this->service = $this->getContainer()->get('item-api');
-        $this->database = $this->getContainer()->get('item-db');
-        $this->messageQueue = $this->getContainer()->get('rabbitmq');
+        $this->initServices();
+        $this->buildRequest($input);
 
-        $this->log->notice('Checking Item data for update');
-        $request = $this->buildRequest($input);
+        $this->log->info('Checking Item data for update');
 
-        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
-            $this->log->notice("Update required");
-            $this->updateData($input);
+        if (count($this->database->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
+            $this->log->info("Update required");
+            try {
+                $this->database->add($this->service->fetch($this->where));
+                $this->database->store();
+            } catch (\Exception $ex) {
+                $this->recover($input, 'Command failed to update data: ', $ex);
+            }
             return;
         }
 
         $this->log->info('Skipping update for version '.$input->getArgument('release').' as data exists');
+    }
+    
+    /**
+     * Initialize used services
+     */
+    private function initServices()
+    {
+        $this->log = $this->getContainer()->get('logger');
+        $this->service = $this->getContainer()->get('item-api');
+        $this->database = $this->getContainer()->get('item-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
     }
 
     /**
      * Build a request object
      *
      * @param InputInterface $input
-     * @return RequestInterface
      */
-    private function buildRequest(InputInterface $input) : RequestInterface
+    private function buildRequest(InputInterface $input)
     {
-        $where = [
+        $this->select = "SELECT * FROM items WHERE version = :version AND region = :region";
+        $this->where = [
             'version' => $input->getArgument('release'),
             'region' => $input->getOption('region')
         ];
 
         if (null !== $input->getOption('itemId')) {
-            $where['item_id'] = $this->getOption('itemId');
+            $this->where['item_id'] = $this->getOption('itemId');
+            $this->select .= " AND item_id = :item_id";
         }
-
-        return new ItemRequest($where, '*');
     }
 
     /**
@@ -109,23 +131,5 @@ class ItemUpdateCommand extends ContainerAwareCommand
 
         $this->messageQueue->addProcessToQueue('update:item', "{ {$params} }");
         $this->log->error($msg, ['exception' => $exception]);
-    }
-
-    /**
-     * Process data and update DB
-     *
-     * @param InputInterface $input
-     */
-    private function updateData(InputInterface $input)
-    {
-        try {
-            $this->service->fetch($this->buildRequest($input));
-            $this->log->info("Storing item data");
-
-            $this->database->add($this->service->transfer());
-            $this->database->store();
-        } catch (\Exception $exception) {
-            $this->recover($input, 'Unexpected API response: ', $exception);
-        }
     }
 }

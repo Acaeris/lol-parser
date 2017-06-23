@@ -32,7 +32,7 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
      */
     private $regen;
 
-    /** 
+    /**
      * @var int The amount the regeneration rate increases per level
      */
     private $regenPerLevel;

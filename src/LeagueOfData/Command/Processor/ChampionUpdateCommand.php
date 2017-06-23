@@ -7,19 +7,38 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use LeagueOfData\Adapters\Request\ChampionRequest;
-use LeagueOfData\Adapters\RequestInterface;
 
 class ChampionUpdateCommand extends ContainerAwareCommand
 {
-    /* @var LoggerInterface Logger */
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
-    /* @var ChampionService API Service */
+
+    /**
+     * @var ChampionService API Service
+     */
     private $service;
-    /* @var ChampionService DB Service */
+
+    /**
+     * @var Connection DB Service
+     */
     private $database;
-    /* @var object Messsage Queue Service */
+
+    /**
+     * @var object Messsage Queue Service
+     */
     private $messageQueue;
+
+    /**
+     * @var string Select Query
+     */
+    private $select;
+
+    /**
+     * @var array Where parameters
+     */
+    private $where;
 
     /**
      * Configure the command
@@ -44,44 +63,53 @@ class ChampionUpdateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->log = $this->getContainer()->get('logger');
-        $this->service = $this->getContainer()->get('champion-api');
-        $this->database = $this->getContainer()->get('champion-db');
-        $this->messageQueue = $this->getContainer()->get('rabbitmq');
+        $this->initServices();
+        $this->buildRequest($input);
 
-        $this->log->notice('Checking Champion data for update. [v: '
-            . $input->getArgument('release') . ']');
-        $request = $this->buildRequest($input);
+        $this->log->info('Checking Champion data for update. [v: '.$input->getArgument('release').']');
 
-        if (count($this->database->fetch($request)) == 0 || $input->getOption('force')) {
-            $this->log->notice("Update required");
-            $this->updateData($input);
+        if ($this->database->fetch($this->select, $this->where) || $input->getOption('force')) {
+            $this->log->info("Update required");
+            try {
+                $this->database->add($this->service->fetch($this->where));
+                $this->database->store();
+            } catch (\Exception $exception) {
+                $this->recover($input, 'Command failed to update data: ', $exception);
+            }
             return;
         }
 
         $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+    }
+    
+    /**
+     * Initialize used services
+     */
+    private function initServices()
+    {
+        $this->log = $this->getContainer()->get('logger');
+        $this->service = $this->getContainer()->get('champion-api');
+        $this->database = $this->getContainer()->get('champion-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
     }
 
     /**
      * Build a request object
      *
      * @param InputInterface $input
-     * @return RequestInterface
      */
-    private function buildRequest(InputInterface $input) : RequestInterface
+    private function buildRequest(InputInterface $input)
     {
-        $select = "SELECT * FROM champions WHERE version = :version AND region = :region";
-        $where = [
+        $this->select = "SELECT * FROM champions WHERE version = :version AND region = :region";
+        $this->where = [
             'version' => $input->getArgument('release'),
             'region' => $input->getOption('region')
         ];
 
         if (null !== $input->getOption('championId')) {
-            $where['champion_id'] = $input->getOption('championId');
-            $select .= " AND champion_id = :champion_id";
+            $this->where['champion_id'] = $input->getOption('championId');
+            $this->select .= " AND champion_id = :champion_id";
         }
-
-        return new ChampionRequest($where, $select);
     }
 
     /**
@@ -103,23 +131,5 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
         $this->messageQueue->addProcessToQueue('update:champion', "{ {$params} }");
         $this->log->error($msg, ['exception' => $exception]);
-    }
-
-    /**
-     * Process data and update DB
-     *
-     * @param InputInterface $input
-     */
-    private function updateData(InputInterface $input)
-    {
-        try {
-            $this->service->fetch($this->buildRequest($input));
-            $this->log->info("Storing champion data");
-
-            $this->database->add($this->service->transfer());
-            $this->database->store();
-        } catch (\Exception $exception) {
-            $this->recover($input, 'Unexpected API response: ', $exception);
-        }
     }
 }

@@ -15,15 +15,14 @@ class ApiAdapterSpec extends ObjectBehavior
         $this->beConstructedWith($log, $client, 'TEST');
     }
 
-    public function it_can_build_the_api_query(RequestInterface $request)
+    public function it_can_build_the_api_query()
     {
-        $request->where()->willReturn([
+        $where = [
             'region' => 'na',
             'champListData' => 'all',
             'id' => 1
-        ]);
-        $request->query()->willReturn('static/v3/champions');
-        $this->buildQuery($request)->shouldReturn('https://na1.api.riotgames.com/lol/static/v3/champions/1');
+        ];
+        $this->buildQuery('static/v3/champions', $where)->shouldReturn('https://na1.api.riotgames.com/lol/static/v3/champions/1');
     }
 
     public function it_can_process_the_api_response_code_200(ResponseInterface $response)
@@ -44,8 +43,7 @@ class ApiAdapterSpec extends ObjectBehavior
         $this->checkResponse($response)->shouldReturn(2);
     }
 
-    public function it_can_request_guzzle_fetch_data_from_the_api(Client $client, RequestInterface $request,
-        ResponseInterface $response)
+    public function it_can_request_guzzle_fetch_data_from_the_api(Client $client, ResponseInterface $response)
     {
         $response->getStatusCode()->willReturn(200);
         $response->getBody()->willReturn('{"test":{"object":1}}');
@@ -59,13 +57,11 @@ class ApiAdapterSpec extends ObjectBehavior
                 ],
                 'headers' => ['Content-type' => 'application/json']
             ])->willReturn($response);
-        $request->where()->willReturn([
+        $where = [
             'region' => 'na',
             'champListData' => 'all',
             'id' => 1
-        ]);
-        $request->requestFormat('json')->shouldBeCalled();
-        $request->query()->willReturn('static/v3/champions');
-        $this->fetch($request)->shouldReturn(["test" => [ "object" => 1]]);
+        ];
+        $this->fetch('static/v3/champions', $where)->shouldReturn(["test" => [ "object" => 1]]);
     }
 }

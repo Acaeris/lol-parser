@@ -9,7 +9,6 @@ use LeagueOfData\Entity\Item\Item;
 use LeagueOfData\Entity\Item\ItemStat;
 use LeagueOfData\Entity\Item\ItemInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 
 /**
  * Item object JSON factory.
@@ -20,6 +19,20 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class JsonItems implements FetchServiceInterface
 {
+    /**
+     * @var array Default parameters for API query
+     */
+    private $apiDefaults = [
+        'region' => 'euw',
+        'itemListData' => 'all',
+        'itemData' => 'all',
+    ];
+
+    /**
+     * @var string API Endpoint
+     */
+    private $apiEndpoint = 'static-data/v3/items';
+
     /**
      * @var AdapterInterface API adapter
      */
@@ -48,18 +61,6 @@ final class JsonItems implements FetchServiceInterface
     }
 
     /**
-     * Add item objects to internal array
-     *
-     * @param array $items Item objects
-     */
-    public function add(array $items)
-    {
-        foreach ($items as $item) {
-            $this->items[$item->getItemID()] = $item;
-        }
-    }
-
-    /**
      * Create the item object from JSON data
      *
      * @param array $item
@@ -82,28 +83,21 @@ final class JsonItems implements FetchServiceInterface
     /**
      * Fetch Items
      *
-     * @param RequestInterface $request
+     * @param array $params API parameters
      * @return array Item Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(array $params) : array
     {
-        $this->log->debug("Fetching items from API");
-        $response = $this->source->fetch($request);
         $this->items = [];
-        if (count($response) > 0) {
-            $this->processResponse($response, $request);
-        }
+
+        $this->log->debug("Fetching items from API");
+
+        $response = $this->source->fetch($this->apiEndpoint, array_merge($this->apiDefaults, $params));
+        $this->processResponse($response, array_merge($this->apiDefaults, $params));
+
         $this->log->debug(count($this->items)." items fetched from API");
 
         return $this->items;
-    }
-
-    /**
-     * Not implemented in JSON API calls
-     */
-    public function store()
-    {
-        throw new \Exception("Request to store data through JSON API not available.");
     }
 
     /**
@@ -137,18 +131,16 @@ final class JsonItems implements FetchServiceInterface
     /**
      * Convert response data into Item objects
      *
-     * @param array  $response
-     * @param RequestInterface $request
+     * @param array $response
+     * @param array $params
      */
-    private function processResponse(array $response, RequestInterface $request)
+    private function processResponse(array $response, array $params)
     {
-        if ($response !== false) {
+        if (count($response) > 0 && $response !== false) {
             if (!isset($response['data'])) {
                 $temp['data'] = [ $response ];
                 $response = $temp;
             }
-
-            $params = $request->where();
 
             foreach ($response['data'] as $item) {
                 $item['version'] = $params['version'];

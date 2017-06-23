@@ -32,12 +32,9 @@ class SqlChampionStatsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_fetch_champion_stats(RequestInterface $request)
+    public function it_should_fetch_champion_stats()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfChampionStats();
+        $this->fetch("")->shouldReturnArrayOfChampionStats();
     }
 
     public function it_can_convert_data_to_stat_object()

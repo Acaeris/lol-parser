@@ -4,7 +4,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Adapters\Request\ChampionStatsRequest;
 use LeagueOfData\Adapters\Request\ChampionSpellRequest;
 use LeagueOfData\Adapters\Request\ChampionPassiveRequest;
@@ -32,19 +31,22 @@ class SqlChampionsSpec extends ObjectBehavior
     public function let(
         Connection $dbConn,
         LoggerInterface $logger,
-        StoreServiceInterface $mockService,
+        StoreServiceInterface $statService,
+        StoreServiceInterface $spellService,
+        StoreServiceInterface $passiveService,
         ChampionStatsInterface $stats,
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive)
     {
+        $where = ["version" => "7.9.1", "region" => "euw", "champion_id" => 266];
         $dbConn->fetchAll('', [])->willReturn($this->mockData);
-        $aatroxStatRequest = new ChampionStatsRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $mockService->fetch($aatroxStatRequest)->willReturn([266 => $stats]);
-        $aatroxSpellRequest = new ChampionSpellRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $mockService->fetch($aatroxSpellRequest)->willReturn([266 => [$spell]]);
-        $aatroxPassiveRequest = new ChampionPassiveRequest(['champion_id' => 266, 'version' => '7.9.1', 'region' => 'euw']);
-        $mockService->fetch($aatroxPassiveRequest)->willReturn([266 => $passive]);
-        $this->beConstructedWith($dbConn, $logger, $mockService, $mockService, $mockService);
+        $statService->fetch("SELECT * FROM champion_stats WHERE version = :version AND region = :region"
+            . " AND champion_id = :champion_id", $where)->willReturn([266 => $stats]);
+        $spellService->fetch("SELECT * FROM champion_spells WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where)->willReturn([266 => [$spell]]);
+        $passiveService->fetch("SELECT * FROM champion_passives WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where)->willReturn([266 => $passive]);
+        $this->beConstructedWith($dbConn, $logger, $statService, $spellService, $passiveService);
     }
 
     public function it_should_be_initializable()
@@ -53,12 +55,9 @@ class SqlChampionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_fetch_champions(RequestInterface $request)
+    public function it_should_fetch_champions()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfChampions();
+        $this->fetch("")->shouldReturnArrayOfChampions();
     }
 
     public function it_can_convert_data_to_champion_object()

@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Realm\RealmInterface;
 
 class SqlRealmsSpec extends ObjectBehavior
@@ -27,12 +26,9 @@ class SqlRealmsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_find_all_realm_data(RequestInterface $request)
+    public function it_should_find_all_realm_data()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfRealms();
+        $this->fetch("")->shouldReturnArrayOfRealms();
     }
 
     public function it_can_convert_data_to_realm_object()

@@ -2,7 +2,6 @@
 
 namespace LeagueOfData\Service;
 
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\EntityInterface;
 
 /**
@@ -17,7 +16,7 @@ interface FetchServiceInterface
     /**
      * Find all data
      */
-    public function fetch(RequestInterface $request): array;
+    public function fetch(array $params): array;
 
     /**
      * Transfer object out to another service

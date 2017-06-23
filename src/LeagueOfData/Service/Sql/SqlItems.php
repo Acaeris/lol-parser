@@ -5,8 +5,6 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\StoreServiceInterface;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request;
 use LeagueOfData\Entity\Item\Item;
 use LeagueOfData\Entity\Item\ItemStat;
 use LeagueOfData\Entity\EntityInterface;
@@ -111,16 +109,19 @@ final class SqlItems implements StoreServiceInterface
     /**
      * Fetch Items
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL Where parameters
      * @return array Item Objects
      */
-    public function fetch(RequestInterface $request): array
+    public function fetch(string $query, array $where = []): array
     {
-        $this->log->debug("Fetching items from DB");
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
         $this->items = [];
+
+        $this->log->debug("Fetching items from DB");
+
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->processResults($results);
+
         $this->log->debug(count($this->items)." items fetched from DB");
 
         return $this->items;

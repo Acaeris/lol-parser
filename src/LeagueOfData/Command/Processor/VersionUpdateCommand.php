@@ -6,8 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request\VersionRequest;
 
 class VersionUpdateCommand extends ContainerAwareCommand
 {
@@ -34,20 +32,27 @@ class VersionUpdateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->log = $this->getContainer()->get('logger');
-        $this->service = $this->getContainer()->get('version-api');
-        $this->database = $this->getContainer()->get('version-db');
-        $this->messageQueue = $this->getContainer()->get('rabbitmq');
+        $this->initServices();
+        $this->log->info('Checking version data for update');
 
-        $this->log->notice('Checking version data for update');
-
-        if (count($this->database->fetch(new VersionRequest([], '*'))) == 0 || $input->getOption('force')) {
-            $this->log->notice("Update required");
+        if (count($this->database->fetch('SELECT * FROM versions', [])) == 0 || $input->getOption('force')) {
+            $this->log->info("Update required");
             $this->updateData($input);
             return;
         }
 
         $this->log->info("Skipping update");
+    }
+    
+    /**
+     * Initialize used services
+     */
+    private function initServices()
+    {
+        $this->log = $this->getContainer()->get('logger');
+        $this->service = $this->getContainer()->get('version-api');
+        $this->database = $this->getContainer()->get('version-db');
+        $this->messageQueue = $this->getContainer()->get('rabbitmq');
     }
 
     /**
@@ -58,7 +63,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->service->fetch(new VersionRequest([], '*'));
+            $this->service->fetch([]);
             $this->log->info("Storing version data");
 
             $this->database->add($this->service->transfer());

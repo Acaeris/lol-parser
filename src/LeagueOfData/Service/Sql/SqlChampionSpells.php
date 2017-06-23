@@ -5,8 +5,6 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\StoreServiceInterface;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionSpellInterface;
 use LeagueOfData\Entity\Champion\ChampionSpellResourceInterface;
@@ -88,14 +86,14 @@ class SqlChampionSpells implements StoreServiceInterface
     /**
      * Fetch Champions Spells
      *
-     * @param RequestInterface $request
+     * @param string $query SQL Query
+     * @param array  $where SQL Where parameters
      * @return array ChampionSpell Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(string $query, array $where = []) : array
     {
         $this->logger->debug("Fetch champion spells from DB");
-        $request->requestFormat(Request::TYPE_SQL);
-        $results = $this->dbConn->fetchAll($request->query(), $request->where());
+        $results = $this->dbConn->fetchAll($query, $where);
         $this->spells = [];
         $this->processResults($results);
         $this->logger->debug(count($this->spells)." spells fetched from DB");

@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Version\VersionInterface;
 
 class SqlVersionsSpec extends ObjectBehavior
@@ -30,12 +29,9 @@ class SqlVersionsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_find_all_version_data(RequestInterface $request)
+    public function it_should_find_all_version_data()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfVersions();
+        $this->fetch("")->shouldReturnArrayOfVersions();
     }
 
     public function it_can_convert_data_to_version_object()

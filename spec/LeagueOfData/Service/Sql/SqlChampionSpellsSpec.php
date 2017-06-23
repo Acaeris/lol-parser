@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Champion\ChampionSpellInterface;
 
 class SqlChampionSpellsSpec extends ObjectBehavior
@@ -41,12 +40,9 @@ class SqlChampionSpellsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_fetch_champion_spells(RequestInterface $request)
+    public function it_should_fetch_champion_spells()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfChampionSpells();
+        $this->fetch("")->shouldReturnArrayOfChampionSpells();
     }
 
     public function it_can_convert_data_to_spell_object()

@@ -7,7 +7,6 @@ use LeagueOfData\Entity\Champion\Champion;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 
 /**
  * Champion object JSON factory.
@@ -18,6 +17,16 @@ use LeagueOfData\Adapters\RequestInterface;
  */
 final class JsonChampions implements FetchServiceInterface
 {
+    /**
+     * @var array Default parameters for API query
+     */
+    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all', 'champListData' => 'all' ];
+
+    /**
+     * @var string API Endpoint
+     */
+    private $apiEndpoint = 'static-data/v3/champions';
+
     /**
      * @var AdapterInterface API adapter
      */
@@ -75,16 +84,6 @@ final class JsonChampions implements FetchServiceInterface
      */
     public function create(array $champion) : EntityInterface
     {
-        $spells = [];
-
-        foreach ($champion['spells'] as $id => $spell) {
-            $spell['number'] = $id;
-            $spell['id'] = $champion['id'];
-            $spell['version'] = $champion['version'];
-            $spell['region'] = $champion['region'];
-            $spells[] = $this->spellService->create($spell);
-        }
-
         return new Champion(
             $champion['id'],
             $champion['name'],
@@ -93,7 +92,7 @@ final class JsonChampions implements FetchServiceInterface
             $champion['tags'],
             $this->statService->create($champion),
             $this->passiveService->create($champion),
-            $spells,
+            $this->fetchSpells($champion),
             preg_replace('/\\.[^.\\s]{3,4}$/', '', $champion['image']['full']),
             $champion['version'],
             $champion['region']
@@ -103,17 +102,20 @@ final class JsonChampions implements FetchServiceInterface
     /**
      * Fetch Champions
      *
-     * @param RequestInterface $request
+     * @param array Fetch parameters
      * @return array Champion Objects
      */
-    public function fetch(RequestInterface $request) : array
+    public function fetch(array $params) : array
     {
-        $this->log->debug("Fetching champions from API");
-        $response = $this->adapter->fetch($request);
         $this->champions = [];
-        if (count($response) > 0) {
-            $this->processResponse($response, $request);
-        }
+        $this->log->debug("Fetching champions from API");
+
+        $query = $this->apiEndpoint
+            . (isset($params['champion_id']) ? '/' . $params['champion_id'] : '');
+        unset($params['champion_id']);
+        $response = $this->adapter->fetch($query, array_merge($this->apiDefaults, $params));
+        $this->processResponse($response, array_merge($this->apiDefaults, $params));
+
         $this->log->debug(count($this->champions)." champions fetched from API");
 
         return $this->champions;
@@ -130,20 +132,39 @@ final class JsonChampions implements FetchServiceInterface
     }
 
     /**
+     * Fetch spells for object creation
+     *
+     * @param array $champion
+     * @return array
+     */
+    private function fetchSpells(array $champion) : array
+    {
+        $spells = [];
+
+        foreach ($champion['spells'] as $id => $spell) {
+            $spell['number'] = $id;
+            $spell['id'] = $champion['id'];
+            $spell['version'] = $champion['version'];
+            $spell['region'] = $champion['region'];
+            $spells[] = $this->spellService->create($spell);
+        }
+
+        return $spells;
+    }
+
+    /**
      * Convert response data into Champion objects
      *
-     * @param array            $response
-     * @param RequestInterface $request
+     * @param array $response
+     * @param array $params
      */
-    private function processResponse(array $response, RequestInterface $request)
+    private function processResponse(array $response, array $params)
     {
-        if ($response !== false) {
+        if (count($response) > 0 && $response !== false) {
             if (!isset($response['data'])) {
                 $temp['data'] = [ $response ];
                 $response = $temp;
             }
-
-            $params = $request->where();
 
             foreach ($response['data'] as $champion) {
                 $champion['version'] = $params['version'];

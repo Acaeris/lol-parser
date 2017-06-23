@@ -167,7 +167,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
 
     /**
      * Get icon image filename
-     * 
+     *
      * @return string
      */
     public function getImageName(): string

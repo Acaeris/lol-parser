@@ -4,7 +4,6 @@ namespace spec\LeagueOfData\Service\Json;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 
 class JsonChampionPassivesSpec extends ObjectBehavior
 {
@@ -29,9 +28,8 @@ class JsonChampionPassivesSpec extends ObjectBehavior
         "region" => "euw"
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 

@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Json;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Adapters\RequestInterface;
 
 class JsonChampionSpellsSpec extends ObjectBehavior
 {
@@ -65,9 +64,8 @@ class JsonChampionSpellsSpec extends ObjectBehavior
         "number" => 0
     ];
 
-    public function let(AdapterInterface $adapter, LoggerInterface $logger, RequestInterface $request)
+    public function let(AdapterInterface $adapter, LoggerInterface $logger)
     {
-        $adapter->fetch($request)->willReturn($this->mockData);
         $this->beConstructedWith($adapter, $logger);
     }
 

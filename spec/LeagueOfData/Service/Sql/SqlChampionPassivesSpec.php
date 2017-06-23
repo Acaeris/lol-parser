@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Champion\ChampionPassiveInterface;
 
 class SqlChampionPassivesSpec extends ObjectBehavior
@@ -33,12 +32,9 @@ class SqlChampionPassivesSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_fetch_champion_passives(RequestInterface $request)
+    public function it_should_fetch_champion_passives()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfChampionPassives();
+        $this->fetch("")->shouldReturnArrayOfChampionPassives();
     }
 
     public function it_can_convert_data_to_passive_object()

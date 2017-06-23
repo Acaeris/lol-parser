@@ -2,8 +2,6 @@
 
 namespace LeagueOfData\Adapters;
 
-use LeagueOfData\Adapters\RequestInterface;
-
 /**
  * Adapter Interface
  *
@@ -16,5 +14,5 @@ interface AdapterInterface
     /**
      * Fetch data interface
      */
-    public function fetch(RequestInterface $request) : array;
+    public function fetch(string $query, array $params) : array;
 }

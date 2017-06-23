@@ -5,7 +5,6 @@ namespace spec\LeagueOfData\Service\Sql;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use LeagueOfData\Adapters\RequestInterface;
 use LeagueOfData\Entity\Item\ItemInterface;
 
 class SqlItemsSpec extends ObjectBehavior
@@ -63,12 +62,9 @@ class SqlItemsSpec extends ObjectBehavior
         $this->shouldImplement('LeagueOfData\Service\StoreServiceInterface');
     }
 
-    public function it_should_fetch_item_data(RequestInterface $request)
+    public function it_should_fetch_item_data()
     {
-        $request->query()->shouldBeCalled();
-        $request->where()->shouldBeCalled();
-        $request->requestFormat('sql')->shouldBeCalled();
-        $this->fetch($request)->shouldReturnArrayOfItems();
+        $this->fetch("")->shouldReturnArrayOfItems();
     }
 
     public function it_can_convert_data_to_item_objects()
