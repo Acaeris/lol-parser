@@ -5,7 +5,7 @@ use LeagueOfData\Entity\EntityInterface;
 
 /**
  * Rune Interface
- * 
+ *
  * @author caitlyn.osborne
  */
 interface RuneInterface extends EntityInterface

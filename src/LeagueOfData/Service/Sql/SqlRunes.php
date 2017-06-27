@@ -87,7 +87,7 @@ class SqlRunes implements StoreServiceInterface
      * @param array  $where SQL Where parameters
      * @return array Rune Objects
      */
-    public function fetch(string $query, array $where = array()): array
+    public function fetch(string $query, array $where = []): array
     {
         $this->runes = [];
 

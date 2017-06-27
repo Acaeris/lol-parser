@@ -11,7 +11,7 @@ use LeagueOfData\Entity\Stat;
 
 /**
  * Rune object JSON factory.
- * 
+ *
  * @package LeagueOfData\Service\Json
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
