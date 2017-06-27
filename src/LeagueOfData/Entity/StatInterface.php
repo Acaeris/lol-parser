@@ -4,7 +4,13 @@ namespace LeagueOfData\Entity;
 
 interface StatInterface
 {
-    public function key() : string;
-    public function value() : float;
-    public function toArray() : array;
+    /**
+     * Stat Name
+     */
+    public function getStatName() : string;
+
+    /**
+     * Stat Modifier
+     */
+    public function getStatModifier() : float;
 }

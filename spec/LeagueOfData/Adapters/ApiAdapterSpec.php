@@ -6,7 +6,6 @@ use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client;
-use LeagueOfData\Adapters\RequestInterface;
 
 class ApiAdapterSpec extends ObjectBehavior
 {
@@ -22,7 +21,8 @@ class ApiAdapterSpec extends ObjectBehavior
             'champListData' => 'all',
             'id' => 1
         ];
-        $this->buildQuery('static/v3/champions', $where)->shouldReturn('https://na1.api.riotgames.com/lol/static/v3/champions/1');
+        $this->buildQuery('static/v3/champions', $where)
+            ->shouldReturn('https://na1.api.riotgames.com/lol/static/v3/champions/1');
     }
 
     public function it_can_process_the_api_response_code_200(ResponseInterface $response)

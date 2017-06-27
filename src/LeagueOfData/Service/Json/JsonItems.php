@@ -6,8 +6,8 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Item\Item;
-use LeagueOfData\Entity\Item\ItemStat;
 use LeagueOfData\Entity\Item\ItemInterface;
+use LeagueOfData\Entity\Stat;
 use LeagueOfData\Adapters\AdapterInterface;
 
 /**
@@ -111,10 +111,9 @@ final class JsonItems implements FetchServiceInterface
     }
 
     /**
-     * Create the item stats objects from JSON data
+     * Create the item's stat objects from JSON data
      *
      * @param array $item
-     *
      * @return array
      */
     private function createStats(array $item) : array
@@ -122,7 +121,7 @@ final class JsonItems implements FetchServiceInterface
         $stats = [];
 
         foreach ($item['stats'] as $key => $value) {
-            $stats[] = new ItemStat($key, $value);
+            $stats[] = new Stat($key, $value);
         }
 
         return $stats;
@@ -145,7 +144,7 @@ final class JsonItems implements FetchServiceInterface
             foreach ($response['data'] as $item) {
                 $item['version'] = $params['version'];
                 $item['region'] = $params['region'];
-                $this->items[$item['id']] = $this->create($item, []);
+                $this->items[$item['id']] = $this->create($item);
             }
         }
     }

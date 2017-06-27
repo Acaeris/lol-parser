@@ -71,6 +71,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
         if ($this->database->fetch($this->select, $this->where) || $input->getOption('force')) {
             $this->log->info("Update required");
             try {
+                $this->database->clear();
                 $this->database->add($this->service->fetch($this->where));
                 $this->database->store();
             } catch (\Exception $exception) {
@@ -81,7 +82,7 @@ class ChampionUpdateCommand extends ContainerAwareCommand
 
         $this->log->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
     }
-    
+
     /**
      * Initialize used services
      */

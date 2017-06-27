@@ -87,6 +87,14 @@ final class SqlChampions implements StoreServiceInterface
     }
 
     /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->champions = [];
+    }
+
+    /**
      * Fetch Champions
      *
      * @param string $query SQL query

@@ -43,7 +43,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
 
         $this->log->info("Skipping update");
     }
-    
+
     /**
      * Initialize used services
      */
@@ -66,6 +66,7 @@ class VersionUpdateCommand extends ContainerAwareCommand
             $this->service->fetch([]);
             $this->log->info("Storing version data");
 
+            $this->database->clear();
             $this->database->add($this->service->transfer());
             $this->database->store();
             $this->queueUpdates($input->getOption('force'));
@@ -90,6 +91,11 @@ class VersionUpdateCommand extends ContainerAwareCommand
             }');
             $this->messageQueue->addProcessToQueue('update:item', '{
                 "command" : "update:item",
+                "release" : "'.$version->getFullVersion().'",
+                "--force" : "'.$force.'"
+            }');
+            $this->messageQueue->addProcessToQueue('update:rune', '{
+                "command" : "update:rune",
                 "release" : "'.$version->getFullVersion().'",
                 "--force" : "'.$force.'"
             }');

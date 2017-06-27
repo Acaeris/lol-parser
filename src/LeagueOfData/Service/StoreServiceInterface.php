@@ -36,4 +36,9 @@ interface StoreServiceInterface
      * Factory for creating objects
      */
     public function create(array $data): EntityInterface;
+
+    /**
+     * Clear the internal collection
+     */
+    public function clear();
 }

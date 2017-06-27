@@ -4,12 +4,13 @@ namespace LeagueOfData\Command\Processor;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
-class ItemUpdateCommand extends ContainerAwareCommand
+class RuneUpdateCommand extends ContainerAwareCommand
 {
+
     /**
      * @var LoggerInterface Logger
      */
@@ -45,13 +46,13 @@ class ItemUpdateCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('update:item')
-            ->setDescription('API processor command for item data')
-            ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addOption('itemId', 'i', InputOption::VALUE_REQUIRED, 'Item ID to process data for.'
-                .' (Will fetch all if not supplied)')
-            ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
-            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data.', false);
+        $this->setName('update:rune')
+            ->setDescription('API processor command for rune data')
+            ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for.')
+            ->addOption('runeId', 'i', InputOption::VALUE_REQUIRED, 'Rune ID to process data for.'
+                .' (Wull fetch all if not supplied)')
+            ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', 'euw')
+            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data', false);
     }
 
     /**
@@ -65,7 +66,7 @@ class ItemUpdateCommand extends ContainerAwareCommand
         $this->initServices();
         $this->buildRequest($input);
 
-        $this->log->info('Checking Item data for update');
+        $this->log->info('Checking Rune data for update');
 
         if (count($this->database->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
             $this->log->info("Update required");
@@ -88,8 +89,8 @@ class ItemUpdateCommand extends ContainerAwareCommand
     private function initServices()
     {
         $this->log = $this->getContainer()->get('logger');
-        $this->service = $this->getContainer()->get('item-api');
-        $this->database = $this->getContainer()->get('item-db');
+        $this->service = $this->getContainer()->get('rune-api');
+        $this->database = $this->getContainer()->get('rune-db');
         $this->messageQueue = $this->getContainer()->get('rabbitmq');
     }
 
@@ -100,15 +101,15 @@ class ItemUpdateCommand extends ContainerAwareCommand
      */
     private function buildRequest(InputInterface $input)
     {
-        $this->select = "SELECT * FROM items WHERE version = :version AND region = :region";
+        $this->select = "SELECT * FROM runes WHERE version = :version AND region = :region";
         $this->where = [
             'version' => $input->getArgument('release'),
             'region' => $input->getOption('region')
         ];
 
-        if (null !== $input->getOption('itemId')) {
-            $this->where['item_id'] = $this->getOption('itemId');
-            $this->select .= " AND item_id = :item_id";
+        if (null !== $input->getOption('runeId')) {
+            $this->where['rune_id'] = $this->getOption('runeId');
+            $this->select .= " AND rune_id = :rune_id";
         }
     }
 
@@ -122,13 +123,13 @@ class ItemUpdateCommand extends ContainerAwareCommand
      */
     private function recover(InputInterface $input, string $msg, \Exception $exception = null)
     {
-        $params = '"command": "update:item", "release": "'.$input->getArgument('release').'"';
+        $params = '"command": "update:rune", "release": "'.$input->getArgument('release').'"';
 
-        if (!empty($input->getOption('itemId'))) {
-            $params .= ', "itemId": "'.$input->getArgument('itemId').'"';
+        if (!empty($input->getOption('runeId'))) {
+            $params .= ', "runeId": "'.$input->getArgument('runeId').'"';
         }
 
-        $this->messageQueue->addProcessToQueue('update:item', "{ {$params} }");
+        $this->messageQueue->addProcessToQueue('update:rune', "{ {$params} }");
         $this->log->error($msg, ['exception' => $exception]);
     }
 }

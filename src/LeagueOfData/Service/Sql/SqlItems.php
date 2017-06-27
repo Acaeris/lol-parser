@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Entity\Item\Item;
-use LeagueOfData\Entity\Item\ItemStat;
+use LeagueOfData\Entity\Stat;
 use LeagueOfData\Entity\EntityInterface;
 
 /**
@@ -53,6 +53,14 @@ final class SqlItems implements StoreServiceInterface
         foreach ($items as $item) {
             $this->items[$item->getItemID()] = $item;
         }
+    }
+
+    /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->items = [];
     }
 
     /**
@@ -131,7 +139,6 @@ final class SqlItems implements StoreServiceInterface
      * Fetch the stats for the given item
      *
      * @param array $item
-     *
      * @return array
      */
     private function fetchStats(array $item) : array
@@ -143,7 +150,7 @@ final class SqlItems implements StoreServiceInterface
 
         if ($results !== false) {
             foreach ($results as $stat) {
-                $stats[] = new ItemStat($stat['stat_name'], $stat['stat_value']);
+                $stats[] = new Stat($stat['stat_name'], $stat['stat_value']);
             }
         }
 
@@ -157,17 +164,16 @@ final class SqlItems implements StoreServiceInterface
      */
     private function storeStats(Item $item)
     {
-        foreach ($item->getStats() as $key => $value) {
+        foreach ($item->getStats() as $stat) {
             $select = "SELECT item_id FROM item_stats WHERE item_id = :item_id AND version = :version "
                 . "AND stat_name = :stat_name AND region = :region";
             $where = $item->getKeyData();
-            $where['stat_name'] = $key;
-            $data = array_merge($where, ['stat_value' => $value]);
+            $where['stat_name'] = $stat->getStatName();
+            $data = array_merge($where, ['stat_value' => $stat->getStatModifier()]);
 
             if ($this->dbConn->fetchAll($select, $where)) {
                 $this->dbConn->update('item_stats', $data, $where);
-
-                return;
+                continue;
             }
 
             $this->dbConn->insert('item_stats', $data);
@@ -178,7 +184,6 @@ final class SqlItems implements StoreServiceInterface
      * Converts Item object into SQL data array
      *
      * @param Item $item
-     *
      * @return array
      */
     private function convertItemToArray(Item $item) : array
@@ -202,10 +207,6 @@ final class SqlItems implements StoreServiceInterface
     private function processResults(array $results)
     {
         if ($results !== false) {
-            if (!is_array($results)) {
-                $results = [ $results ];
-            }
-
             foreach ($results as $item) {
                 $item['stats'] = $this->fetchStats($item);
                 $this->items[$item['item_id']] = $this->create($item);

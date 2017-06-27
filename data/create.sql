@@ -90,3 +90,26 @@ CREATE TABLE IF NOT EXISTS item_stats (
   version    varchar(16) NOT NULL,
   region     varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS runes (
+  PRIMARY KEY (rune_id, version),
+          KEY rune_names (rune_name),
+          KEY rune_versions (version),
+  rune_id     int         NOT NULL,
+  rune_name   varchar(60) DEFAULT NULL,
+  description mediumtext  DEFAULT NULL,
+  image_name  varchar(45) DEFAULT NULL,
+  tags        varchar(45) DEFAULT NULL,
+  version     varchar(16) NOT NULL,
+  region      varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS rune_stats (
+  PRIMARY KEY (rune_id, version, stat_name),
+          KEY stat_names (stat_name),
+  rune_id    int         NOT NULL,
+  stat_name  varchar(45) NOT NULL,
+  stat_value float       DEFAULT NULL,
+  version    varchar(16) NOT NULL,
+  region     varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

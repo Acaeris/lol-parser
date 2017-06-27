@@ -5,8 +5,6 @@ namespace LeagueOfData\Service\Sql;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Service\StoreServiceInterface;
-use LeagueOfData\Adapters\RequestInterface;
-use LeagueOfData\Adapters\Request;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Champion\ChampionStats;
 use LeagueOfData\Entity\Champion\ChampionDefense;
@@ -61,6 +59,14 @@ class SqlChampionStats implements StoreServiceInterface
             }
             $this->log->error('Incorrect object supplied to Champion Stats service', [$champion]);
         }
+    }
+
+    /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->champions = [];
     }
 
     /**

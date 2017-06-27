@@ -56,6 +56,14 @@ class SqlChampionPassives implements StoreServiceInterface
     }
 
     /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->passives = [];
+    }
+
+    /**
      * Factory to create Champion Passive objects from SQL
      *
      * @param array $passive

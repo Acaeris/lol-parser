@@ -58,6 +58,14 @@ class SqlChampionSpells implements StoreServiceInterface
     }
 
     /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->spells = [];
+    }
+
+    /**
      * Factory to create Champion Spell objects from SQL
      *
      * @param array $spell

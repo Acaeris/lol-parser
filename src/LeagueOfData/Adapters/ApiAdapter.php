@@ -85,14 +85,14 @@ class ApiAdapter implements AdapterInterface
      * Handle API exceptions
      *
      * @param string $type
-     * @param \Exception $e
+     * @param \Exception $exception
      */
-    private function handleApiException(string $type, \Exception $e)
+    private function handleApiException(string $type, \Exception $exception)
     {
         $this->log->error('Guzzle '.$type.' Exception:', [
-            'status' => $e->getResponse()->getStatusCode(),
-            'request' => $e->getRequest()->getUri(),
-            'response' => $e->getResponse()->getBody(),
+            'status' => $exception->getResponse()->getStatusCode(),
+            'request' => $exception->getRequest()->getUri(),
+            'response' => $exception->getResponse()->getBody(),
         ]);
     }
 

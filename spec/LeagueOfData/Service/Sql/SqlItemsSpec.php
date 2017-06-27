@@ -18,31 +18,16 @@ class SqlItemsSpec extends ObjectBehavior
             "sale_value" => 210,
             "version" => "7.4.3",
             "region" => "euw"
-        ],
-        [
-            "item_id" => 1002,
-            "item_name" => "Test Item",
-            "description" => "Test Description",
-            "purchase_value" => 300,
-            "sale_value" => 210,
-            "version" => "7.4.3",
-            "region" => "euw"
-        ],
+        ]
     ];
     private $mockStats = [
-        [[
+        [
             "item_id" => 1001,
             "stat_name" => "FlatMoveSpeedMod",
             "stat_value" => 30,
             "version" => "7.4.3",
             "region" => "euw"
-        ]], [[
-            "item_id" => 1002,
-            "stat_name" => "TestMod",
-            "stat_value" => 30,
-            "version" => "7.4.3",
-            "region" => "euw"
-        ]]
+        ]
     ];
 
     public function let(Connection $dbConn, LoggerInterface $logger)
@@ -50,9 +35,7 @@ class SqlItemsSpec extends ObjectBehavior
         $dbConn->fetchAll('', [])->willReturn($this->mockData);
         $select = 'SELECT * FROM item_stats WHERE item_id = :item_id AND version = :version AND region = :region';
         $statRequest = ['item_id' => 1001, 'version' => '7.4.3', 'region' => 'euw'];
-        $dbConn->fetchAll($select, $statRequest)->willReturn($this->mockStats[0]);
-        $statRequest['item_id'] = 1002;
-        $dbConn->fetchAll($select, $statRequest)->willReturn($this->mockStats[1]);
+        $dbConn->fetchAll($select, $statRequest)->willReturn($this->mockStats);
         $this->beConstructedWith($dbConn, $logger);
     }
 
@@ -69,7 +52,7 @@ class SqlItemsSpec extends ObjectBehavior
 
     public function it_can_convert_data_to_item_objects()
     {
-        $data = array_merge($this->mockData[0], ['stats' => $this->mockStats[0]]);
+        $data = array_merge($this->mockData[0], ['stats' => $this->mockStats]);
         $this->create($data)->shouldImplement('LeagueOfData\Entity\Item\ItemInterface');
     }
 

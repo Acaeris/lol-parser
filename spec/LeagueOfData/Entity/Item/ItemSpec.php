@@ -9,9 +9,18 @@ class ItemSpec extends ObjectBehavior
 {
     public function let(StatInterface $itemStat)
     {
-        $itemStat->key()->willReturn('moveSpeed');
-        $itemStat->value()->willReturn((float) 30);
-        $this->beConstructedWith(1, 'Infinity Edge', 'Test Description', 300, 210, [$itemStat], '7.4.3', 'euw');
+        $itemStat->getStatName()->willReturn('moveSpeed');
+        $itemStat->getStatModifier()->willReturn((float) 30);
+        $this->beConstructedWith(
+            1, // Item ID
+            'Infinity Edge', // Item Name
+            'Test Description', // Item Description
+            300, // Purchase Cost
+            210, // Sale Value
+            [$itemStat], // Item Stats
+            '7.4.3', // Version
+            'euw' // Region
+        );
     }
 
     public function it_is_initializable()
@@ -32,7 +41,7 @@ class ItemSpec extends ObjectBehavior
         $this->getDescription()->shouldReturn('Test Description');
         $this->getGoldToBuy()->shouldReturn(300);
         $this->getGoldFromSale()->shouldReturn(210);
-        $this->getStats()->shouldReturn(['moveSpeed' => (float) 30]);
+        $this->getStats()->shouldReturnArrayOfStats();
         $this->getVersion()->shouldReturn('7.4.3');
         $this->getRegion()->shouldReturn('euw');
     }
@@ -40,5 +49,19 @@ class ItemSpec extends ObjectBehavior
     public function it_can_fetch_a_specific_stat()
     {
         $this->getStat('moveSpeed')->shouldReturn((float) 30);
+    }
+
+    public function getMatchers()
+    {
+        return [
+            'returnArrayOfStats' => function(array $stats) : bool {
+                foreach ($stats as $stat) {
+                    if (!$stat instanceof StatInterface) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        ];
     }
 }

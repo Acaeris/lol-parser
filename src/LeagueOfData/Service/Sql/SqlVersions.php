@@ -60,6 +60,14 @@ final class SqlVersions implements StoreServiceInterface
     }
 
     /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->versions = [];
+    }
+
+    /**
      * Factory for creating version objects
      *
      * @param string $version

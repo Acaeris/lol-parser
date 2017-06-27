@@ -29,6 +29,9 @@ services:
     realm-api:
         class: LeagueOfData\Service\Json\JsonRealms
         arguments: ['@api-adapter', '@logger']
+    rune-api:
+        class: LeagueOfData\Service\Json\JsonRunes
+        arguments: ['@api-adapter', '@logger']
     champion-stat-db:
         class: LeagueOfData\Service\Sql\SqlChampionStats
         arguments: ['@database_connection', '@logger']
@@ -49,4 +52,7 @@ services:
         arguments: ['@database_connection', '@logger']
     realm-db:
         class: LeagueOfData\Service\Sql\SqlRealms
+        arguments: ['@database_connection', '@logger']
+    rune-db:
+        class: LeagueOfData\Service\Sql\SqlRunes
         arguments: ['@database_connection', '@logger']

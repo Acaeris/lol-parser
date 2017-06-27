@@ -60,6 +60,14 @@ class SqlRealms implements StoreServiceInterface
     }
 
     /**
+     * Clear the internal collection
+     */
+    public function clear()
+    {
+        $this->realms = [];
+    }
+
+    /**
      * Factory to create realm objects
      *
      * @param array $realm

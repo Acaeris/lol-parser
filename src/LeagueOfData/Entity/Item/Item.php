@@ -146,27 +146,20 @@ class Item implements ItemInterface, ImmutableInterface
      */
     public function getStats() : array
     {
-        $stats = [];
-
-        foreach ($this->stats as $stat) {
-            $stats[$stat->key()] = $stat->value();
-        }
-
-        return $stats;
+        return $this->stats;
     }
 
     /**
      * Fetch a specific stat
      *
      * @param string $key
-     *
      * @return float
      */
     public function getStat(string $key) : float
     {
         foreach ($this->stats as $stat) {
-            if ($stat->key() === $key) {
-                return $stat->value();
+            if ($stat->getStatName() === $key) {
+                return $stat->getStatModifier();
             }
         }
 
