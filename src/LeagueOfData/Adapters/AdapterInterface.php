@@ -12,7 +12,12 @@ namespace LeagueOfData\Adapters;
 interface AdapterInterface
 {
     /**
+     * Set adapter options. (Fluid interface)
+     */
+    public function setOptions(string $query, array $params) : AdapterInterface;
+
+    /**
      * Fetch data interface
      */
-    public function fetch(string $query, array $params) : array;
+    public function fetch() : array;
 }

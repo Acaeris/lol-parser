@@ -4,6 +4,7 @@ namespace LeagueOfData\Adapters;
 
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
@@ -27,6 +28,9 @@ class ApiAdapter implements AdapterInterface
     private $apiKey;
     private $attempts = 0;
 
+    private $apiEndpoint;
+    private $params = [];
+
     /**
      * Set up the API adapter
      *
@@ -34,7 +38,7 @@ class ApiAdapter implements AdapterInterface
      * @param Client          $client
      * @param string          $apiKey
      */
-    public function __construct(LoggerInterface $log, Client $client, string $apiKey)
+    public function __construct(LoggerInterface $log, ClientInterface $client, string $apiKey)
     {
         $this->log = $log;
         $this->client = $client;
@@ -42,19 +46,29 @@ class ApiAdapter implements AdapterInterface
     }
 
     /**
-     * Fetch data from API
+     * Set the API options
      *
-     * @param string $apiEndpoint API Endpoint
-     * @param array $params API parameters
+     * @param string $apiEndpoint
+     * @param AdapterInterface Fluid Interface
+     */
+    public function setOptions(string $apiEndpoint, array $params) : AdapterInterface
+    {
+        $this->apiEndpoint = $apiEndpoint;
+        $this->params = $params;
+        return $this;
+    }
+
+    /**
+     * Fetch data from API
      *
      * @return array Fetch response
      */
-    public function fetch(string $apiEndpoint, array $params) : array
+    public function fetch() : array
     {
         $this->attempts++;
         try {
-            $response = $this->client->get($this->buildQuery($apiEndpoint, $params), [
-                'query' => array_merge($params, ['api_key' => $this->apiKey]),
+            $response = $this->client->request('GET', $this->buildQuery(), [
+                'query' => array_merge($this->params, ['api_key' => $this->apiKey]),
                 'headers' => [ 'Content-type' => 'application/json' ],
             ]);
         } catch (ServerException $e) {
@@ -64,21 +78,53 @@ class ApiAdapter implements AdapterInterface
             $this->handleApiException('Client', $e);
             $response = $e->getResponse();
         }
-        $state = $this->checkResponse($response);
-        switch ($state) {
-            case self::API_PROCEED:
+        return $this->checkResponse($response);
+    }
+
+    /**
+     * Checks the response code from the API
+     *
+     * @param ResponseInterface $response
+     * @return array
+     */
+    public function checkResponse(ResponseInterface $response) : array
+    {
+        switch ($response->getStatusCode()) {
+            case 200:
                 $this->attempts = 0;
                 return json_decode($response->getBody(), true);
-            case self::API_REPEAT:
-                sleep(1);
-
-                return $this->fetch($apiEndpoint, $params);
-            case self::API_SKIP:
-                $this->attempts = 0;
-                return [];
-            case self::API_FAIL:
-                exit;
+            case 503:
+                if ($this->attempts < 3) {
+                    $this->log->info("API unavailable. Waiting to retry.");
+                    sleep(1);
+                    return $this->fetch();
+                }
+                $this->log->info("API unavailable after 3 attempts. Skipping.");
+                break;
+            case 404:
+                $this->log->info("Data unavailable. Skipping.");
+                break;
+            default:
+                $this->log->error("Unknown response: ".$response->getStatusCode());
+                break;
         }
+
+        $this->attempts = 0;
+        return [];
+    }
+
+    /**
+     * Builds the API query
+     *
+     * @return string
+     */
+    public function buildQuery() : string
+    {
+        $region = $this->params['region'] . (in_array($this->params['region'], ['ru', 'kr']) ? '' : '1');
+        $url = str_replace('{region}', $region, self::API_URL).(
+            isset($this->params['id']) ? '/'.$this->params['id'] : ''
+        );
+        return str_replace('{endpoint}', $this->apiEndpoint, $url);
     }
 
     /**
@@ -94,51 +140,5 @@ class ApiAdapter implements AdapterInterface
             'request' => $exception->getRequest()->getUri(),
             'response' => $exception->getResponse()->getBody(),
         ]);
-    }
-
-    /**
-     * Checks the response code from the API
-     *
-     * @param ResponseInterface $response
-     * @return int
-     */
-    public function checkResponse(ResponseInterface $response) : int
-    {
-        switch ($response->getStatusCode()) {
-            case 200:
-                return self::API_PROCEED;
-            case 503:
-                if ($this->attempts < 3) {
-                    $this->log->info("API unavailable. Waiting to retry.");
-
-                    return self::API_REPEAT;
-                }
-                $this->log->info("API unavailable after 3 attempts. Skipping.");
-                break;
-            case 404:
-                $this->log->info("Data unavailable. Skipping.");
-                break;
-            default:
-                $this->log->error("Unknown response: ".$response->getStatusCode());
-                break;
-        }
-
-        return self::API_SKIP;
-    }
-
-    /**
-     * Builds the API query
-     *
-     * @param string $apiEndpoint API Endpoint
-     * @param array  $params      API Parameters
-     * @return string
-     */
-    public function buildQuery(string $apiEndpoint, array $params) : string
-    {
-        $region = $params['region'] . (in_array($params['region'], ['ru', 'kr']) ? '' : '1');
-        $url = str_replace('{region}', $region, self::API_URL).(
-            isset($params['id']) ? '/'.$params['id'] : ''
-        );
-        return str_replace('{endpoint}', $apiEndpoint, $url);
     }
 }
