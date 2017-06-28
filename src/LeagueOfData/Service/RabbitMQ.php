@@ -12,9 +12,11 @@ use Psr\Log\LoggerInterface;
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
-final class RabbitMQ
+final class RabbitMQ implements MessageQueueInterface
 {
-    /* @var Psr\Log\LoggerInterface Logger */
+    /**
+     * @var LoggerInterface Logger
+     */
     private $log;
 
     /**

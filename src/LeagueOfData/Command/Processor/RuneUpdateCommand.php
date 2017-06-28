@@ -50,7 +50,7 @@ class RuneUpdateCommand extends ContainerAwareCommand
             ->setDescription('API processor command for rune data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for.')
             ->addOption('runeId', 'i', InputOption::VALUE_REQUIRED, 'Rune ID to process data for.'
-                .' (Wull fetch all if not supplied)')
+                .' (Will fetch all if not supplied)')
             ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', 'euw')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data', false);
     }

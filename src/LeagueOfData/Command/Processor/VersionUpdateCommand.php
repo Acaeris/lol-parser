@@ -63,15 +63,14 @@ class VersionUpdateCommand extends ContainerAwareCommand
     private function updateData(InputInterface $input)
     {
         try {
-            $this->service->fetch([]);
             $this->log->info("Storing version data");
 
             $this->database->clear();
-            $this->database->add($this->service->transfer());
+            $this->database->add($this->service->fetch([]));
             $this->database->store();
             $this->queueUpdates($input->getOption('force'));
         } catch (\Exception $exception) {
-            $this->recover($input, "Unexpected API response: ", $exception);
+            $this->log->error("Failed to store version data:", ['exception' => $exception]);
         }
     }
 

@@ -11,4 +11,9 @@ class ItemUpdateCommandSpec extends ObjectBehavior
         $this->shouldHaveType('LeagueOfData\Command\Processor\ItemUpdateCommand');
         $this->shouldHaveType('Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand');
     }
+
+    public function it_has_a_name()
+    {
+        $this->getName()->shouldReturn('update:item');
+    }
 }
