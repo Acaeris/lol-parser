@@ -2,7 +2,8 @@
 namespace spec\LeagueOfData\Command;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Prophecy\Argument\Token\AnyValueToken;
+use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,7 +21,7 @@ class VersionUpdateCommandSpec extends ObjectBehavior
         LoggerInterface $logger,
         ProducerInterface $producer
     ) {
-        $input->bind(Argument::cetera())->willReturn();
+        $input->bind(new AnyValuesToken)->willReturn();
         $input->isInteractive()->willReturn(false);
         $input->validate()->willReturn();
         $input->hasArgument('command')->willReturn(false);
@@ -52,7 +53,7 @@ class VersionUpdateCommandSpec extends ObjectBehavior
         $dbAdapter->clear()->shouldBeCalled();
         $dbAdapter->add([$mockVersion])->shouldBeCalled();
         $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(Argument::any())->willReturn([$mockVersion]);
+        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockVersion]);
         $apiAdapter->transfer()->willReturn([$mockVersion]);
 
         $mockVersion->getFullVersion()->willReturn('7.9.1');

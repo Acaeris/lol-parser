@@ -2,15 +2,17 @@
 namespace spec\LeagueOfData\Adapters;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Prophecy\Argument\Token\AnyValuesToken;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class ApiAdapterSpec extends ObjectBehavior
 {
-    public function let(LoggerInterface $logger, ClientInterface $client)
+    public function let(LoggerInterface $logger, ClientInterface $client, ResponseInterface $response)
     {
+        $response->getBody()->willReturn('{"test": "Test"}');
+        $response->getStatusCode()->willReturn(200);
         $this->beConstructedWith($logger, $client, 'test');
     }
 
@@ -22,8 +24,6 @@ class ApiAdapterSpec extends ObjectBehavior
 
     public function it_checks_the_response_status_200(ResponseInterface $response)
     {
-        $response->getStatusCode()->willReturn(200);
-        $response->getBody()->willReturn('{"test": "Test"}');
         $this->checkResponse($response)->shouldReturn(['test' => 'Test']);
     }
 
@@ -34,7 +34,7 @@ class ApiAdapterSpec extends ObjectBehavior
     {
         $this->setOptions("Test", ['region' => 'euw']);
         $response->getStatusCode()->willReturn(503);
-        $client->request(Argument::cetera())->willReturn($response);
+        $client->request(new AnyValuesToken)->willReturn($response);
         $logger->info("API unavailable. Waiting to retry.")->shouldBeCalled();
         $logger->info("API unavailable after 3 attempts. Skipping.")->shouldBeCalled();
         $this->checkResponse($response)->shouldReturn([]);
@@ -56,8 +56,8 @@ class ApiAdapterSpec extends ObjectBehavior
 
     public function it_calls_the_api_for_data(ClientInterface $client, ResponseInterface $response)
     {
-        $client->request('GET', 'https://euw1.api.riotgames.com/lol/static-data/v3/versions', Argument::cetera())
+        $client->request('GET', 'https://euw1.api.riotgames.com/lol/static-data/v3/versions', new AnyValuesToken)
             ->willReturn($response);
-        $this->setOptions('static-data/v3/versions', ['region' => 'euw'])->fetch();
+        $this->setOptions('static-data/v3/versions', ['region' => 'euw'])->fetch()->shouldReturn(['test' => 'Test']);
     }
 }

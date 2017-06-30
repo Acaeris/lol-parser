@@ -7,7 +7,6 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Service\StoreServiceInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Mastery\Mastery;
-use LeagueOfData\Entity\Stat;
 
 /**
  * Mastery object SQL factory.
@@ -48,7 +47,7 @@ class MasteryCollection implements StoreServiceInterface
     public function add(array $masteries)
     {
         foreach ($masteries as $mastery) {
-            $this->masteries[$mastery->getRuneID()] = $mastery;
+            $this->masteries[$mastery->getMasteryID()] = $mastery;
         }
     }
 
@@ -69,12 +68,12 @@ class MasteryCollection implements StoreServiceInterface
     public function create(array $mastery): EntityInterface
     {
         return new Mastery(
-            $mastery['rune_id'],
-            $mastery['rune_name'],
-            $mastery['description'],
+            $mastery['mastery_id'],
+            $mastery['mastery_name'],
+            explode('|', $mastery['description']),
+            $mastery['ranks'],
             $mastery['image_name'],
-            $mastery['stats'],
-            explode('|', $mastery['tags']),
+            $mastery['mastery_tree'],
             $mastery['version'],
             $mastery['region']
         );
@@ -112,8 +111,6 @@ class MasteryCollection implements StoreServiceInterface
             $select = "SELECT mastery_id FROM masteries WHERE mastery_id = :mastery_id AND version = :version"
                 . " AND region = :region";
 
-            $this->storeStats($mastery);
-
             if ($this->dbConn->fetchAll($select, $mastery->getKeyData())) {
                 $this->dbConn->update('masteries', $this->convertMasteryToArray($mastery), $mastery->getKeyData());
                 continue;
@@ -142,56 +139,8 @@ class MasteryCollection implements StoreServiceInterface
     {
         if ($results !== false) {
             foreach ($results as $mastery) {
-                $mastery['stats'] = $this->fetchStats($mastery);
                 $this->masteries[$mastery['mastery_id']] = $this->create($mastery);
             }
-        }
-    }
-
-    /**
-     * Fetch the stats for the given mastery
-     *
-     * @param array $mastery
-     * @return array
-     */
-    private function fetchStats(array $mastery) : array
-    {
-        $select = "SELECT * FROM mastery_stats WHERE mastery_id = :mastery_id AND version = :version"
-            . " AND region = :region";
-        $where = ['mastery_id' => $mastery['mastery_id'], 'version' => $mastery['version'],
-            'region' => $mastery['region']];
-        $stats = [];
-        $results = $this->dbConn->fetchAll($select, $where);
-
-        if ($results !== false) {
-            foreach ($results as $stat) {
-                $stats[] = new Stat($stat['stat_name'], $stat['stat_value']);
-            }
-        }
-
-        return $stats;
-    }
-
-    /**
-     * Store the mastery stats in the database
-     *
-     * @param Mastery $mastery
-     */
-    private function storeStats(Mastery $mastery)
-    {
-        foreach ($mastery->getStats() as $stat) {
-            $select = "SELECT mastery_id FROM mastery_stats WHERE mastery_id = :mastery_id AND version = :version "
-                . "AND stat_name = :stat_name AND region = :region";
-            $where = $mastery->getKeyData();
-            $where['stat_name'] = $stat->getStatName();
-            $data = array_merge($where, ['stat_value' => $stat->getStatModifier()]);
-
-            if ($this->dbConn->fetchAll($select, $where)) {
-                $this->dbConn->update('mastery_stats', $data, $where);
-                continue;
-            }
-
-            $this->dbConn->insert('mastery_stats', $data);
         }
     }
 
@@ -206,9 +155,10 @@ class MasteryCollection implements StoreServiceInterface
         return [
             'mastery_id' => $mastery->getMasteryID(),
             'mastery_name' => $mastery->getName(),
-            'description' => $mastery->getDescription(),
+            'description' => implode('|', $mastery->getDescription()),
+            'ranks' => $mastery->getRanks(),
             'image_name' => $mastery->getImageName(),
-            'tags' => implode('|', $mastery->getTags()),
+            'mastery_tree' => $mastery->getMasteryTree(),
             'version' => $mastery->getVersion(),
             'region' => $mastery->getRegion()
         ];

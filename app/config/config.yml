@@ -75,6 +75,9 @@ old_sound_rabbit_mq:
         rune_updates:
             connection:       default
             exchange_options: { name: 'rune_updates', type: direct }
+        mastery_updates:
+            connection:       default
+            exchange_options: { name: 'mastery_updates', type: direct }
     consumers:
         version_updates:
             connection:       default
@@ -96,3 +99,8 @@ old_sound_rabbit_mq:
             exchange_options: { name: 'rune_updates', type: direct }
             queue_options:    { name: 'rune_updates' }
             callback:         LeagueOfData\Consumer\RuneUpdateConsumer
+        mastery_updates:
+            connection:       default
+            exchange_options: { name: 'mastery_updates', type: direct }
+            queue_options:    { name: 'mastery_updates' }
+            callback:         LeagueOfData\Consumer\MasteryUpdateConsumer

@@ -11,6 +11,16 @@ class Mastery implements MasteryInterface, ImmutableInterface
     /**
      * @var string
      */
+    private $masteryTree;
+
+    /**
+     * @var int
+     */
+    private $ranks;
+
+    /**
+     * @var string
+     */
     private $region;
 
     /**
@@ -19,22 +29,12 @@ class Mastery implements MasteryInterface, ImmutableInterface
     private $version;
 
     /**
-     * @var array
-     */
-    private $tags;
-
-    /**
-     * @var array
-     */
-    private $stats;
-
-    /**
      * @var string
      */
     private $imageName;
 
     /**
-     * @var string
+     * @var array
      */
     private $description;
 
@@ -55,10 +55,10 @@ class Mastery implements MasteryInterface, ImmutableInterface
     public function __construct(
         int $masteryID,
         string $masteryName,
-        string $description,
+        array $description,
+        int $ranks,
         string $imageName,
-        array $stats,
-        array $tags,
+        string $masteryTree,
         string $version,
         string $region
     ) {
@@ -67,10 +67,10 @@ class Mastery implements MasteryInterface, ImmutableInterface
         $this->masteryName = $masteryName;
         $this->description = $description;
         $this->imageName = $imageName;
-        $this->stats = $stats;
-        $this->tags = $tags;
         $this->version = $version;
         $this->region = $region;
+        $this->ranks = $ranks;
+        $this->masteryTree = $masteryTree;
     }
 
     /**
@@ -110,9 +110,9 @@ class Mastery implements MasteryInterface, ImmutableInterface
     /**
      * Description
      *
-     * @return string
+     * @return array
      */
-    public function getDescription() : string
+    public function getDescription() : array
     {
         return $this->description;
     }
@@ -128,23 +128,23 @@ class Mastery implements MasteryInterface, ImmutableInterface
     }
 
     /**
-     * Rune Stats
+     * Ranks
      *
-     * @return array
+     * @return int
      */
-    public function getStats() : array
+    public function getRanks()  : int
     {
-        return $this->stats;
+        return $this->ranks;
     }
 
     /**
-     * Rune Tags
+     * Mastery Tree
      *
-     * @return array
+     * @return string
      */
-    public function getTags() : array
+    public function getMasteryTree() : string
     {
-        return $this->tags;
+        return $this->masteryTree;
     }
 
     /**
@@ -165,22 +165,5 @@ class Mastery implements MasteryInterface, ImmutableInterface
     public function getRegion() : string
     {
         return $this->region;
-    }
-
-    /**
-     * Fetch a specific stat
-     *
-     * @param string $key
-     * @return float
-     */
-    public function getStat(string $key) : float
-    {
-        foreach ($this->stats as $stat) {
-            if ($stat->getStatName() === $key) {
-                return $stat->getStatModifier();
-            }
-        }
-
-        return 0;
     }
 }

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS champions (
           KEY champ_names (champion_name),
           KEY champ_versions (version),
   champion_id   int         NOT NULL,
-  champion_name varchar(45) DEFAULT NULL,
+  champion_name varchar(45) NOT NULL,
   title         varchar(45) DEFAULT NULL,
   tags          varchar(45) DEFAULT NULL,
   resource_type varchar(20) DEFAULT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS items (
           KEY item_names (item_name),
           KEY item_versions (version),
   item_id        int         NOT NULL,
-  item_name      varchar(45) DEFAULT NULL,
+  item_name      varchar(45) NOT NULL,
   description    mediumtext  DEFAULT NULL,
   purchase_value int         DEFAULT NULL,
   sale_value     int         DEFAULT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS runes (
           KEY rune_names (rune_name),
           KEY rune_versions (version),
   rune_id     int         NOT NULL,
-  rune_name   varchar(60) DEFAULT NULL,
+  rune_name   varchar(60) NOT NULL,
   description mediumtext  DEFAULT NULL,
   image_name  varchar(45) DEFAULT NULL,
   tags        varchar(45) DEFAULT NULL,
@@ -112,4 +112,18 @@ CREATE TABLE IF NOT EXISTS rune_stats (
   stat_value float       DEFAULT NULL,
   version    varchar(16) NOT NULL,
   region     varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS masteries (
+  PRIMARY KEY (mastery_id, version),
+          KEY mastery_names (mastery_name),
+          KEY mastery_versions (version),
+  mastery_id   int         NOT NULL,
+  mastery_name varchar(60) NOT NULL,
+  description  mediumtext  DEFAULT NULL,
+  ranks        int         NOT NULL,
+  image_name   varchar(45) DEFAULT NULL,
+  mastery_tree varchar(45) DEFAULT NULL,
+  version      varchar(16) NOT NULL,
+  region       varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

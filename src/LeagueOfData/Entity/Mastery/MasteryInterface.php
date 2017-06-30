@@ -23,7 +23,12 @@ interface MasteryInterface extends EntityInterface
     /**
      * Description
      */
-    public function getDescription() : string;
+    public function getDescription() : array;
+
+    /**
+     * Ranks
+     */
+    public function getRanks()  : int;
 
     /**
      * Image Name
@@ -31,14 +36,9 @@ interface MasteryInterface extends EntityInterface
     public function getImageName() : string;
 
     /**
-     * Mastery Stats
+     * Mastery Tree
      */
-    public function getStats() : array;
-
-    /**
-     * Mastery Tags
-     */
-    public function getTags() : array;
+    public function getMasteryTree() : string;
 
     /**
      * Version
@@ -49,9 +49,4 @@ interface MasteryInterface extends EntityInterface
      * Region
      */
     public function getRegion() : string;
-
-    /**
-     * Specific stat value
-     */
-    public function getStat(string $key) : float;
 }

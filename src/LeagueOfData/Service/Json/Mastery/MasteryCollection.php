@@ -7,7 +7,6 @@ use LeagueOfData\Service\FetchServiceInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Mastery\Mastery;
-use LeagueOfData\Entity\Stat;
 
 /**
  * Mastery object JSON factory.
@@ -65,9 +64,9 @@ class MasteryCollection implements FetchServiceInterface
             $mastery['id'],
             $mastery['name'],
             $mastery['description'],
+            $mastery['ranks'],
             $mastery['image']['full'],
-            $this->createStats($mastery),
-            $mastery['tags'],
+            $mastery['masteryTree'],
             $mastery['version'],
             $mastery['region']
         );
@@ -102,23 +101,6 @@ class MasteryCollection implements FetchServiceInterface
     public function transfer(): array
     {
         return $this->masteries;
-    }
-
-    /**
-     * Create the mastery's stat objects from JSON data
-     *
-     * @param array $mastery
-     * @return array
-     */
-    private function createStats(array $mastery) : array
-    {
-        $stats = [];
-
-        foreach ($mastery['stats'] as $key => $value) {
-            $stats[] = new Stat($key, $value);
-        }
-
-        return $stats;
     }
 
     /**

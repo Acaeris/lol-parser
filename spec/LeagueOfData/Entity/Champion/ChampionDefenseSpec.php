@@ -38,6 +38,6 @@ class ChampionDefenseSpec extends ObjectBehavior
     public function it_requires_an_appropriate_resource_type()
     {
         $this->beConstructedWith('mana', 10, 1); // Not a valid defense resource
-        $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
+        $this->shouldThrow('InvalidArgumentException')->duringInstantiation();
     }
 }

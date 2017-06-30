@@ -17,6 +17,11 @@ class VersionUpdateCommand extends Command
     /**
      * @var ProducerInterface
      */
+    private $masteryProducer;
+
+    /**
+     * @var ProducerInterface
+     */
     private $runeProducer;
 
     /**
@@ -50,7 +55,8 @@ class VersionUpdateCommand extends Command
         DbCollection $dbAdapter,
         ProducerInterface $championProducer,
         ProducerInterface $itemProducer,
-        ProducerInterface $runeProducer
+        ProducerInterface $runeProducer,
+        ProducerInterface $masteryProducer
     ) {
         parent::__construct();
         $this->logger = $logger;
@@ -59,6 +65,7 @@ class VersionUpdateCommand extends Command
         $this->championProducer = $championProducer;
         $this->itemProducer = $itemProducer;
         $this->runeProducer = $runeProducer;
+        $this->masteryProducer = $masteryProducer;
     }
     
     /**
@@ -126,6 +133,7 @@ class VersionUpdateCommand extends Command
             $this->championProducer->publish($message);
             $this->itemProducer->publish($message);
             $this->runeProducer->publish($message);
+            $this->masteryProducer->publish($message);
         }
     }
 }

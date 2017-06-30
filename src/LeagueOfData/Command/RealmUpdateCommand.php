@@ -52,8 +52,8 @@ class RealmUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Updating Realm data');
-        $this->database->add($this->service->fetch([]));
-        $this->database->store();
+        $this->dbAdapter->add($this->apiAdapter->fetch([]));
+        $this->dbAdapter->store();
         $this->logger->info('Command complete');
     }
 }

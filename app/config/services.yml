@@ -21,6 +21,7 @@ services:
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
+            $masteryProducer: '@old_sound_rabbit_mq.mastery_updates_producer'
     LeagueOfData\Command\VersionUpdateCommand:
         arguments:
             $logger: '@logger'
@@ -29,3 +30,4 @@ services:
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
+            $masteryProducer: '@old_sound_rabbit_mq.mastery_updates_producer'

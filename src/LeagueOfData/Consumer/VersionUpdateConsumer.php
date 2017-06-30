@@ -14,6 +14,11 @@ class VersionUpdateConsumer implements ConsumerInterface
     /**
      * @var ProducerInterface
      */
+    private $masteryProducer;
+
+    /**
+     * @var ProducerInterface
+     */
     private $runeProducer;
 
     /**
@@ -47,7 +52,8 @@ class VersionUpdateConsumer implements ConsumerInterface
         DbCollection $dbAdapter,
         ProducerInterface $championProducer,
         ProducerInterface $itemProducer,
-        ProducerInterface $runeProducer
+        ProducerInterface $runeProducer,
+        ProducerInterface $masteryProducer
     ) {
         $this->logger = $logger;
         $this->apiAdapter = $apiAdapter;
@@ -55,6 +61,7 @@ class VersionUpdateConsumer implements ConsumerInterface
         $this->championProducer = $championProducer;
         $this->itemProducer = $itemProducer;
         $this->runeProducer = $runeProducer;
+        $this->masteryProducer = $masteryProducer;
     }
 
     /**
@@ -119,6 +126,7 @@ class VersionUpdateConsumer implements ConsumerInterface
             $this->championProducer->publish($message);
             $this->itemProducer->publish($message);
             $this->runeProducer->publish($message);
+            $this->masteryProducer->publish($message);
         }
     }
 }
