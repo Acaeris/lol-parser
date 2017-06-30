@@ -85,7 +85,7 @@ class MasteryUpdateConsumer implements ConsumerInterface
         if (isset($input['masteryId'])) {
             $select .= " AND mastery_id = :mastery_id";
         }
-        
+
         return $select;
     }
 }

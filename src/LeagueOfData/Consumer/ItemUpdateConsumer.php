@@ -85,7 +85,7 @@ class ItemUpdateConsumer implements ConsumerInterface
         if (isset($input['itemId'])) {
             $select .= " AND item_id = :item_id";
         }
-        
+
         return $select;
     }
 }

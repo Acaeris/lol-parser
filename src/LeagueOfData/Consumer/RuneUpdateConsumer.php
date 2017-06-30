@@ -85,7 +85,7 @@ class RuneUpdateConsumer implements ConsumerInterface
         if (isset($input['runeId'])) {
             $select .= " AND rune_id = :rune_id";
         }
-        
+
         return $select;
     }
 }

@@ -24,8 +24,7 @@ class ItemCollection implements FetchServiceInterface
      */
     private $apiDefaults = [
         'region' => 'euw',
-        'itemListData' => 'all',
-        'itemData' => 'all',
+        'tags' => 'all'
     ];
 
     /**

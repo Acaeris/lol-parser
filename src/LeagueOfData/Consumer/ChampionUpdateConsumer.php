@@ -85,7 +85,7 @@ class ChampionUpdateConsumer implements ConsumerInterface
         if (isset($input['championId'])) {
             $select .= " AND champion_id = :champion_id";
         }
-        
+
         return $select;
     }
 }

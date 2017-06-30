@@ -20,7 +20,7 @@ class ChampionCollection implements FetchServiceInterface
     /**
      * @var array Default parameters for API query
      */
-    private $apiDefaults = [ 'region' => 'euw', 'champData' => 'all', 'champListData' => 'all' ];
+    private $apiDefaults = [ 'region' => 'euw', 'tags' => 'all' ];
 
     /**
      * @var string API Endpoint

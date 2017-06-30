@@ -67,7 +67,7 @@ class VersionUpdateCommand extends Command
         $this->runeProducer = $runeProducer;
         $this->masteryProducer = $masteryProducer;
     }
-    
+
     /**
      * Configure Command
      */
