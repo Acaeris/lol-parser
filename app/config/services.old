@@ -1,0 +1,75 @@
+
+
+services:
+    guzzle:
+        class: GuzzleHttp\Client
+        arguments: []
+    api-adapter:
+        class: LeagueOfData\Adapters\ApiAdapter
+        arguments: ['@logger', '@guzzle', '%apiKey%']
+    rabbitmq:
+        class: LeagueOfData\Service\RabbitMQ
+        arguments: ['@logger']
+    champion-stat-api:
+        class: LeagueOfData\Service\Json\JsonChampionStats
+        arguments: ['@api-adapter', '@logger']
+    champion-passive-api:
+        class: LeagueOfData\Service\Json\JsonChampionPassives
+        arguments: ['@api-adapter', '@logger']
+    champion-spell-api:
+        class: LeagueOfData\Service\Json\JsonChampionSpells
+        arguments: ['@api-adapter', '@logger']
+    champion-api:
+        class: LeagueOfData\Service\Json\JsonChampions
+        arguments: ['@api-adapter', '@logger', '@champion-stat-api', '@champion-spell-api', '@champion-passive-api']
+    item-api:
+        class: LeagueOfData\Service\Json\JsonItems
+        arguments: ['@api-adapter', '@logger']
+    version-api:
+        class: LeagueOfData\Service\Json\JsonVersions
+        arguments: ['@api-adapter', '@logger']
+    realm-api:
+        class: LeagueOfData\Service\Json\JsonRealms
+        arguments: ['@api-adapter', '@logger']
+    rune-api:
+        class: LeagueOfData\Service\Json\JsonRunes
+        arguments: ['@api-adapter', '@logger']
+    mastery-api:
+        class: LeagueOfData\Service\Json\JsonMasteries
+    champion-stat-db:
+        class: LeagueOfData\Service\Sql\SqlChampionStats
+        arguments: ['@database_connection', '@logger']
+    champion-passive-db:
+        class: LeagueOfData\Service\Sql\SqlChampionPassives
+        arguments: ['@database_connection', '@logger']
+    champion-spell-db:
+        class: LeagueOfData\Service\Sql\SqlChampionSpells
+        arguments: ['@database_connection', '@logger']
+    champion-db:
+        class: LeagueOfData\Service\Sql\SqlChampions
+        arguments: ['@database_connection', '@logger', '@champion-stat-db', '@champion-spell-db', '@champion-passive-db']
+    item-db:
+        class: LeagueOfData\Service\Sql\SqlItems
+        arguments: ['@database_connection', '@logger']
+    version-db:
+        class: LeagueOfData\Service\Sql\SqlVersions
+        arguments: ['@database_connection', '@logger']
+    realm-db:
+        class: LeagueOfData\Service\Sql\SqlRealms
+        arguments: ['@database_connection', '@logger']
+    rune-db:
+        class: LeagueOfData\Service\Sql\SqlRunes
+        arguments: ['@database_connection', '@logger']
+    version-update:
+        class: LeagueOfData\Consumer\VersionUpdateConsumer
+        arguments: ['@logger', '@version-api', '@version-db',
+            '@old_sound_rabbit_mq.champion_updates_producer', '@old_sound_rabbit_mq.item_updates_producer']
+    champion-update:
+        class: LeagueOfData\Consumer\ChampionUpdateConsumer
+        arguments: ['@logger', '@champion-api', '@champion-db']
+    item-update:
+        class: LeagueOfData\Consumer\ItemUpdateConsumer
+        arguments: ['@logger', '@item-api', '@item-db']
+    mastery-update:
+        class: LeagueOfData\Consumer\MasteryUpdateConsumer
+        arguments: ['@logger', '@mastery-api', '@mastery-db']

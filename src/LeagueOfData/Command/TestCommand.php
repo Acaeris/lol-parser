@@ -35,8 +35,7 @@ class TestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->log = $this->getContainer()->get('logger');
-        $this->database = $this->getContainer()->get('champion-db');
-
-        var_dump($this->database->test());
+        $producer = $this->getContainer()->get('old_sound_rabbit_mq.item_updates_producer');
+        $producer->publish(serialize(['force' => true, 'version' => '7.9.1']));
     }
 }

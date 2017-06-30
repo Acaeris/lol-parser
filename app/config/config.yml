@@ -36,3 +36,63 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+
+# Guzzle Configuration
+guzzle:
+    clients:
+        riot_api:
+            # Not actual url as the adapter needs to set region in domain anyway
+            base_url: "https://api.riotgames/lol"
+            options:
+                headers:
+                    Accept: "applicaiton/json"
+            
+
+# RabbitMQ Configuration
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+    producers:
+        version_updates:
+            connection:       default
+            exchange_options: { name: 'version_updates', type: direct }
+        champion_updates:
+            connection:       default
+            exchange_options: { name: 'champion_updates', type: direct }
+        item_updates:
+            connection:       default
+            exchange_options: { name: 'item_updates', type: direct }
+        rune_updates:
+            connection:       default
+            exchange_options: { name: 'rune_updates', type: direct }
+    consumers:
+        version_updates:
+            connection:       default
+            exchange_options: { name: 'version_updates', type: direct }
+            queue_options:    { name: 'version_updates' }
+            callback:         LeagueOfData\Consumer\VersionUpdateConsumer
+        champion_updates:
+            connection:       default
+            exchange_options: { name: 'champion_updates', type: direct }
+            queue_options:    { name: 'champion_updates' }
+            callback:         LeagueOfData\Consumer\ChampionUpdateConsumer
+        item_updates:
+            connection:       default
+            exchange_options: { name: 'item_updates', type: direct }
+            queue_options:    { name: 'item_updates' }
+            callback:         LeagueOfData\Consumer\ItemUpdateConsumer
+        rune_updates:
+            connection:       default
+            exchange_options: { name: 'rune_updates', type: direct }
+            queue_options:    { name: 'rune_updates' }
+            callback:         LeagueOfData\Consumer\RuneUpdateConsumer

@@ -5,9 +5,12 @@ namespace LeagueOfData\Adapters;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
+use bandwidthThrottle\tokenBucket\Rate;
+use bandwidthThrottle\tokenBucket\TokenBucket;
+use bandwidthThrottle\tokenBucket\BlockingConsumer;
+use bandwidthThrottle\tokenBucket\storage\FileStorage;
 
 /**
  * API Adapter class
@@ -17,6 +20,12 @@ use GuzzleHttp\Exception\ClientException;
  */
 class ApiAdapter implements AdapterInterface
 {
+
+    /**
+     * @var BlockingConsumer
+     */
+    private $consumer;
+
     const API_URL = "https://{region}.api.riotgames.com/lol/{endpoint}";
     const API_PROCEED = 1;
     const API_SKIP = 2;
@@ -35,7 +44,7 @@ class ApiAdapter implements AdapterInterface
      * Set up the API adapter
      *
      * @param LoggerInterface $log
-     * @param Client          $client
+     * @param ClientInterface $client
      * @param string          $apiKey
      */
     public function __construct(LoggerInterface $log, ClientInterface $client, string $apiKey)
@@ -43,6 +52,11 @@ class ApiAdapter implements AdapterInterface
         $this->log = $log;
         $this->client = $client;
         $this->apiKey = $apiKey;
+        $storage = new FileStorage(__DIR__ . "/api.bucket");
+        $rate = new Rate(10, Rate::SECOND);
+        $bucket = new TokenBucket(10, $rate, $storage);
+        $this->consumer = new BlockingConsumer($bucket);
+        $bucket->bootstrap(10);
     }
 
     /**
@@ -67,6 +81,7 @@ class ApiAdapter implements AdapterInterface
     {
         $this->attempts++;
         try {
+            $this->consumer->consume(1);
             $response = $this->client->request('GET', $this->buildQuery(), [
                 'query' => array_merge($this->params, ['api_key' => $this->apiKey]),
                 'headers' => [ 'Content-type' => 'application/json' ],
