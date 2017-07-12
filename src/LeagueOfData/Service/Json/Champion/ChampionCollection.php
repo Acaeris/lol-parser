@@ -35,7 +35,7 @@ class ChampionCollection implements FetchServiceInterface
     /**
      * @var LoggerInterface logger
      */
-    private $log;
+    private $logger;
 
     /**
      * @var ChampionStatsCollection Champion Stat factory
@@ -70,7 +70,7 @@ class ChampionCollection implements FetchServiceInterface
         ChampionSpellCollection $spellService, ChampionPassiveCollection $passiveService)
     {
         $this->adapter = $adapter;
-        $this->log = $log;
+        $this->logger = $log;
         $this->statService = $statService;
         $this->spellService = $spellService;
         $this->passiveService = $passiveService;
@@ -108,7 +108,7 @@ class ChampionCollection implements FetchServiceInterface
     public function fetch(array $params) : array
     {
         $this->champions = [];
-        $this->log->debug("Fetching champions from API");
+        $this->logger->debug("Fetching champions from API");
 
         $query = $this->apiEndpoint
             . (isset($params['champion_id']) ? '/' . $params['champion_id'] : '');
@@ -117,7 +117,7 @@ class ChampionCollection implements FetchServiceInterface
         $response = $this->adapter->setOptions($query, $params)->fetch();
         $this->processResponse($response, $params);
 
-        $this->log->debug(count($this->champions)." champions fetched from API");
+        $this->logger->debug(count($this->champions)." champions fetched from API");
 
         return $this->champions;
     }

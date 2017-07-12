@@ -33,11 +33,23 @@ class ChampionSpec extends ObjectBehavior
     {
         $this->shouldHaveType('LeagueOfData\Entity\Champion\Champion');
         $this->shouldImplement('LeagueOfData\Entity\Champion\ChampionInterface');
+        $this->shouldImplement('LeagueOfData\Entity\EntityInterface');
     }
 
     public function it_is_immutable()
     {
         $this->shouldImplement('LeagueOfData\Library\Immutable\ImmutableInterface');
+        $this->shouldThrow('LeagueOfData\Library\Immutable\ImmutableException')
+            ->during('__set', ['id', 1]);
+    }
+
+    public function it_can_return_key_data_for_indexing()
+    {
+        $this->getKeyData()->shouldReturn([
+            'champion_id' => 1,
+            'version' => '6.21.1',
+            'region' => 'euw'
+        ]);
     }
 
     public function it_has_all_data_available()

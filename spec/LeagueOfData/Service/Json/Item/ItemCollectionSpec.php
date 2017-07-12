@@ -56,7 +56,7 @@ class ItemCollectionSpec extends ObjectBehavior
 
     public function it_should_fetch_item_data(AdapterInterface $adapter)
     {
-        $params = ["region" => "euw", "itemListData" => "all", "itemData" => "all", "version" => "7.9.1"];
+        $params = ["region" => "euw", "tags" => "all", "version" => "7.9.1"];
         $adapter->setOptions("static-data/v3/items", $params)->willReturn($adapter);
         $this->fetch(['version' => '7.9.1'])->shouldReturnArrayOfItems();
     }

@@ -2,6 +2,7 @@
 namespace spec\LeagueOfData\Service\Sql\Champion;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use LeagueOfData\Entity\Champion\ChampionInterface;
@@ -37,14 +38,10 @@ class ChampionCollectionSpec extends ObjectBehavior
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive)
     {
-        $where = ["version" => "7.9.1", "region" => "euw", "champion_id" => 266];
-        $dbConn->fetchAll('', [])->willReturn($this->mockData);
-        $statService->fetch("SELECT * FROM champion_stats WHERE version = :version AND region = :region"
-            . " AND champion_id = :champion_id", $where)->willReturn([266 => $stats]);
-        $spellService->fetch("SELECT * FROM champion_spells WHERE version = :version"
-            . " AND region = :region AND champion_id = :champion_id", $where)->willReturn([266 => [$spell]]);
-        $passiveService->fetch("SELECT * FROM champion_passives WHERE version = :version"
-            . " AND region = :region AND champion_id = :champion_id", $where)->willReturn([266 => $passive]);
+        $dbConn->fetchAll(new AnyValuesToken)->willReturn($this->mockData);
+        $statService->fetch(new AnyValuesToken)->willReturn([266 => $stats]);
+        $spellService->fetch(new AnyValuesToken)->willReturn([266 => [$spell]]);
+        $passiveService->fetch(new AnyValuesToken)->willReturn([266 => $passive]);
         $this->beConstructedWith($dbConn, $logger, $statService, $spellService, $passiveService);
     }
 

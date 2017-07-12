@@ -3,6 +3,7 @@
 namespace spec\LeagueOfData\Service\Json\Champion;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Entity\Champion\ChampionInterface;
@@ -151,8 +152,7 @@ class ChampionCollectionSpec extends ObjectBehavior
 
     public function it_should_fetch_champions(AdapterInterface $adapter)
     {
-        $params = ['region' => 'euw', "champData" => "all", "champListData" => "all", 'version' => '7.9.1'];
-        $adapter->setOptions("static-data/v3/champions", $params)->willReturn($adapter);
+        $adapter->setOptions(new AnyValuesToken)->willReturn($adapter);
         $this->fetch(["version" => "7.9.1"])->shouldReturnArrayOfChampions();
     }
 

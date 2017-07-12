@@ -80,7 +80,7 @@ class MasteryCollection implements StoreServiceInterface
     }
 
     /**
-     * Fetch Runes
+     * Fetch Masteries
      *
      * @param string $query SQL Query
      * @param array  $where SQL Where parameters

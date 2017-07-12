@@ -27,7 +27,7 @@ class VersionUpdateCommandSpec extends ObjectBehavior
         $input->hasArgument('command')->willReturn(false);
         $input->getOption('force')->willReturn(false);
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter, $producer, $producer, $producer);
+        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter, $producer, $producer, $producer, $producer);
     }
 
     public function it_is_initializable()

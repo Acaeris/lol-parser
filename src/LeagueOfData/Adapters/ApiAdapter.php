@@ -53,10 +53,10 @@ class ApiAdapter implements AdapterInterface
         $this->client = $client;
         $this->apiKey = $apiKey;
         $storage = new FileStorage(__DIR__ . "/api.bucket");
-        $rate = new Rate(10, Rate::SECOND);
-        $bucket = new TokenBucket(10, $rate, $storage);
+        $rate = new Rate(50, Rate::MINUTE);
+        $bucket = new TokenBucket(50, $rate, $storage);
         $this->consumer = new BlockingConsumer($bucket);
-        $bucket->bootstrap(10);
+        $bucket->bootstrap(50);
     }
 
     /**

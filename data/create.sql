@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS versions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champions (
-  PRIMARY KEY (champion_id, version),
+  PRIMARY KEY (champion_id, version, region),
           KEY champ_names (champion_name),
           KEY champ_versions (version),
   champion_id   int         NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS champions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champion_stats (
-  PRIMARY KEY (champion_id, version, stat_name),
+  PRIMARY KEY (champion_id, version, stat_name, region),
           KEY stat_names (stat_name),
   champion_id int         NOT NULL,
   stat_name   varchar(45) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS champion_stats (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champion_spells (
-  PRIMARY KEY (champion_id, version, spell_name),
+  PRIMARY KEY (champion_id, version, spell_name, region),
           KEY spell_names (spell_name),
   champion_id int         NOT NULL,
   spell_name  varchar(45) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS champion_spells (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS champion_passives (
-  PRIMARY KEY (champion_id, version, passive_name),
+  PRIMARY KEY (champion_id, version, passive_name, region),
           KEY passive_names (passive_name),
   champion_id  int         NOT NULL,
   passive_name varchar(45) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS champion_passives (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS items (
-  PRIMARY KEY (item_id, version),
+  PRIMARY KEY (item_id, version, region),
           KEY item_names (item_name),
           KEY item_versions (version),
   item_id        int         NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS items (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS item_stats (
-  PRIMARY KEY (item_id, version, stat_name),
+  PRIMARY KEY (item_id, version, stat_name, region),
           KEY stat_names (stat_name),
   item_id    int         NOT NULL,
   stat_name  varchar(45) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS item_stats (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS runes (
-  PRIMARY KEY (rune_id, version),
+  PRIMARY KEY (rune_id, version, region),
           KEY rune_names (rune_name),
           KEY rune_versions (version),
   rune_id     int         NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS runes (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS rune_stats (
-  PRIMARY KEY (rune_id, version, stat_name),
+  PRIMARY KEY (rune_id, version, stat_name, region),
           KEY stat_names (stat_name),
   rune_id    int         NOT NULL,
   stat_name  varchar(45) NOT NULL,
@@ -126,4 +126,23 @@ CREATE TABLE IF NOT EXISTS masteries (
   mastery_tree varchar(45) DEFAULT NULL,
   version      varchar(16) NOT NULL,
   region       varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS summoners (
+  PRIMARY KEY (summoner_id, region),
+          KEY summoner_names (summoner_name),
+          KEY account_ids (account_id),
+  summoner_id    int         NOT NULL,
+  summoner_name  varchar(45) NOT NULL,
+  account_id     int         NOT NULL,
+  summoner_level int         DEFAULT NULL,
+  profile_icon   varchar(45) DEFAULT NULL,
+  revision_date  date        NOT NULL,
+  region         varchar(8)  NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS matches (
+  PRIMARY KEY (match_id, region),
+  match_id int        NOT NULL,
+  region   varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

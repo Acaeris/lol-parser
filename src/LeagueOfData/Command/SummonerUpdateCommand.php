@@ -2,32 +2,32 @@
 
 namespace LeagueOfData\Command;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Sql\Champion\ChampionCollection as DbCollection;
-use LeagueOfData\Service\Json\Champion\ChampionCollection as ApiCollection;
+use LeagueOfData\Service\Json\Summoner\SummonerCollection as ApiCollection;
+use LeagueOfData\Service\Sql\Summoner\SummonerCollection as DbCollection;
 
-class ChampionUpdateCommand extends Command
+class SummonerUpdateCommand extends Command
 {
-    /**
-     * @var LoggerInterface Logger
-     */
-    private $logger;
 
     /**
-     * @var ChampionService API Service
+     * @var DbCollection
+     */
+    private $dbAdapter;
+
+    /**
+     * @var ApiCollection
      */
     private $apiAdapter;
 
     /**
-     * @var Connection DB Service
+     * @var LoggerInterface
      */
-    private $dbAdapter;
-
+    private $logger;
+    
     /**
      * @var string Select Query
      */
@@ -54,11 +54,11 @@ class ChampionUpdateCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('update:champion')
-            ->setDescription('API processor command for champion data')
-            ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addOption('championId', 'i', InputOption::VALUE_REQUIRED, 'Champion ID to process data for.'
-                .' (Will fetch all if not supplied)')
+        $this->setName('update:summoner')
+            ->setDescription('API processor command for summoner data')
+            ->addOption('summonerId', 'i', InputOption::VALUE_REQUIRED, 'Summoer ID to process data for.')
+            ->addOption('summonerName', 's', InputOption::VALUE_REQUIRED, 'Summoner Name to process data for.')
+            ->addOption('accountId', 'a', InputOption::VALUE_REQUIRED, 'Account ID to process data for.')
             ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force a refresh of the data.');
     }
@@ -68,12 +68,13 @@ class ChampionUpdateCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->buildRequest($input);
 
-        $this->logger->info('Checking Champion data for update. [v: '.$input->getArgument('release').']');
+        $this->logger->info('Checking Summoner data for update.');
 
         if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
             $this->logger->info("Update required");
@@ -87,8 +88,11 @@ class ChampionUpdateCommand extends Command
             }
             return;
         }
-
-        $this->logger->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+        $accountId = null !== $input->getOption('accountId') ? $input->getOption('accountId') : '';
+        $summonerName = null !== $input->getOption('summonerName') ? $input->getOption('summonerName') : '';
+        $summonerId = null !== $input->getOption('summonerId') ? $input->getOption('summonerId') : '';
+        $this->logger->info('Skipping update for summoner: '.$summonerName
+            .' [SID: '.$summonerId.'][AID: '.$accountId.']');
     }
 
     /**
@@ -98,15 +102,20 @@ class ChampionUpdateCommand extends Command
      */
     private function buildRequest(InputInterface $input)
     {
-        $this->select = "SELECT * FROM champions WHERE version = :version AND region = :region";
-        $this->where = [
-            'version' => $input->getArgument('release'),
-            'region' => $input->getOption('region')
-        ];
+        $this->select = "SELECT * FROM summoners WHERE region = :region";
+        $this->where['region'] = $input->getOption('region');
 
-        if (null !== $input->getOption('championId')) {
-            $this->where['champion_id'] = $input->getOption('championId');
-            $this->select .= " AND champion_id = :champion_id";
+        if (null !== $input->getOption('summonerId')) {
+            $this->where['summoner_id'] = $input->getOption('summonerId');
+            $this->select .= " AND summoner_id = :summoner_id";
+        }
+        if (null !== $input->getOption('summonerName')) {
+            $this->where['summoner_name'] = $input->getOption('summonerName');
+            $this->select .= " AND summoner_name = :summoner_name";
+        }
+        if (null !== $input->getOption('accountId')) {
+            $this->where['account_id'] = $input->getOption('accountId');
+            $this->select .= " AND account_id = :account_id";
         }
     }
 }

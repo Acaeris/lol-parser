@@ -107,7 +107,7 @@ class ChampionCollection implements StoreServiceInterface
         $results = $this->dbConn->fetchAll($query, $where);
         $this->champions = [];
         $this->processResults($results);
-        $this->log->debug(count($this->champions) . " champions fetched from DB");
+        $this->log->debug(count($this->champions)." champions fetched from DB");
 
         return $this->champions;
     }
@@ -117,12 +117,12 @@ class ChampionCollection implements StoreServiceInterface
      */
     public function store()
     {
-        $this->log->debug("Storing " . count($this->champions) . " new/updated champions");
+        $this->log->debug("Storing ".count($this->champions)." new/updated champions");
 
-        foreach ($this->champions as $champion) {
-            $select = "SELECT champion_name FROM champions WHERE champion_id = :champion_id AND version = :version"
+        $select = "SELECT champion_name FROM champions WHERE champion_id = :champion_id AND version = :version"
                 . " AND region = :region";
 
+        foreach ($this->champions as $champion) {
             $this->statService->add([$champion->getStats()]);
             $this->spellService->add($champion->getSpells());
             $this->passiveService->add([$champion->getPassive()]);
