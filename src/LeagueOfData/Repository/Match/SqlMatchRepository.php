@@ -75,8 +75,10 @@ class SqlMatchRepository implements StoreRepositoryInterface
         return new Match(
             $match['match_id'],
             $match['region'],
-            $match['game_mode'],
-            $match['game_version']
+            $match['mode'],
+            $match['type'],
+            $match['duration'],
+            $match['version']
         );
     }
 

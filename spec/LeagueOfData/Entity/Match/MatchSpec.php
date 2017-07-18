@@ -12,6 +12,8 @@ class MatchSpec extends ObjectBehavior
             1, // Match ID
             "euw", // Region
             "ASSASSINATE", // Game Mode
+            "MATCHED_GAME", // Game Type
+            865, // Game Duration
             "7.12.190.9002" // Game Version
         );
     }
@@ -41,8 +43,10 @@ class MatchSpec extends ObjectBehavior
     public function it_has_all_data_available()
     {
         $this->getMatchID()->shouldReturn(1);
-        $this->getGameMode()->shouldReturn("ASSASSINATE");
         $this->getRegion()->shouldReturn("euw");
-        $this->getGameVersion()->shouldReturn('7.12.190.9002');
+        $this->getMode()->shouldReturn("ASSASSINATE");
+        $this->getType()->shouldReturn("MATCHED_GAME");
+        $this->getDuration()->shouldReturn(865);
+        $this->getVersion()->shouldReturn('7.12.190.9002');
     }
 }

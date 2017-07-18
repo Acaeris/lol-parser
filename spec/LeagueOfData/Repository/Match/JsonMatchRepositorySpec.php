@@ -13,6 +13,8 @@ class MatchRepositorySpec extends ObjectBehavior
     private $mockData = [
         'gameId' => 1,
         'gameMode' => "ASSASSINATE",
+        'gameType' => "MATCHED_GAME",
+        'gameDuration' => 865,
         'region' => "euw",
         'gameVersion' => '7.12.190.9002'
     ];

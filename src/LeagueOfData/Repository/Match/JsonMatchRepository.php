@@ -53,6 +53,8 @@ class JsonMatchRepository implements FetchRepositoryInterface
             $match['gameId'],
             $match['region'],
             $match['gameMode'],
+            $match['gameType'],
+            $match['gameDuration'],
             $match['gameVersion']
         );
     }

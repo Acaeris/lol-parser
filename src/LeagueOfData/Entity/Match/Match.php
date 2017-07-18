@@ -12,12 +12,22 @@ class Match implements MatchInterface, ImmutableInterface
     /**
      * @var string
      */
-    private $gameVersion;
+    private $duration;
 
     /**
      * @var string
      */
-    private $gameMode;
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @var string
+     */
+    private $mode;
 
     /**
      * @var string
@@ -36,15 +46,19 @@ class Match implements MatchInterface, ImmutableInterface
     public function __construct(
         int $matchID,
         string $region,
-        string $gameMode = null,
-        string $gameVersion = null
+        string $mode = "",
+        string $type = "",
+        int $duration = null,
+        string $version = ""
     ) {
         $this->constructImmutable();
 
         $this->matchID = $matchID;
         $this->region = $region;
-        $this->gameMode = $gameMode;
-        $this->gameVersion = $gameVersion;
+        $this->mode = $mode;
+        $this->version = $version;
+        $this->type = $type;
+        $this->duration = $duration;
     }
 
     /**
@@ -75,9 +89,9 @@ class Match implements MatchInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getGameMode(): string
+    public function getMode(): string
     {
-        return $this->gameMode;
+        return $this->mode;
     }
 
     /**
@@ -95,8 +109,28 @@ class Match implements MatchInterface, ImmutableInterface
      *
      * @return string
      */
-    public function getGameVersion(): string
+    public function getVersion(): string
     {
-        return $this->gameVersion;
+        return $this->version;
+    }
+
+    /**
+     * Game Type
+     *
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * Game Duration
+     *
+     * @return int
+     */
+    public function getDuration(): int
+    {
+        return $this->duration;
     }
 }
