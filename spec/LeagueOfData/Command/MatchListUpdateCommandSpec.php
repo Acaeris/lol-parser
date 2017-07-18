@@ -7,19 +7,18 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Sql\Match\MatchCollection as DbCollection;
-use LeagueOfData\Service\Json\MatchList\MatchListCollection as ApiCollection;
+use LeagueOfData\Repository\Match\SqlMatchRepository;
+use LeagueOfData\Repository\MatchList\JsonMatchListRepository;
 use LeagueOfData\Entity\Match\MatchInterface;
 
 class MatchListUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
-        InputInterface $input,
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonMatchListRepository $apiRepository,
+        SqlMatchRepository $dbRepository
     ) {
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
 
     public function it_is_initializable()
@@ -37,16 +36,16 @@ class MatchListUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_match_list_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonMatchListRepository $apiRepository,
+        SqlMatchRepository $dbRepository,
         MatchInterface $mockMatch
     ) {
-        $dbAdapter->fetch(new AnyValuesToken)->willReturn([]);
-        $apiAdapter->fetch(new AnyValuesToken)->willReturn([$mockMatch]);
+        $dbRepository->fetch(new AnyValuesToken)->willReturn([]);
+        $apiRepository->fetch(new AnyValuesToken)->willReturn([$mockMatch]);
 
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockMatch])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockMatch])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
 
         $this->run($input, $output);
     }

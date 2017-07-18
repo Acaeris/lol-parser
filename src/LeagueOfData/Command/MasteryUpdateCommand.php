@@ -8,8 +8,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Json\Mastery\MasteryCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Mastery\MasteryCollection as DbCollection;
+use LeagueOfData\Repository\Mastery\JsonMasteryRepository;
+use LeagueOfData\Repository\Mastery\SqlMasteryRepository;
 
 class MasteryUpdateCommand extends Command
 {
@@ -22,12 +22,12 @@ class MasteryUpdateCommand extends Command
     /**
      * @var FetchServiceInterface API Service
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var StoreServiceInterface DB Service
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var string Select Query
@@ -41,13 +41,13 @@ class MasteryUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonMasteryRepository $apiRepository,
+        SqlMasteryRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -74,22 +74,22 @@ class MasteryUpdateCommand extends Command
     {
         $this->buildRequest($input);
 
-        $this->logger->info('Checking Mastery data for update');
+        $output->writeln('Checking Mastery data for update');
 
-        if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
-            $this->logger->info("Update required");
+        if (count($this->dbRepository->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
+            $output->writeln("Update required");
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($this->where));
-                $this->dbAdapter->store();
-                $this->logger->info("Command complete");
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($this->where));
+                $this->dbRepository->store();
+                $output->writeln("Command complete");
             } catch (\Exception $exception) {
                 $this->logger->error("Failed to store mastery data:", ['exception' => $exception]);
             }
             return;
         }
 
-        $this->logger->info('Skipping update for version '.$input->getArgument('release').' as data exists');
+        $output->writeln('Skipping update for version '.$input->getArgument('release').' as data exists');
     }
 
     /**

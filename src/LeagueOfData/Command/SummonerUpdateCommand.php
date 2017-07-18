@@ -7,27 +7,27 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use LeagueOfData\Service\Json\Summoner\SummonerCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Summoner\SummonerCollection as DbCollection;
+use LeagueOfData\Repository\Summoner\JsonSummonerRepository;
+use LeagueOfData\Repository\Summoner\SqlSummonerRepository;
 
 class SummonerUpdateCommand extends Command
 {
 
     /**
-     * @var DbCollection
+     * @var JsonSummonerRepository
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
-     * @var ApiCollection
+     * @var SqlSummonerRepository
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var LoggerInterface
      */
     private $logger;
-    
+
     /**
      * @var string Select Query
      */
@@ -40,13 +40,13 @@ class SummonerUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonSummonerRepository $apiRepository,
+        SqlSummonerRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -74,25 +74,25 @@ class SummonerUpdateCommand extends Command
     {
         $this->buildRequest($input);
 
-        $this->logger->info('Checking Summoner data for update.');
+        $output->writeln('<info>Checking Summoner data for update.</info>');
 
-        if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
-            $this->logger->info("Update required");
+        if (count($this->dbRepository->fetch($this->select, $this->where)) === 0 || $input->getOption('force')) {
+            $output->writeln("<info>Update required</info>");
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($this->where));
-                $this->dbAdapter->store();
-                $this->logger->info("Command complete");
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($this->where));
+                $this->dbRepository->store();
+                $output->writeln("<info>Command complete</info>");
             } catch (\Exception $exception) {
                 $this->logger->error("Failed to store champion data:", ['exception' => $exception]);
             }
             return;
         }
-        $accountId = null !== $input->getOption('accountId') ? $input->getOption('accountId') : '';
-        $summonerName = null !== $input->getOption('summonerName') ? $input->getOption('summonerName') : '';
-        $summonerId = null !== $input->getOption('summonerId') ? $input->getOption('summonerId') : '';
-        $this->logger->info('Skipping update for summoner: '.$summonerName
-            .' [SID: '.$summonerId.'][AID: '.$accountId.']');
+        $accountId = $input->getOption('accountId') ?? '';
+        $summonerName = $input->getOption('summonerName') ?? '';
+        $summonerId = $input->getOption('summonerId') ?? '';
+        $output->writeln('<info>Skipping update for summoner:</info> '.$summonerName
+            .' [summoner_id: '.$summonerId.', account_id: '.$accountId.']');
     }
 
     /**

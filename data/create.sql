@@ -143,6 +143,6 @@ CREATE TABLE IF NOT EXISTS summoners (
 
 CREATE TABLE IF NOT EXISTS matches (
   PRIMARY KEY (match_id, region),
-  match_id int        NOT NULL,
+  match_id bigint     NOT NULL,
   region   varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

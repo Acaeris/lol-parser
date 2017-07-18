@@ -8,16 +8,16 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Realm\RealmCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Realm\RealmCollection as DbCollection;
+use LeagueOfData\Repository\Realm\JsonRealmRepository;
+use LeagueOfData\Repository\Realm\SqlRealmRepository;
 use LeagueOfData\Entity\Realm\RealmInterface;
 
 class RealmUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
         InputInterface $input,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonRealmRepository $apiRepository,
+        SqlRealmRepository $dbRepository,
         LoggerInterface $logger
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
@@ -26,7 +26,7 @@ class RealmUpdateCommandSpec extends ObjectBehavior
         $input->hasArgument('command')->willReturn(false);
         $input->getOption('force')->willReturn(false);
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
 
     public function it_is_initializable()
@@ -43,16 +43,16 @@ class RealmUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_realm_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonRealmRepository $apiRepository,
+        SqlRealmRepository $dbRepository,
         RealmInterface $mockRealm
     ) {
 
-        $dbAdapter->fetch('SELECT * FROM realms', [])->willReturn([]);
-        $dbAdapter->add([$mockRealm])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockRealm]);
-        $apiAdapter->transfer()->willReturn([$mockRealm]);
+        $dbRepository->fetch('SELECT * FROM realms', [])->willReturn([]);
+        $dbRepository->add([$mockRealm])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
+        $apiRepository->fetch(new AnyValueToken)->willReturn([$mockRealm]);
+        $apiRepository->transfer()->willReturn([$mockRealm]);
 
         $this->run($input, $output);
     }

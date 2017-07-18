@@ -6,8 +6,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Json\Realm\RealmCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Realm\RealmCollection as DbCollection;
+use LeagueOfData\Repository\Realm\JsonRealmRepository;
+use LeagueOfData\Repository\Realm\SqlRealmRepository;
 
 class RealmUpdateCommand extends Command
 {
@@ -19,22 +19,22 @@ class RealmUpdateCommand extends Command
     /**
      * @var FetchServiceInterface API Service
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var StoreServiceInterface DB Service
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonRealmRepository $apiRepository,
+        SqlRealmRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -52,8 +52,8 @@ class RealmUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Updating Realm data');
-        $this->dbAdapter->add($this->apiAdapter->fetch([]));
-        $this->dbAdapter->store();
+        $this->dbRepository->add($this->apiRepository->fetch([]));
+        $this->dbRepository->store();
         $this->logger->info('Command complete');
     }
 }

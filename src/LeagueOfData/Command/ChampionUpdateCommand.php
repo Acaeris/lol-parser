@@ -8,8 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Sql\Champion\ChampionCollection as DbCollection;
-use LeagueOfData\Service\Json\Champion\ChampionCollection as ApiCollection;
+use LeagueOfData\Repository\Champion\SqlChampionRepository;
+use LeagueOfData\Repository\Champion\JsonChampionRepository;
 
 class ChampionUpdateCommand extends Command
 {
@@ -19,14 +19,14 @@ class ChampionUpdateCommand extends Command
     private $logger;
 
     /**
-     * @var ChampionService API Service
+     * @var JsonChampionRepository API Repository
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
-     * @var Connection DB Service
+     * @var SqlChampionRepository DB Repository
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var string Select Query
@@ -40,13 +40,13 @@ class ChampionUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonChampionRepository $apiRepository,
+        SqlChampionRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -73,22 +73,22 @@ class ChampionUpdateCommand extends Command
     {
         $this->buildRequest($input);
 
-        $this->logger->info('Checking Champion data for update. [v: '.$input->getArgument('release').']');
+        $output->writeln('<info>Checking Champion data for update.</info> [v: '.$input->getArgument('release').']');
 
-        if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
-            $this->logger->info("Update required");
+        if (count($this->dbRepository->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
+            $output->writeln("<info>Update required</info>");
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($this->where));
-                $this->dbAdapter->store();
-                $this->logger->info("Command complete");
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($this->where));
+                $this->dbRepository->store();
+                $output->writeln("<info>Command complete</info>");
             } catch (\Exception $exception) {
                 $this->logger->error("Failed to store champion data:", ['exception' => $exception]);
             }
             return;
         }
 
-        $this->logger->info('Skipping update for version ' . $input->getArgument('release') . ' as data exists');
+        $output->writeln('<info>Skipping update as data exists</info>');
     }
 
     /**

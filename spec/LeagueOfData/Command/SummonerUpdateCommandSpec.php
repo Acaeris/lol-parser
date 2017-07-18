@@ -7,8 +7,8 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Summoner\SummonerCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Summoner\SummonerCollection as DbCollection;
+use LeagueOfData\Repository\Summoner\JsonSummonerRepository;
+use LeagueOfData\Repository\Summoner\SqlSummonerRepository;
 use LeagueOfData\Entity\Summoner\SummonerInterface;
 
 class SummonerUpdateCommandSpec extends ObjectBehavior
@@ -16,8 +16,8 @@ class SummonerUpdateCommandSpec extends ObjectBehavior
     public function let(
         InputInterface $input,
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonSummonerRepository $apiRepository,
+        SqlSummonerRepository $dbRepository
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
         $input->isInteractive()->willReturn(false);
@@ -28,7 +28,7 @@ class SummonerUpdateCommandSpec extends ObjectBehavior
         $input->getOption('summonerName')->willReturn();
         $input->getOption('accountId')->willReturn();
         $input->getOption('force')->willReturn(false);
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
 
     public function it_is_initializable()
@@ -46,16 +46,16 @@ class SummonerUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_summoner(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonSummonerRepository $apiRepository,
+        SqlSummonerRepository $dbRepository,
         SummonerInterface $mockSummoner
     ) {
-        $dbAdapter->fetch(new AnyValuesToken)->willReturn([]);
-        $apiAdapter->fetch(new AnyValuesToken)->willReturn([$mockSummoner]);
+        $dbRepository->fetch(new AnyValuesToken)->willReturn([]);
+        $apiRepository->fetch(new AnyValuesToken)->willReturn([$mockSummoner]);
 
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockSummoner])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockSummoner])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
 
         $this->run($input, $output);
     }

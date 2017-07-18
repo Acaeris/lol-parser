@@ -10,7 +10,9 @@ class MatchSpec extends ObjectBehavior
     {
         $this->beConstructedWith(
             1, // Match ID
-            "euw" // Region
+            "euw", // Region
+            "ASSASSINATE", // Game Mode
+            "7.12.190.9002" // Game Version
         );
     }
 
@@ -39,6 +41,8 @@ class MatchSpec extends ObjectBehavior
     public function it_has_all_data_available()
     {
         $this->getMatchID()->shouldReturn(1);
+        $this->getGameMode()->shouldReturn("ASSASSINATE");
         $this->getRegion()->shouldReturn("euw");
+        $this->getGameVersion()->shouldReturn('7.12.190.9002');
     }
 }

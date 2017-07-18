@@ -12,4 +12,7 @@ use LeagueOfData\Entity\EntityInterface;
 interface MatchInterface extends EntityInterface
 {
     public function getMatchID(): int;
+    public function getGameMode(): string;
+    public function getRegion(): string;
+    public function getGameVersion(): string;
 }

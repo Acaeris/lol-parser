@@ -2,22 +2,21 @@
 namespace spec\LeagueOfData\Command;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use Prophecy\Argument\Token\AnyValueToken;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Mastery\MasteryCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Mastery\MasteryCollection as DbCollection;
+use LeagueOfData\Repository\Mastery\JsonMasteryRepository;
+use LeagueOfData\Repository\Mastery\SqlMasteryRepository;
 use LeagueOfData\Entity\Mastery\MasteryInterface;
 
 class MasteryUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
         InputInterface $input,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonMasteryRepository $apiRepository,
+        SqlMasteryRepository $dbRepository,
         LoggerInterface $logger
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
@@ -29,7 +28,7 @@ class MasteryUpdateCommandSpec extends ObjectBehavior
         $input->getOption('region')->willReturn('euw');
         $input->getOption('masteryId')->willReturn();
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
 
     public function it_is_initializable()
@@ -46,18 +45,18 @@ class MasteryUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_mastery_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonMasteryRepository $apiRepository,
+        SqlMasteryRepository $dbRepository,
         MasteryInterface $mockMastery
     ) {
 
-        $dbAdapter->fetch('SELECT * FROM masteries WHERE version = :version AND region = :region',
+        $dbRepository->fetch('SELECT * FROM masteries WHERE version = :version AND region = :region',
             ["version" => "7.9.1", "region" => "euw"])->willReturn([]);
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockMastery])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockMastery]);
-        $apiAdapter->transfer()->willReturn([$mockMastery]);
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockMastery])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
+        $apiRepository->fetch(new AnyValueToken)->willReturn([$mockMastery]);
+        $apiRepository->transfer()->willReturn([$mockMastery]);
 
         $this->run($input, $output);
     }

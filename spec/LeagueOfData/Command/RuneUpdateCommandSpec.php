@@ -7,16 +7,16 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Rune\RuneCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Rune\RuneCollection as DbCollection;
+use LeagueOfData\Repository\Rune\JsonRuneRepository;
+use LeagueOfData\Repository\Rune\SqlRuneRepository;
 use LeagueOfData\Entity\Rune\RuneInterface;
 
 class RuneUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
         InputInterface $input,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonRuneRepository $apiRepository,
+        SqlRuneRepository $dbRepository,
         LoggerInterface $logger
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
@@ -28,7 +28,7 @@ class RuneUpdateCommandSpec extends ObjectBehavior
         $input->getOption('region')->willReturn('euw');
         $input->getOption('runeId')->willReturn();
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
 
     public function it_is_initializable()
@@ -45,18 +45,18 @@ class RuneUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_rune_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonRuneRepository $apiRepository,
+        SqlRuneRepository $dbRepository,
         RuneInterface $mockRune
     ) {
 
-        $dbAdapter->fetch('SELECT * FROM runes WHERE version = :version AND region = :region',
+        $dbRepository->fetch('SELECT * FROM runes WHERE version = :version AND region = :region',
             ["version" => "7.9.1", "region" => "euw"])->willReturn([]);
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockRune])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockRune]);
-        $apiAdapter->transfer()->willReturn([$mockRune]);
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockRune])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
+        $apiRepository->fetch(new AnyValueToken)->willReturn([$mockRune]);
+        $apiRepository->transfer()->willReturn([$mockRune]);
 
         $this->run($input, $output);
     }

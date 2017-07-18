@@ -8,8 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Sql\Item\ItemCollection as DbCollection;
-use LeagueOfData\Service\Json\Item\ItemCollection as ApiCollection;
+use LeagueOfData\Repository\Item\SqlItemRepository;
+use LeagueOfData\Repository\Item\JsonItemRepository;
 
 class ItemUpdateCommand extends Command
 {
@@ -21,12 +21,12 @@ class ItemUpdateCommand extends Command
     /**
      * @var FetchServiceInterface API Service
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var StoreServiceInterface DB Service
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var string Select Query
@@ -40,13 +40,13 @@ class ItemUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonItemRepository $apiRepository,
+        SqlItemRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -75,12 +75,12 @@ class ItemUpdateCommand extends Command
 
         $this->logger->info('Checking Item data for update');
 
-        if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
+        if (count($this->dbRepository->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
             $this->logger->info("Update required");
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($this->where));
-                $this->dbAdapter->store();
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($this->where));
+                $this->dbRepository->store();
                 $this->logger->info("Command complete");
             } catch (\Exception $exception) {
                 $this->logger->error("Failed to store item data:", ['exception' => $exception]);

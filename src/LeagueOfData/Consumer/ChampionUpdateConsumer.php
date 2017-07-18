@@ -4,7 +4,7 @@ namespace LeagueOfData\Consumer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use Psr\Log\LoggerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
-use LeagueOfData\Service\Json\Champion\ChampionCollection as ApiCollection;
+use LeagueOfData\Service\Json\Champion\JsonChampionRepository as ApiCollection;
 use LeagueOfData\Service\Sql\Champion\ChampionCollection as DbCollection;
 
 class ChampionUpdateConsumer implements ConsumerInterface

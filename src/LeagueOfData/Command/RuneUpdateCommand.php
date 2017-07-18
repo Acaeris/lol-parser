@@ -8,8 +8,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Psr\Log\LoggerInterface;
-use LeagueOfData\Service\Json\Rune\RuneCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Rune\RuneCollection as DbCollection;
+use LeagueOfData\Repository\Rune\JsonRuneRepository;
+use LeagueOfData\Repository\Rune\SqlRuneRepository;
 
 class RuneUpdateCommand extends Command
 {
@@ -22,12 +22,12 @@ class RuneUpdateCommand extends Command
     /**
      * @var FetchServiceInterface API Service
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var StoreServiceInterface DB Service
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var string Select Query
@@ -41,13 +41,13 @@ class RuneUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonRuneRepository $apiRepository,
+        SqlRuneRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -76,12 +76,12 @@ class RuneUpdateCommand extends Command
 
         $this->logger->info('Checking Rune data for update');
 
-        if (count($this->dbAdapter->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
+        if (count($this->dbRepository->fetch($this->select, $this->where)) == 0 || $input->getOption('force')) {
             $this->logger->info("Update required");
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($this->where));
-                $this->dbAdapter->store();
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($this->where));
+                $this->dbRepository->store();
                 $this->logger->info("Command complete");
             } catch (\Exception $exception) {
                 $this->logger->error("Failed to store rune data:", ['exception' => $exception]);

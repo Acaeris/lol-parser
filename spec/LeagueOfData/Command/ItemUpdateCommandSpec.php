@@ -8,16 +8,16 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Item\ItemCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Item\ItemCollection as DbCollection;
+use LeagueOfData\Repository\Item\JsonItemRepository;
+use LeagueOfData\Repository\Item\SqlItemRepository;
 use LeagueOfData\Entity\Item\ItemInterface;
 
 class ItemUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
         InputInterface $input,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonItemRepository $apiRepository,
+        SqlItemRepository $dbRepository,
         LoggerInterface $logger
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
@@ -29,7 +29,7 @@ class ItemUpdateCommandSpec extends ObjectBehavior
         $input->getOption('region')->willReturn('euw');
         $input->getOption('itemId')->willReturn();
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
     public function it_is_initializable()
     {
@@ -45,18 +45,17 @@ class ItemUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_item_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonItemRepository $apiRepository,
+        SqlItemRepository $dbRepository,
         ItemInterface $mockItem
     ) {
 
-        $dbAdapter->fetch('SELECT * FROM items WHERE version = :version AND region = :region',
-            ["version" => "7.9.1", "region" => "euw"])->willReturn([]);
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockItem])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockItem]);
-        $apiAdapter->transfer()->willReturn([$mockItem]);
+        $dbRepository->fetch(new AnyValuesToken)->willReturn([]);
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockItem])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
+        $apiRepository->fetch(new AnyValueToken)->willReturn([$mockItem]);
+        $apiRepository->transfer()->willReturn([$mockItem]);
 
         $this->run($input, $output);
     }

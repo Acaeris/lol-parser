@@ -8,16 +8,16 @@ use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Json\Champion\ChampionCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Champion\ChampionCollection as DbCollection;
+use LeagueOfData\Repository\Champion\JsonChampionRepository;
+use LeagueOfData\Repository\Champion\SqlChampionRepository;
 use LeagueOfData\Entity\Champion\ChampionInterface;
 
-class RealmUpdateCommandSpec extends ObjectBehavior
+class ChampionUpdateCommandSpec extends ObjectBehavior
 {
     public function let(
         InputInterface $input,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonChampionRepository $apiRepository,
+        SqlChampionRepository $dbRepository,
         LoggerInterface $logger
     ) {
         $input->bind(new AnyValuesToken)->willReturn();
@@ -29,7 +29,7 @@ class RealmUpdateCommandSpec extends ObjectBehavior
         $input->getOption('region')->willReturn('euw');
         $input->getOption('championId')->willReturn();
 
-        $this->beConstructedWith($logger, $apiAdapter, $dbAdapter);
+        $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
     public function it_is_initializable()
     {
@@ -46,17 +46,17 @@ class RealmUpdateCommandSpec extends ObjectBehavior
     public function it_updates_the_champion_data(
         InputInterface $input,
         OutputInterface $output,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonChampionRepository $apiRepository,
+        SqlChampionRepository $dbRepository,
         ChampionInterface $mockChampion
     ) {
 
-        $dbAdapter->fetch(new AnyValuesToken)->willReturn([]);
-        $dbAdapter->clear()->shouldBeCalled();
-        $dbAdapter->add([$mockChampion])->shouldBeCalled();
-        $dbAdapter->store()->shouldBeCalled();
-        $apiAdapter->fetch(new AnyValueToken)->willReturn([$mockChampion]);
-        $apiAdapter->transfer()->willReturn([$mockChampion]);
+        $dbRepository->fetch(new AnyValuesToken)->willReturn([]);
+        $dbRepository->clear()->shouldBeCalled();
+        $dbRepository->add([$mockChampion])->shouldBeCalled();
+        $dbRepository->store()->shouldBeCalled();
+        $apiRepository->fetch(new AnyValueToken)->willReturn([$mockChampion]);
+        $apiRepository->transfer()->willReturn([$mockChampion]);
 
         $this->run($input, $output);
     }

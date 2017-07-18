@@ -8,21 +8,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Service\Sql\Match\MatchCollection as DbCollection;
-use LeagueOfData\Service\Json\MatchList\MatchListCollection as ApiCollection;
+use LeagueOfData\Repository\Match\SqlMatchRepository;
+use LeagueOfData\Repository\MatchList\JsonMatchListRepository;
 
 class MatchListUpdateCommand extends Command
 {
 
     /**
-     * @var DbCollection
+     * @var SqlMatchRepository
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var ApiCollection
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var LoggerInterface
@@ -31,13 +31,13 @@ class MatchListUpdateCommand extends Command
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonMatchListRepository $apiRepository,
+        SqlMatchRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -61,18 +61,19 @@ class MatchListUpdateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logger->info('Checking Matchlist data for update.');
+        $output->writeln('<info>Checking Matchlist data for update.</info>');
 
         $where = [
-            'all' => $input->getOption('all')
+            'all' => $input->getOption('all'),
+            'account_id' => $input->getArgument('accountId')
         ];
 
         // TODO: Add check for last time this account was updated.
         try {
-            $this->dbAdapter->clear();
-            $this->dbAdapter->add($this->apiAdapter->fetch($where));
-            $this->dbAdapter->store();
-            $this->logger->info("Command complete");
+            $this->dbRepository->clear();
+            $this->dbRepository->add($this->apiRepository->fetch($where));
+            $this->dbRepository->store();
+            $output->writeln("<info>Command complete</info>");
         } catch (Exception $exception) {
             $this->logger->error("Failed to store matchlist data:", ['exception' => $exception]);
         }
