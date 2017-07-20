@@ -6,7 +6,7 @@ services:
 
     LeagueOfData\:
         resource: '../../src/LeagueOfData/*'
-        exclude: '../../src/LeagueOfData/{Entity,Repository,Library}'
+        exclude: '../../src/LeagueOfData/{Entity,Library}'
         public: true
     LeagueOfData\Adapters\ApiAdapter:
         arguments:
@@ -16,8 +16,8 @@ services:
     LeagueOfData\Consumer\VersionUpdateConsumer:
         arguments:
             $logger: '@logger'
-            $apiAdapter: '@LeagueOfData\Service\Json\Version\VersionCollection'
-            $dbAdapter: '@LeagueOfData\Service\Sql\Version\VersionCollection'
+            $apiRepository: '@LeagueOfData\Repository\Version\JsonVersionRepository'
+            $dbRepository: '@LeagueOfData\Repository\Version\SqlVersionRepository'
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
@@ -25,8 +25,8 @@ services:
     LeagueOfData\Command\VersionUpdateCommand:
         arguments:
             $logger: '@logger'
-            $apiAdapter: '@LeagueOfData\Service\Json\Version\VersionCollection'
-            $dbAdapter: '@LeagueOfData\Service\Sql\Version\VersionCollection'
+            $apiRepository: '@LeagueOfData\Repository\Version\JsonVersionRepository'
+            $dbRepository: '@LeagueOfData\Repository\Version\SqlVersionRepository'
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'

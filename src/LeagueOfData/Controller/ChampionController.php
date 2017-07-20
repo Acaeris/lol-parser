@@ -4,16 +4,16 @@ namespace LeagueOfData\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use LeagueOfData\Service\Sql\Champion\ChampionCollection;
+use LeagueOfData\Repository\Champion\SqlChampionRepository;
 
 class ChampionController extends Controller
 {
 
-    public function byIdAction(Request $request, ChampionCollection $database) : Response
+    public function byIdAction(Request $request, SqlChampionRepository $repository) : Response
     {
         $championId = $request->query->get('id');
         $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.1';
-        $champion = $database->fetch('SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version',
+        $champion = $repository->fetch('SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version',
             [ 'champion_id' => $championId, 'version' => $version ]);
 
         return new Response(
@@ -26,7 +26,7 @@ class ChampionController extends Controller
         );
     }
 
-    public function listAction(Request $request, ChampionCollection $database) : Response
+    public function listAction(Request $request, SqlChampionRepository $repository) : Response
     {
         $select = "SELECT * FROM champions WHERE version = :version";
         $params = [ 'version' => (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.1' ];
@@ -35,7 +35,7 @@ class ChampionController extends Controller
             $params['champion_name'] = '%'.$request->query->get('s').'%';
         }
         $select .= " ORDER BY champion_name ASC";
-        $champions = $database->fetch($select, $params);
+        $champions = $repository->fetch($select, $params);
 
         return new Response(
             $this->renderView('api/championList.html.twig', ['champions' => $champions]),

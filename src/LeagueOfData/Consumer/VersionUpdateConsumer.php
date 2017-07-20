@@ -5,8 +5,8 @@ use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 use Psr\Log\LoggerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
-use LeagueOfData\Service\Json\Version\VersionCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Version\VersionCollection as DbCollection;
+use LeagueOfData\Repository\Version\JsonVersionRepository;
+use LeagueOfData\Repository\Version\SqlVersionRepository;
 
 class VersionUpdateConsumer implements ConsumerInterface
 {
@@ -34,12 +34,12 @@ class VersionUpdateConsumer implements ConsumerInterface
     /**
      * @var StoreServiceInterface
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var FetchServiceInterface
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var LoggerInterface
@@ -48,16 +48,16 @@ class VersionUpdateConsumer implements ConsumerInterface
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter,
+        JsonVersionRepository $apiRepository,
+        SqlVersionRepository $dbRepository,
         ProducerInterface $championProducer,
         ProducerInterface $itemProducer,
         ProducerInterface $runeProducer,
         ProducerInterface $masteryProducer
     ) {
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
         $this->championProducer = $championProducer;
         $this->itemProducer = $itemProducer;
         $this->runeProducer = $runeProducer;
@@ -75,7 +75,7 @@ class VersionUpdateConsumer implements ConsumerInterface
 
         $message = unserialize($msg->body);
 
-        if (count($this->dbAdapter->fetch("SELECT * FROM versions", [])) == 0 || $message['force']) {
+        if (count($this->dbRepository->fetch("SELECT * FROM versions", [])) == 0 || $message['force']) {
             $this->logger->info("Update required");
             if ($this->updateData($message)) {
                 return true;
@@ -98,9 +98,9 @@ class VersionUpdateConsumer implements ConsumerInterface
         try {
             $this->logger->info("Storing version data");
 
-            $this->dbAdapter->clear();
-            $this->dbAdapter->add($this->apiAdapter->fetch([]));
-            $this->dbAdapter->store();
+            $this->dbRepository->clear();
+            $this->dbRepository->add($this->apiRepository->fetch([]));
+            $this->dbRepository->store();
             $this->queueUpdates($message['force']);
             $this->logger->info('Update complete');
             return true;
@@ -117,7 +117,7 @@ class VersionUpdateConsumer implements ConsumerInterface
      */
     private function queueUpdates(bool $force)
     {
-        foreach ($this->apiAdapter->transfer() as $version) {
+        foreach ($this->apiRepository->transfer() as $version) {
             $this->logger->info("Queuing update for version ".$version->getFullVersion());
             $message = serialize([
                 'version' => $version->getFullVersion(),

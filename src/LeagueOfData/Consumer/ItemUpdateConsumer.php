@@ -4,8 +4,8 @@ namespace LeagueOfData\Consumer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use Psr\Log\LoggerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
-use LeagueOfData\Service\Json\Item\ItemCollection as ApiCollection;
-use LeagueOfData\Service\Sql\Item\ItemCollection as DbCollection;
+use LeagueOfData\Repository\Item\JsonItemRepository;
+use LeagueOfData\Repository\Item\SqlItemRepository;
 
 class ItemUpdateConsumer implements ConsumerInterface
 {
@@ -34,12 +34,12 @@ class ItemUpdateConsumer implements ConsumerInterface
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonItemRepository $apiRepository,
+        SqlItemRepository $dbRepository
     ) {
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiAdapter = $apiRepository;
+        $this->dbAdapter = $dbRepository;
     }
 
     /**

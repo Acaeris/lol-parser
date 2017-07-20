@@ -4,8 +4,8 @@ namespace LeagueOfData\Consumer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use Psr\Log\LoggerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
-use LeagueOfData\Service\Json\Champion\JsonChampionRepository as ApiCollection;
-use LeagueOfData\Service\Sql\Champion\ChampionCollection as DbCollection;
+use LeagueOfData\Repository\Champion\JsonChampionRepository;
+use LeagueOfData\Repository\Champion\SqlChampionRepository;
 
 class ChampionUpdateConsumer implements ConsumerInterface
 {
@@ -13,12 +13,12 @@ class ChampionUpdateConsumer implements ConsumerInterface
     /**
      * @var StoreServiceInterface
      */
-    private $dbAdapter;
+    private $dbRepository;
 
     /**
      * @var FetchServiceInterface
      */
-    private $apiAdapter;
+    private $apiRepository;
 
     /**
      * @var LoggerInterface
@@ -34,12 +34,12 @@ class ChampionUpdateConsumer implements ConsumerInterface
 
     public function __construct(
         LoggerInterface $logger,
-        ApiCollection $apiAdapter,
-        DbCollection $dbAdapter
+        JsonChampionRepository $apiRepository,
+        SqlChampionRepository $dbRepository
     ) {
         $this->logger = $logger;
-        $this->apiAdapter = $apiAdapter;
-        $this->dbAdapter = $dbAdapter;
+        $this->apiRepository = $apiRepository;
+        $this->dbRepository = $dbRepository;
     }
 
     /**
@@ -54,12 +54,12 @@ class ChampionUpdateConsumer implements ConsumerInterface
         $message = array_merge($this->defaultParams, unserialize($msg->body));
         $select = $this->buildRequest($message);
 
-        if (count($this->dbAdapter->fetch($select, $message) == 0 || $message['force'])) {
+        if (count($this->dbRepository->fetch($select, $message) == 0 || $message['force'])) {
             $this->logger->info('Update required');
             try {
-                $this->dbAdapter->clear();
-                $this->dbAdapter->add($this->apiAdapter->fetch($message));
-                $this->dbAdapter->store();
+                $this->dbRepository->clear();
+                $this->dbRepository->add($this->apiRepository->fetch($message));
+                $this->dbRepository->store();
                 $this->logger->info('Update complete');
                 return true;
             } catch (\Exception $exception) {
