@@ -10,11 +10,11 @@ class MatchSpec extends ObjectBehavior
     {
         $this->beConstructedWith(
             1, // Match ID
-            "euw", // Region
             "ASSASSINATE", // Game Mode
             "MATCHED_GAME", // Game Type
             865, // Game Duration
-            "7.12.190.9002" // Game Version
+            "7.12.190.9002", // Game Version
+            "euw" // Region
         );
     }
 

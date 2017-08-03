@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Repository\FetchRepositoryInterface;
 use LeagueOfData\Entity\EntityInterface;
-use LeagueOfData\Entity\Match\Match;
+use LeagueOfData\Entity\Match\MatchPlayer;
 
 class JsonMatchListRepository implements FetchRepositoryInterface
 {
@@ -31,7 +31,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     private $adapter;
 
     /**
-     * @var array Match collection
+     * @var array MatchPlayer collection
      */
     private $matches = [];
 
@@ -42,15 +42,17 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     }
 
     /**
-     * Create the match object from array data
+     * Create the match player object from array data
      *
      * @param array $match
      * @return EntityInterface
      */
     public function create(array $match): EntityInterface
     {
-        return new Match(
+        return new MatchPlayer(
             $match['gameId'],
+            $match['account_id'],
+            $match['champion'],
             $match['region']
         );
     }
@@ -81,7 +83,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     }
 
     /**
-     * Collection of Match objects
+     * Collection of MatchPlayer objects
      *
      * @return array
      */
@@ -91,7 +93,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     }
 
     /**
-     * Convert response data into Match objects
+     * Convert response data into MatchPlayer objects
      *
      * @param array $response
      * @param array $params
@@ -106,6 +108,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
 
             foreach ($response['matches'] as $match) {
                 $match['region'] = $params['region'];
+                $match['account_id'] = $params['account_id'];
                 $this->matches[$match['gameId']] = $this->create($match);
             }
         }

@@ -34,8 +34,10 @@ class SqlMatchRepository implements StoreRepositoryInterface
      */
     private $matches;
 
-    public function __construct(Connection $dbConn, LoggerInterface $logger)
-    {
+    public function __construct(
+        Connection $dbConn,
+        LoggerInterface $logger
+    ) {
         $this->dbConn = $dbConn;
         $this->logger = $logger;
     }
@@ -74,26 +76,26 @@ class SqlMatchRepository implements StoreRepositoryInterface
     {
         return new Match(
             $match['match_id'],
-            $match['region'],
-            $match['mode'],
-            $match['type'],
+            $match['match_mode'],
+            $match['match_type'],
             $match['duration'],
-            $match['version']
+            $match['version'],
+            $match['region']
         );
     }
 
     /**
-     * Fetch Match List
+     * Fetch Match
      *
      * @param string $query SQL Query
      * @param array  $where SQL Where parameters
-     * @return array MatchList Objects
+     * @return array Match Objects
      */
     public function fetch(string $query, array $where = []): array
     {
         $this->matches = [];
 
-        $this->logger->debug('Fetching match list from DB');
+        $this->logger->debug('Fetching match from DB');
 
         $results = $this->dbConn->fetchAll($query, $where);
         $this->processResults($results);
@@ -155,6 +157,10 @@ class SqlMatchRepository implements StoreRepositoryInterface
     {
         return [
             'match_id' => $match->getMatchID(),
+            'match_mode' => $match->getMode(),
+            'match_type' => $match->getType(),
+            'duration' => $match->getDuration(),
+            'version' => $match->getVersion(),
             'region' => $match->getRegion()
         ];
     }

@@ -45,11 +45,11 @@ class Match implements MatchInterface, ImmutableInterface
 
     public function __construct(
         int $matchID,
-        string $region,
-        string $mode = "",
-        string $type = "",
-        int $duration = null,
-        string $version = ""
+        string $mode,
+        string $type,
+        int $duration,
+        string $version,
+        string $region
     ) {
         $this->constructImmutable();
 

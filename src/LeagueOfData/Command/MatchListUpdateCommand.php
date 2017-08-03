@@ -8,14 +8,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LeagueOfData\Repository\Match\SqlMatchRepository;
+use LeagueOfData\Repository\Match\SqlMatchPlayerRepository;
 use LeagueOfData\Repository\MatchList\JsonMatchListRepository;
 
 class MatchListUpdateCommand extends Command
 {
 
     /**
-     * @var SqlMatchRepository
+     * @var SqlMatchPlayerRepository
      */
     private $dbRepository;
 
@@ -32,7 +32,7 @@ class MatchListUpdateCommand extends Command
     public function __construct(
         LoggerInterface $logger,
         JsonMatchListRepository $apiRepository,
-        SqlMatchRepository $dbRepository
+        SqlMatchPlayerRepository $dbRepository
     ) {
         parent::__construct();
         $this->logger = $logger;

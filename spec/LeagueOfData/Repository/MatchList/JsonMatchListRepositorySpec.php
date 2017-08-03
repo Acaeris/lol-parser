@@ -6,12 +6,14 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Psr\Log\LoggerInterface;
 use LeagueOfData\Adapters\AdapterInterface;
-use LeagueOfData\Entity\Match\MatchInterface;
+use LeagueOfData\Entity\Match\MatchPlayerInterface;
 
 class JsonMatchListRepositorySpec extends ObjectBehavior
 {
     private $mockData = [
         'gameId' => 1,
+        'champion' => 103,
+        'account_id' => 2,
         'region' => "euw"
     ];
 
@@ -32,27 +34,27 @@ class JsonMatchListRepositorySpec extends ObjectBehavior
     public function it_can_convert_data_to_match_object()
     {
         $this->create($this->mockData)
-            ->shouldImplement('LeagueOfData\Entity\Match\MatchInterface');
+            ->shouldImplement('LeagueOfData\Entity\Match\MatchPlayerInterface');
     }
 
     public function it_can_fetch_recent_matchlist_by_account_id(AdapterInterface $adapter)
     {
         $adapter->setOptions('match/v3/matchlists/by-account/1/recent', new AnyValuesToken)->willReturn($adapter);
-        $this->fetch(['account_id' => 1])->shouldReturnArrayOfMatches();
+        $this->fetch(['account_id' => 1])->shouldReturnArrayOfMatchPlayers();
     }
 
     public function it_can_fetch_entire_matchlist_by_account_id(AdapterInterface $adapter)
     {
         $adapter->setOptions('match/v3/matchlists/by-account/1', new AnyValuesToken)->willReturn($adapter);
-        $this->fetch(['account_id' => 1, 'all' => true])->shouldReturnArrayOfMatches();
+        $this->fetch(['account_id' => 1, 'all' => true])->shouldReturnArrayOfMatchPlayers();
     }
 
     public function getMatchers()
     {
         return [
-            'returnArrayOfMatches' => function($matches) {
+            'returnArrayOfMatchPlayers' => function($matches) {
                 foreach ($matches as $match) {
-                    if (!$match instanceof MatchInterface) {
+                    if (!$match instanceof MatchPlayerInterface) {
                         return false;
                     }
                 }
