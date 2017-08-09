@@ -38,17 +38,17 @@ trait ResourceTrait
     ];
 
     /**
-     * @var string The type of resource this object represents 
+     * @var string The type of resource this object represents
      */
     private $type;
 
     /**
-     * @var float The base amount of that resource the champion starts with 
+     * @var float The base amount of that resource the champion starts with
      */
     private $baseValue;
 
     /**
-     * @var float The amount the maximum resource increases per level 
+     * @var float The amount the maximum resource increases per level
      */
     private $perLevel;
 

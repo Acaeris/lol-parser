@@ -113,7 +113,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
             . "AND region = :region";
         $participantSelect = "SELECT participant_id FROM match_players WHERE match_id = :match_id "
             . "AND participant_id = :participant_id AND region = :region";
-        
+
         foreach ($this->matchPlayers as $match) {
             foreach ($match as $player) {
                 $keyData = $player->getKeyData();

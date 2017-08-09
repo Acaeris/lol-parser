@@ -137,7 +137,6 @@ class JsonChampionRepositorySpec extends ObjectBehavior
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive
     ) {
-    
         $adapter->fetch()->willReturn($this->mockData);
         $statRepository->create($this->mockData['data']['Aatrox'])->willReturn($stats);
         $passiveRepository->create($this->mockData['data']['Aatrox'])->willReturn($passive);

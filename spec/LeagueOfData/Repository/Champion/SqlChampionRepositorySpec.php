@@ -38,7 +38,6 @@ class SqlChampionRepositorySpec extends ObjectBehavior
         ChampionSpellInterface $spell,
         ChampionPassiveInterface $passive
     ) {
-    
         $dbConn->fetchAll(new AnyValuesToken)->willReturn($this->mockData);
         $statRepository->fetch(new AnyValuesToken)->willReturn([266 => $stats]);
         $spellRepository->fetch(new AnyValuesToken)->willReturn([266 => [$spell]]);

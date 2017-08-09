@@ -32,7 +32,6 @@ class ApiAdapterSpec extends ObjectBehavior
         ResponseInterface $response,
         LoggerInterface $logger
     ) {
-    
         $this->setOptions("Test", ['region' => 'euw']);
         $response->getStatusCode()->willReturn(503);
         $client->request(new AnyValuesToken)->willReturn($response);
@@ -45,6 +44,20 @@ class ApiAdapterSpec extends ObjectBehavior
     {
         $response->getStatusCode()->willReturn(404);
         $logger->info("Data unavailable. Skipping.")->shouldBeCalled();
+        $this->checkResponse($response)->shouldReturn([]);
+    }
+
+    public function it_checks_the_response_status_429(
+        ClientInterface $client,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        $this->setOptions("Test", ['region' => 'euw']);
+        $response->getStatusCode()->willReturn(429);
+        $client->request(new AnyValuesToken)->willReturn($response);
+        $response->getHeader("Retry-After")->willReturn(1);
+        $logger->info("Rate Limit exceeded. Waiting...")->shouldBeCalled();
+        $logger->info("API unavailable after 3 attempts. Skipping.")->shouldBeCalled();
         $this->checkResponse($response)->shouldReturn([]);
     }
 

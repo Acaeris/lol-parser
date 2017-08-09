@@ -108,32 +108,32 @@ class ApiAdapter implements AdapterInterface
     public function checkResponse(ResponseInterface $response) : array
     {
         switch ($response->getStatusCode()) {
-        case 200:
-            $this->attempts = 0;
-            return json_decode($response->getBody(), true);
-        case 503:
-            if ($this->attempts < 3) {
-                $this->log->info("API unavailable. Waiting to retry.");
-                sleep(1);
-                return $this->fetch();
-            }
-            $this->log->info("API unavailable after 3 attempts. Skipping.");
-            break;
-        case 404:
-            $this->log->info("Data unavailable. Skipping.");
-            break;
-        case 429:
-            if ($this->attempts < 3) {
-                $this->log->info("Rate Limit exceeded. Waiting...");
-                $wait = $response->getHeader('Retry-After');
-                sleep($wait[0]);
-                return $this->fetch();
-            }
-            $this->log->info("API unavailable after 3 attempts. Skipping.");
-            break;
-        default:
-            $this->log->error("Unknown response: ".$response->getStatusCode());
-            break;
+            case 200:
+                $this->attempts = 0;
+                return json_decode($response->getBody(), true);
+            case 503:
+                if ($this->attempts < 3) {
+                    $this->log->info("API unavailable. Waiting to retry.");
+                    sleep(1);
+                    return $this->fetch();
+                }
+                $this->log->info("API unavailable after 3 attempts. Skipping.");
+                break;
+            case 404:
+                $this->log->info("Data unavailable. Skipping.");
+                break;
+            case 429:
+                if ($this->attempts < 3) {
+                    $this->log->info("Rate Limit exceeded. Waiting...");
+                    $wait = $response->getHeader('Retry-After');
+                    sleep($wait[0]);
+                    return $this->fetch();
+                }
+                $this->log->info("API unavailable after 3 attempts. Skipping.");
+                break;
+            default:
+                $this->log->error("Unknown response: ".$response->getStatusCode());
+                break;
         }
 
         $this->attempts = 0;

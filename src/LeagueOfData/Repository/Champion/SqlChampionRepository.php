@@ -63,7 +63,6 @@ class SqlChampionRepository implements StoreRepositoryInterface
         SqlChampionSpellRepository $spellRepository,
         SqlChampionPassiveRepository $passiveRepository
     ) {
-    
         $this->dbConn = $connection;
         $this->log = $log;
         $this->statRepository = $statRepository;

@@ -23,17 +23,18 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     use ResourceTrait;
 
     /**
- * @var string Tag for defence type: Armor 
-*/
+     * @var string Tag for defence type: Armor
+     */
     const DEFENSE_ARMOR = 'armor';
+
     /**
- * @var string Tag for defence type: Magic Resistance 
-*/
+     * @var string Tag for defence type: Magic Resistance
+     */
     const DEFENSE_MAGICRESIST = 'spellBlock';
 
     /**
- * @var string Defense type 
-**/
+     * @var string Defense type
+     **/
     private $type;
 
     /**

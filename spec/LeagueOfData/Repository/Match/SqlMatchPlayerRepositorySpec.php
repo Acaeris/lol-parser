@@ -44,7 +44,7 @@ class SqlMatchPlayerRepositorySpec extends ObjectBehavior
         $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Match\MatchPlayerInterface');
     }
 
-    public function it_can_add_and_retrieve_player_objects_from_collection(MatchPlayerInterface $player) 
+    public function it_can_add_and_retrieve_player_objects_from_collection(MatchPlayerInterface $player)
     {
         $player->getMatchID()->willReturn(1);
         $player->getAccountID()->willReturn(1);
