@@ -24,7 +24,7 @@ trait ImmutableTrait
      * `true` if the object using this trait has been constructed already,
      * `false` otherwise.
      *
-     * @var boolean
+     * @var  boolean
      * @todo Find a solutions that does not require a member attribute.
      */
     private $constructed = false;

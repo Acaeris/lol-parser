@@ -46,7 +46,7 @@ class SqlRealmRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfRealms' => function($realms) {
+            'returnArrayOfRealms' => function ($realms) {
                 foreach ($realms as $realm) {
                     if (!$realm instanceof RealmInterface) {
                         return false;

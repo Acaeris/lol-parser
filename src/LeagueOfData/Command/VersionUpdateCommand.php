@@ -81,7 +81,7 @@ class VersionUpdateCommand extends Command
     /**
      * Execute the command
      *
-     * @param InputInterface $input Input data
+     * @param InputInterface  $input  Input data
      * @param OutputInterface $output Output data
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -126,10 +126,12 @@ class VersionUpdateCommand extends Command
     {
         foreach ($this->apiRepository->transfer() as $version) {
             $this->logger->info("Queuing update for version ".$version->getFullVersion());
-            $message = serialize([
+            $message = serialize(
+                [
                 'version' => $version->getFullVersion(),
                 'force' => $force
-            ]);
+                ]
+            );
             $this->championProducer->publish($message);
             $this->itemProducer->publish($message);
             $this->runeProducer->publish($message);

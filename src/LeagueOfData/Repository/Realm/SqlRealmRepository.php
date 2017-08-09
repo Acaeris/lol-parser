@@ -70,7 +70,7 @@ class SqlRealmRepository implements StoreRepositoryInterface
     /**
      * Factory to create realm objects
      *
-     * @param array $realm
+     * @param  array $realm
      * @return EntityInterface
      */
     public function create(array $realm) : EntityInterface
@@ -81,8 +81,8 @@ class SqlRealmRepository implements StoreRepositoryInterface
     /**
      * Find all Realm data
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array Realm objects
      */
     public function fetch(string $query, array $where = []) : array
@@ -123,7 +123,7 @@ class SqlRealmRepository implements StoreRepositoryInterface
     /**
      * Convert result data into Realm objects
      *
-     * @param array $results
+     * @param  array $results
      * @throws \Exception
      */
     private function processResults(array $results)
@@ -142,7 +142,7 @@ class SqlRealmRepository implements StoreRepositoryInterface
     /**
      * Converts Realm object into SQL data array
      *
-     * @param Realm $realm
+     * @param  Realm $realm
      * @return array
      */
     private function convertRealmToArray(Realm $realm) : array

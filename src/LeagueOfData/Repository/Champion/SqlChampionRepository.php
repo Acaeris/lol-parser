@@ -61,8 +61,9 @@ class SqlChampionRepository implements StoreRepositoryInterface
         LoggerInterface $log,
         SqlChampionStatsRepository $statRepository,
         SqlChampionSpellRepository $spellRepository,
-        SqlChampionPassiveRepository $passiveRepository)
-    {
+        SqlChampionPassiveRepository $passiveRepository
+    ) {
+    
         $this->dbConn = $connection;
         $this->log = $log;
         $this->statRepository = $statRepository;
@@ -97,8 +98,8 @@ class SqlChampionRepository implements StoreRepositoryInterface
     /**
      * Fetch Champions
      *
-     * @param string $query SQL query
-     * @param array  $where SQL where parameters
+     * @param  string $query SQL query
+     * @param  array  $where SQL where parameters
      * @return array Champion Objects
      */
     public function fetch(string $query, array $where = []): array
@@ -153,7 +154,7 @@ class SqlChampionRepository implements StoreRepositoryInterface
     /**
      * Create the champion object from array data
      *
-     * @param array $champion
+     * @param  array $champion
      * @return EntityInterface
      */
     public function create(array $champion): EntityInterface
@@ -163,12 +164,18 @@ class SqlChampionRepository implements StoreRepositoryInterface
             'region' => $champion['region'],
             'champion_id' => $champion['champion_id'],
         ];
-        $stats = $this->statRepository->fetch("SELECT * FROM champion_stats WHERE version = :version AND region = :region"
-            . " AND champion_id = :champion_id", $where);
-        $spells = $this->spellRepository->fetch("SELECT * FROM champion_spells WHERE version = :version"
-            . " AND region = :region AND champion_id = :champion_id", $where);
-        $passive = $this->passiveRepository->fetch("SELECT * FROM champion_passives WHERE version = :version"
-            . " AND region = :region AND champion_id = :champion_id", $where);
+        $stats = $this->statRepository->fetch(
+            "SELECT * FROM champion_stats WHERE version = :version AND region = :region"
+            . " AND champion_id = :champion_id", $where
+        );
+        $spells = $this->spellRepository->fetch(
+            "SELECT * FROM champion_spells WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where
+        );
+        $passive = $this->passiveRepository->fetch(
+            "SELECT * FROM champion_passives WHERE version = :version"
+            . " AND region = :region AND champion_id = :champion_id", $where
+        );
         return new Champion(
             $champion['champion_id'],
             $champion['champion_name'],
@@ -187,7 +194,7 @@ class SqlChampionRepository implements StoreRepositoryInterface
     /**
      * Converts Champion object into SQL data array
      *
-     * @param ChampionInterface $champion
+     * @param  ChampionInterface $champion
      * @return array
      */
     private function convertChampionToArray(ChampionInterface $champion): array

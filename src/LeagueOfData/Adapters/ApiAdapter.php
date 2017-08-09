@@ -14,6 +14,7 @@ use bandwidthThrottle\tokenBucket\storage\FileStorage;
 
 /**
  * API Adapter class
+ *
  * @package LeagueOfData\Adapters
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
@@ -53,17 +54,17 @@ class ApiAdapter implements AdapterInterface
         $this->client = $client;
         $this->apiKey = $apiKey;
         $storage = new FileStorage(__DIR__ . "/api.bucket");
-        $rate = new Rate(50, Rate::MINUTE);
-        $bucket = new TokenBucket(50, $rate, $storage);
+        $rate = new Rate(10, Rate::MINUTE);
+        $bucket = new TokenBucket(10, $rate, $storage);
         $this->consumer = new BlockingConsumer($bucket);
-        $bucket->bootstrap(50);
     }
 
     /**
      * Set the API options
      *
      * @param string $apiEndpoint
-     * @param AdapterInterface Fluid Interface
+     * @param array  $params
+     * @return AdapterInterface Fluid Interface
      */
     public function setOptions(string $apiEndpoint, array $params) : AdapterInterface
     {
@@ -82,10 +83,12 @@ class ApiAdapter implements AdapterInterface
         $this->attempts++;
         try {
             $this->consumer->consume(1);
-            $response = $this->client->request('GET', $this->buildQuery(), [
-                'query' => array_merge($this->params, ['api_key' => $this->apiKey]),
-                'headers' => [ 'Content-type' => 'application/json' ],
-            ]);
+            $response = $this->client->request(
+                'GET', $this->buildQuery(), [
+                    'query' => array_merge($this->params, ['api_key' => $this->apiKey]),
+                    'headers' => [ 'Content-type' => 'application/json' ],
+                ]
+            );
         } catch (ServerException $e) {
             $this->handleApiException('Server', $e);
             $response = $e->getResponse();
@@ -99,29 +102,38 @@ class ApiAdapter implements AdapterInterface
     /**
      * Checks the response code from the API
      *
-     * @param ResponseInterface $response
+     * @param  ResponseInterface $response
      * @return array
      */
     public function checkResponse(ResponseInterface $response) : array
     {
         switch ($response->getStatusCode()) {
-            case 200:
-                $this->attempts = 0;
-                return json_decode($response->getBody(), true);
-            case 503:
-                if ($this->attempts < 3) {
-                    $this->log->info("API unavailable. Waiting to retry.");
-                    sleep(1);
-                    return $this->fetch();
-                }
-                $this->log->info("API unavailable after 3 attempts. Skipping.");
-                break;
-            case 404:
-                $this->log->info("Data unavailable. Skipping.");
-                break;
-            default:
-                $this->log->error("Unknown response: ".$response->getStatusCode());
-                break;
+        case 200:
+            $this->attempts = 0;
+            return json_decode($response->getBody(), true);
+        case 503:
+            if ($this->attempts < 3) {
+                $this->log->info("API unavailable. Waiting to retry.");
+                sleep(1);
+                return $this->fetch();
+            }
+            $this->log->info("API unavailable after 3 attempts. Skipping.");
+            break;
+        case 404:
+            $this->log->info("Data unavailable. Skipping.");
+            break;
+        case 429:
+            if ($this->attempts < 3) {
+                $this->log->info("Rate Limit exceeded. Waiting...");
+                $wait = $response->getHeader('Retry-After');
+                sleep($wait[0]);
+                return $this->fetch();
+            }
+            $this->log->info("API unavailable after 3 attempts. Skipping.");
+            break;
+        default:
+            $this->log->error("Unknown response: ".$response->getStatusCode());
+            break;
         }
 
         $this->attempts = 0;
@@ -145,15 +157,17 @@ class ApiAdapter implements AdapterInterface
     /**
      * Handle API exceptions
      *
-     * @param string $type
+     * @param string     $type
      * @param \Exception $exception
      */
     private function handleApiException(string $type, \Exception $exception)
     {
-        $this->log->error('Guzzle '.$type.' Exception:', [
-            'status' => $exception->getResponse()->getStatusCode(),
-            'request' => $exception->getRequest()->getUri(),
-            'response' => $exception->getResponse()->getBody(),
-        ]);
+        $this->log->error(
+            'Guzzle '.$type.' Exception:', [
+                'status' => $exception->getResponse()->getStatusCode(),
+                'request' => $exception->getRequest()->getUri(),
+                'response' => $exception->getResponse()->getBody(),
+            ]
+        );
     }
 }

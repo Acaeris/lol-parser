@@ -36,8 +36,9 @@ class SqlChampionRepositorySpec extends ObjectBehavior
         SqlChampionPassiveRepository $passiveRepository,
         ChampionStatsInterface $stats,
         ChampionSpellInterface $spell,
-        ChampionPassiveInterface $passive)
-    {
+        ChampionPassiveInterface $passive
+    ) {
+    
         $dbConn->fetchAll(new AnyValuesToken)->willReturn($this->mockData);
         $statRepository->fetch(new AnyValuesToken)->willReturn([266 => $stats]);
         $spellRepository->fetch(new AnyValuesToken)->willReturn([266 => [$spell]]);
@@ -71,7 +72,7 @@ class SqlChampionRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampions' => function(array $champions) {
+            'returnArrayOfChampions' => function (array $champions) {
                 foreach ($champions as $champion) {
                     if (!$champion instanceof ChampionInterface) {
                         return false;

@@ -8,6 +8,7 @@ use LeagueOfData\Repository\StoreRepositoryInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Match\Match;
 use LeagueOfData\Entity\Match\MatchInterface;
+use LeagueOfData\Repository\Match\SqlMatchPlayerRepository;
 
 /**
  * Match object DB Repository.
@@ -18,6 +19,11 @@ use LeagueOfData\Entity\Match\MatchInterface;
  */
 class SqlMatchRepository implements StoreRepositoryInterface
 {
+
+    /**
+     * @var SqlMatchPlayerRepository
+     */
+    private $playerRepository;
 
     /**
      * @var LoggerInterface
@@ -36,10 +42,12 @@ class SqlMatchRepository implements StoreRepositoryInterface
 
     public function __construct(
         Connection $dbConn,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SqlMatchPlayerRepository $playerRepository
     ) {
         $this->dbConn = $dbConn;
         $this->logger = $logger;
+        $this->playerRepository = $playerRepository;
     }
 
     /**
@@ -69,26 +77,34 @@ class SqlMatchRepository implements StoreRepositoryInterface
     /**
      * Factory for creating objects
      *
-     * @param array $match
+     * @param  array $match
      * @return EntityInterface
      */
     public function create(array $match): EntityInterface
     {
+        $players = $this->playerRepository->fetch(
+            "SELECT * FROM match_players WHERE region = :region AND match_id = :match_id",
+            $match
+        );
+
         return new Match(
             $match['match_id'],
             $match['match_mode'],
             $match['match_type'],
+            $match['map_id'] ?? 0,
             $match['duration'],
+            $players,
             $match['version'],
-            $match['region']
+            $match['region'],
+            $match['season_id'] ?? 0
         );
     }
 
     /**
      * Fetch Match
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array Match Objects
      */
     public function fetch(string $query, array $where = []): array
@@ -115,12 +131,16 @@ class SqlMatchRepository implements StoreRepositoryInterface
         $select = "SELECT match_id FROM matches WHERE match_id = :match_id AND region = :region";
 
         foreach ($this->matches as $match) {
+            $this->playerRepository->add($match->getPlayers());
+
             if ($this->dbConn->fetchAll($select, $match->getKeyData())) {
                 $this->dbConn->update('matches', $this->convertMatchToArray($match), $match->getKeyData());
                 continue;
             }
             $this->dbConn->insert('matches', $this->convertMatchToArray($match));
         }
+
+        $this->playerRepository->store();
     }
 
     /**
@@ -150,7 +170,7 @@ class SqlMatchRepository implements StoreRepositoryInterface
     /**
      * Converts Match object into SQL data array
      *
-     * @param MatchInterface $match
+     * @param  MatchInterface $match
      * @return array
      */
     private function convertMatchToArray(MatchInterface $match): array
@@ -160,6 +180,8 @@ class SqlMatchRepository implements StoreRepositoryInterface
             'match_mode' => $match->getMode(),
             'match_type' => $match->getType(),
             'duration' => $match->getDuration(),
+            'map_id' => $match->getMapID(),
+            'season_id' => $match->getSeasonID(),
             'version' => $match->getVersion(),
             'region' => $match->getRegion()
         ];

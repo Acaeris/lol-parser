@@ -60,8 +60,8 @@ class JsonChampionRepository implements FetchRepositoryInterface
     /**
      * Setup Champion repository
      *
-     * @param AdapterInterface          $adapter
-     * @param LoggerInterface           $log
+     * @param AdapterInterface              $adapter
+     * @param LoggerInterface               $log
      * @param JsonChampionStatsRepository   $statRepository
      * @param JsonChampionSpellRepository   $spellRepository
      * @param JsonChampionPassiveRepository $passiveRepository
@@ -83,7 +83,7 @@ class JsonChampionRepository implements FetchRepositoryInterface
     /**
      * Create the champion object from array data
      *
-     * @param array $champion
+     * @param  array $champion
      * @return EntityInterface
      */
     public function create(array $champion) : EntityInterface
@@ -106,7 +106,7 @@ class JsonChampionRepository implements FetchRepositoryInterface
     /**
      * Fetch Champions
      *
-     * @param array Fetch parameters
+     * @param  array Fetch parameters
      * @return array Champion Objects
      */
     public function fetch(array $params) : array
@@ -139,7 +139,7 @@ class JsonChampionRepository implements FetchRepositoryInterface
     /**
      * Fetch spells for object creation
      *
-     * @param array $champion
+     * @param  array $champion
      * @return array
      */
     private function fetchSpells(array $champion) : array

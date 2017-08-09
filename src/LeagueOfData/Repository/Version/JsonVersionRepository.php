@@ -55,7 +55,7 @@ class JsonVersionRepository implements FetchRepositoryInterface
     /**
      * Factory for creating version objects
      *
-     * @param string $version
+     * @param  string $version
      * @return EntityInterface
      */
     public function create(array $version) : EntityInterface
@@ -66,7 +66,7 @@ class JsonVersionRepository implements FetchRepositoryInterface
     /**
      * Find all Version data
      *
-     * @param array Fetch parameters
+     * @param  array Fetch parameters
      * @return array Version objects
      */
     public function fetch(array $params) : array

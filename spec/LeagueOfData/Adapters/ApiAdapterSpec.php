@@ -30,8 +30,9 @@ class ApiAdapterSpec extends ObjectBehavior
     public function it_checks_the_response_status_503(
         ClientInterface $client,
         ResponseInterface $response,
-        LoggerInterface $logger)
-    {
+        LoggerInterface $logger
+    ) {
+    
         $this->setOptions("Test", ['region' => 'euw']);
         $response->getStatusCode()->willReturn(503);
         $client->request(new AnyValuesToken)->willReturn($response);

@@ -13,8 +13,9 @@ class SqlMatchPlayerRepositorySpec extends ObjectBehavior
     private $mockData = [
         [
             "match_id" => 1,
-            "account_id" => 2,
-            "champion_id" => 3,
+            "participant_id" => 2,
+            "account_id" => 3,
+            "champion_id" => 4,
             "region" => "euw"
         ]
     ];
@@ -43,7 +44,9 @@ class SqlMatchPlayerRepositorySpec extends ObjectBehavior
         $this->create($this->mockData[0])->shouldImplement('LeagueOfData\Entity\Match\MatchPlayerInterface');
     }
 
-    public function it_can_add_and_retrieve_player_objects_from_collection(MatchPlayerInterface $player) {
+    public function it_can_add_and_retrieve_player_objects_from_collection(MatchPlayerInterface $player) 
+    {
+        $player->getMatchID()->willReturn(1);
         $player->getAccountID()->willReturn(1);
         $this->add([$player]);
         $this->transfer()->shouldReturnArrayOfMatchPlayers();
@@ -52,10 +55,12 @@ class SqlMatchPlayerRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfMatchPlayers' => function(array $players) {
-                foreach ($players as $player) {
-                    if (!$player instanceof MatchPlayerInterface) {
-                        return false;
+            'returnArrayOfMatchPlayers' => function (array $matchPlayers) {
+                foreach ($matchPlayers as $match) {
+                    foreach ($match as $player) {
+                        if (!$player instanceof MatchPlayerInterface) {
+                            return false;
+                        }
                     }
                 }
                 return true;

@@ -53,7 +53,7 @@ class RuneSpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfStats' => function(array $stats) : bool {
+            'returnArrayOfStats' => function (array $stats) : bool {
                 foreach ($stats as $stat) {
                     if (!$stat instanceof StatInterface) {
                         return false;

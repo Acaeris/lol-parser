@@ -135,8 +135,9 @@ class JsonChampionRepositorySpec extends ObjectBehavior
         JsonChampionPassiveRepository $passiveRepository,
         ChampionStatsInterface $stats,
         ChampionSpellInterface $spell,
-        ChampionPassiveInterface $passive)
-    {
+        ChampionPassiveInterface $passive
+    ) {
+    
         $adapter->fetch()->willReturn($this->mockData);
         $statRepository->create($this->mockData['data']['Aatrox'])->willReturn($stats);
         $passiveRepository->create($this->mockData['data']['Aatrox'])->willReturn($passive);
@@ -165,7 +166,7 @@ class JsonChampionRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampions' => function($champions) {
+            'returnArrayOfChampions' => function (array $champions) {
                 foreach ($champions as $champion) {
                     if (!$champion instanceof ChampionInterface) {
                         return false;

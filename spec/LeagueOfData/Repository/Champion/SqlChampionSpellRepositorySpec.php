@@ -60,7 +60,7 @@ class SqlChampionSpellRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampionSpells' => function(array $spells) {
+            'returnArrayOfChampionSpells' => function (array $spells) {
                 foreach ($spells as $spell) {
                     if (!$spell instanceof ChampionSpellInterface) {
                         return false;

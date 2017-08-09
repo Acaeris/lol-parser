@@ -26,7 +26,7 @@ interface ResourceInterface
     /**
      * Calculate the max resource value at a given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of max resource at the given level
      */
     public function calculateValueAtLevel(int $level) : float;

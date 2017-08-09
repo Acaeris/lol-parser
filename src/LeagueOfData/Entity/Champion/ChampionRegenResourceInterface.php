@@ -26,7 +26,7 @@ interface ChampionRegenResourceInterface
     /**
      * Calculate the regeneration rate at given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of regeneration rate at the given level
      */
     public function calculateRegenAtLevel(int $level) : float;

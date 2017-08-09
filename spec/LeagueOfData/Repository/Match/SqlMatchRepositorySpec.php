@@ -7,6 +7,8 @@ use Psr\Log\LoggerInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument\Token\AnyValuesToken;
 use LeagueOfData\Entity\Match\MatchInterface;
+use LeagueOfData\Repository\Match\SqlMatchPlayerRepository;
+use LeagueOfData\Entity\Match\MatchPlayerInterface;
 
 class MatchRepositorySpec extends ObjectBehavior
 {
@@ -15,18 +17,23 @@ class MatchRepositorySpec extends ObjectBehavior
             'match_id' => 1,
             'match_mode' => "ASSASSINATE",
             'match_type' => "MATCHED_GAME",
+            'map_id' => 11,
             'duration' => 865,
             'version' => '7.12.190.9002',
-            'region' => "euw"
+            'region' => "euw",
+            'season_id' => 9
         ]
     ];
 
     public function let(
         Connection $dbConn,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SqlMatchPlayerRepository $playerRepository,
+        MatchPlayerInterface $player
     ) {
         $dbConn->fetchAll(new AnyValuesToken)->willReturn($this->mockData);
-        $this->beConstructedWith($dbConn, $logger);
+        $playerRepository->fetch(new AnyValuesToken)->willReturn([1 => [$player]]);
+        $this->beConstructedWith($dbConn, $logger, $playerRepository);
     }
 
     public function it_should_be_initializable()
@@ -55,7 +62,7 @@ class MatchRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfMatches' => function(array $matches) {
+            'returnArrayOfMatches' => function (array $matches) {
                 foreach ($matches as $match) {
                     if (!$match instanceof MatchInterface) {
                         return false;

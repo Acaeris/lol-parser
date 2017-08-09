@@ -35,8 +35,10 @@ class MasterySpec extends ObjectBehavior
     {
         $this->getMasteryID()->shouldReturn(6111);
         $this->getName()->shouldReturn("Fury");
-        $this->getDescription()->shouldReturn(["+0.8% Attack Speed", "+1.6% Attack Speed", "+2.4% Attack Speed",
-            "+3.2% Attack Speed", "+4% Attack Speed"]);
+        $this->getDescription()->shouldReturn(
+            ["+0.8% Attack Speed", "+1.6% Attack Speed", "+2.4% Attack Speed",
+            "+3.2% Attack Speed", "+4% Attack Speed"]
+        );
         $this->getRanks()->shouldReturn(5);
         $this->getImageName()->shouldReturn("6111.png");
         $this->getMasteryTree()->shouldReturn("Ferocity");

@@ -63,7 +63,7 @@ class SqlRuneRepository implements StoreRepositoryInterface
     /**
      * Build the Rune object from the given data.
      *
-     * @param array $rune
+     * @param  array $rune
      * @return EntityInterface
      */
     public function create(array $rune): EntityInterface
@@ -83,8 +83,8 @@ class SqlRuneRepository implements StoreRepositoryInterface
     /**
      * Fetch Runes
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array Rune Objects
      */
     public function fetch(string $query, array $where = []): array
@@ -150,7 +150,7 @@ class SqlRuneRepository implements StoreRepositoryInterface
     /**
      * Fetch the stats for the given rune
      *
-     * @param array $rune
+     * @param  array $rune
      * @return array
      */
     private function fetchStats(array $rune) : array
@@ -195,7 +195,7 @@ class SqlRuneRepository implements StoreRepositoryInterface
     /**
      * Converts Rune object into SQL data array
      *
-     * @param Rune $rune
+     * @param  Rune $rune
      * @return array
      */
     private function convertRuneToArray(Rune $rune) : array

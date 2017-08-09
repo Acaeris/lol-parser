@@ -52,7 +52,7 @@ final class ChampionSpellResource implements ChampionSpellResourceInterface, Imm
     /**
      * Value by rank
      *
-     * @param int $rank
+     * @param  int $rank
      * @return int
      */
     public function getValueByRank(int $rank) : int

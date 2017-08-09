@@ -61,7 +61,7 @@ class JsonSummonerRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfSummoners' => function($summoners) {
+            'returnArrayOfSummoners' => function ($summoners) {
                 foreach ($summoners as $summoner) {
                     if (!$summoner instanceof SummonerInterface) {
                         return false;

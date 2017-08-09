@@ -53,7 +53,7 @@ class SqlSummonerRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfSummoners' => function(array $summoners) {
+            'returnArrayOfSummoners' => function (array $summoners) {
                 foreach ($summoners as $summoner) {
                     if (!$summoner instanceof SummonerInterface) {
                         return false;

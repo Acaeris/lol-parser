@@ -43,7 +43,7 @@ class JsonChampionStatsRepository implements FetchRepositoryInterface
     /**
      * Factory to create Champion Stats objects from JSON
      *
-     * @param array $champion
+     * @param  array $champion
      * @return EntityInterface
      */
     public function create(array $champion) : EntityInterface
@@ -64,7 +64,7 @@ class JsonChampionStatsRepository implements FetchRepositoryInterface
     /**
      * Fetch Champions Stats
      *
-     * @param array $params
+     * @param  array $params
      * @return array ChampionStats Objects
      */
     public function fetch(array $params) : array
@@ -85,7 +85,7 @@ class JsonChampionStatsRepository implements FetchRepositoryInterface
     /**
      * Create Champion Health object
      *
-     * @param array $champion
+     * @param  array $champion
      * @return ChampionRegenResourceInterface
      */
     private function createHealth(array $champion) : ChampionRegenResourceInterface
@@ -101,8 +101,8 @@ class JsonChampionStatsRepository implements FetchRepositoryInterface
     /**
      * Create Champion Resource object
      *
-     * @param string $type
-     * @param array  $champion
+     * @param  string $type
+     * @param  array  $champion
      * @return ChampionRegenResourceInterface
      */
     private function createResource(array $champion) : ChampionRegenResourceInterface

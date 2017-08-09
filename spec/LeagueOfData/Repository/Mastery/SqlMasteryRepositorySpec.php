@@ -54,7 +54,7 @@ class SqlMasteryRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfMasteries' => function(array $masteries) : bool {
+            'returnArrayOfMasteries' => function (array $masteries) : bool {
                 foreach ($masteries as $mastery) {
                     if (!$mastery instanceof MasteryInterface) {
                         return false;

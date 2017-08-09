@@ -65,7 +65,7 @@ class SqlRuneRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfRunes' => function(array $runes) : bool {
+            'returnArrayOfRunes' => function (array $runes) : bool {
                 foreach ($runes as $rune) {
                     if (!$rune instanceof RuneInterface) {
                         return false;

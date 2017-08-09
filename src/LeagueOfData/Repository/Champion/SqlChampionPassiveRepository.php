@@ -66,7 +66,7 @@ class SqlChampionPassiveRepository implements StoreRepositoryInterface
     /**
      * Factory to create Champion Passive objects from SQL
      *
-     * @param array $passive
+     * @param  array $passive
      * @return EntityInterface
      */
     public function create(array $passive) : EntityInterface
@@ -84,8 +84,8 @@ class SqlChampionPassiveRepository implements StoreRepositoryInterface
     /**
      * Fetch Champions Passives
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array ChampionPassive Objects
      */
     public function fetch(string $query, array $where = []) : array
@@ -111,8 +111,10 @@ class SqlChampionPassiveRepository implements StoreRepositoryInterface
                 . ' AND version = :version AND passive_name = :passive_name AND region = :region';
 
             if ($this->dbConn->fetchAll($select, $passive->getKeyData())) {
-                $this->dbConn->update('champion_passives', $this->convertPassiveToArray($passive),
-                    $passive->getKeyData());
+                $this->dbConn->update(
+                    'champion_passives', $this->convertPassiveToArray($passive),
+                    $passive->getKeyData()
+                );
 
                 continue;
             }
@@ -148,7 +150,7 @@ class SqlChampionPassiveRepository implements StoreRepositoryInterface
     /**
      * Converts Passive object into SQL data array
      *
-     * @param ChampionPassive $passive
+     * @param  ChampionPassive $passive
      * @return array
      */
     private function convertPassiveToArray(ChampionPassive $passive) : array

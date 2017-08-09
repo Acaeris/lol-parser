@@ -62,7 +62,7 @@ class SqlMasteryRepository implements StoreRepositoryInterface
     /**
      * Build the Mastery object from the given data.
      *
-     * @param array $mastery
+     * @param  array $mastery
      * @return EntityInterface
      */
     public function create(array $mastery): EntityInterface
@@ -82,8 +82,8 @@ class SqlMasteryRepository implements StoreRepositoryInterface
     /**
      * Fetch Masteries
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array Mastery Objects
      */
     public function fetch(string $query, array $where = []): array
@@ -147,7 +147,7 @@ class SqlMasteryRepository implements StoreRepositoryInterface
     /**
      * Converts Mastery object into SQL data array
      *
-     * @param Mastery $mastery
+     * @param  Mastery $mastery
      * @return array
      */
     private function convertMasteryToArray(Mastery $mastery) : array

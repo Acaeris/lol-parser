@@ -22,12 +22,18 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     }
     use ResourceTrait;
 
-    /** @var string Tag for defence type: Armor */
+    /**
+ * @var string Tag for defence type: Armor 
+*/
     const DEFENSE_ARMOR = 'armor';
-    /** @var string Tag for defence type: Magic Resistance */
+    /**
+ * @var string Tag for defence type: Magic Resistance 
+*/
     const DEFENSE_MAGICRESIST = 'spellBlock';
 
-    /** @var string Defense type **/
+    /**
+ * @var string Defense type 
+**/
     private $type;
 
     /**
@@ -36,7 +42,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
      * @param string $type     Type of defence represented by this object
      * @param float  $base     The base amount of defence the champion starts with
      * @param float  $perLevel The amount of defence the champion gains per level
-     * @todo Add validation of parameters.
+     * @todo  Add validation of parameters.
      */
     public function __construct(string $type, float $base, float $perLevel)
     {
@@ -59,7 +65,7 @@ final class ChampionDefense implements ChampionDefenseInterface, ResourceInterfa
     /**
      * Check to make sure we are building a valid defense resource.
      *
-     * @param string $type
+     * @param  string $type
      * @return boolean
      * @throws \InvalidArgumentException
      */

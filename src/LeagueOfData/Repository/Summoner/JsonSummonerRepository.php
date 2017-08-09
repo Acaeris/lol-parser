@@ -44,7 +44,7 @@ class JsonSummonerRepository implements FetchRepositoryInterface
     /**
      * Create the summoner object from array data
      *
-     * @param array $summoner
+     * @param  array $summoner
      * @return EntityInterface
      */
     public function create(array $summoner): EntityInterface
@@ -63,7 +63,7 @@ class JsonSummonerRepository implements FetchRepositoryInterface
     /**
      * Fetch Summoners
      *
-     * @param array Fetch parameters
+     * @param  array Fetch parameters
      * @return array Summoner Objects
      */
     public function fetch(array $params): array
@@ -94,7 +94,7 @@ class JsonSummonerRepository implements FetchRepositoryInterface
     /**
      * Determine which API query to use based on the supplied parameters
      *
-     * @param array $params
+     * @param  array $params
      * @return string
      * @throws \Exception
      */

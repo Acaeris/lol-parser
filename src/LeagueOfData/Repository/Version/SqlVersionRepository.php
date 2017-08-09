@@ -70,7 +70,7 @@ class SqlVersionRepository implements StoreRepositoryInterface
     /**
      * Factory for creating version objects
      *
-     * @param string $version
+     * @param  string $version
      * @return EntityInterface
      */
     public function create(array $version) : EntityInterface
@@ -81,8 +81,8 @@ class SqlVersionRepository implements StoreRepositoryInterface
     /**
      * Fetch Version data
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL parameters
      * @return array Version objects
      */
     public function fetch(string $query, array $where = []) : array
@@ -128,7 +128,7 @@ class SqlVersionRepository implements StoreRepositoryInterface
     /**
      * Convert result data into version objects
      *
-     * @param array $results
+     * @param  array $results
      * @throws \Exception
      */
     private function processResults(array $results)
@@ -143,7 +143,7 @@ class SqlVersionRepository implements StoreRepositoryInterface
     /**
      * Converts Version object into SQL data array
      *
-     * @param VersionInterface $version
+     * @param  VersionInterface $version
      * @return array
      */
     private function convertVersionToArray(VersionInterface $version) : array

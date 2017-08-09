@@ -56,7 +56,7 @@ class JsonRuneRepository implements FetchRepositoryInterface
     /**
      * Create the item object from JSON data
      *
-     * @param array $rune
+     * @param  array $rune
      * @return EntityInterface
      */
     public function create(array $rune): EntityInterface
@@ -76,7 +76,7 @@ class JsonRuneRepository implements FetchRepositoryInterface
     /**
      * Fetch Items
      *
-     * @param array $params API parameters
+     * @param  array $params API parameters
      * @return array Rune Objects
      */
     public function fetch(array $params): array
@@ -107,7 +107,7 @@ class JsonRuneRepository implements FetchRepositoryInterface
     /**
      * Create the rune's stat objects from JSON data
      *
-     * @param array $rune
+     * @param  array $rune
      * @return array
      */
     private function createStats(array $rune) : array

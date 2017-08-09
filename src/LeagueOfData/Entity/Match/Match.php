@@ -10,6 +10,21 @@ class Match implements MatchInterface, ImmutableInterface
 {
 
     /**
+     * @var array
+     */
+    private $players;
+
+    /**
+     * @var int
+     */
+    private $seasonID;
+
+    /**
+     * @var int
+     */
+    private $mapID;
+
+    /**
      * @var string
      */
     private $duration;
@@ -47,9 +62,12 @@ class Match implements MatchInterface, ImmutableInterface
         int $matchID,
         string $mode,
         string $type,
+        int $mapID,
         int $duration,
+        array $players,
         string $version,
-        string $region
+        string $region,
+        int $seasonID = -1
     ) {
         $this->constructImmutable();
 
@@ -59,6 +77,9 @@ class Match implements MatchInterface, ImmutableInterface
         $this->version = $version;
         $this->type = $type;
         $this->duration = $duration;
+        $this->mapID = $mapID;
+        $this->seasonID = $seasonID;
+        $this->players = $players;
     }
 
     /**
@@ -132,5 +153,35 @@ class Match implements MatchInterface, ImmutableInterface
     public function getDuration(): int
     {
         return $this->duration;
+    }
+
+    /**
+     * Map ID
+     *
+     * @return int
+     */
+    public function getMapID(): int
+    {
+        return $this->mapID;
+    }
+
+    /**
+     * Season ID
+     *
+     * @return int
+     */
+    public function getSeasonID(): int
+    {
+        return $this->seasonID;
+    }
+
+    /**
+     * Players
+     *
+     * @return array
+     */
+    public function getPlayers(): array
+    {
+        return $this->players;
     }
 }

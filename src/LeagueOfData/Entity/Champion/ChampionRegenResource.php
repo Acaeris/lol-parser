@@ -40,11 +40,11 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     /**
      * Construct a Champion Resource object
      *
-     * @param float  $baseValue     The base amount of that resource the champion starts with
-     * @param float  $perLevel      The amount the maximum resource increases per level
-     * @param float  $regen         The base regeneration rate of this resource
-     * @param float  $regenPerLevel The amount the regeneration rate increases per level
-     * @todo Add validation of parameters.
+     * @param float $baseValue     The base amount of that resource the champion starts with
+     * @param float $perLevel      The amount the maximum resource increases per level
+     * @param float $regen         The base regeneration rate of this resource
+     * @param float $regenPerLevel The amount the regeneration rate increases per level
+     * @todo  Add validation of parameters.
      */
     public function __construct(float $baseValue, float $perLevel, float $regen, float $regenPerLevel)
     {
@@ -78,7 +78,7 @@ final class ChampionRegenResource implements ChampionRegenResourceInterface, Res
     /**
      * Calculate the regeneration rate at given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of regeneration rate at the given level
      */
     public function calculateRegenAtLevel(int $level) : float

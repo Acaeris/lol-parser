@@ -52,7 +52,7 @@ class JsonMatchListRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfMatchPlayers' => function($matches) {
+            'returnArrayOfMatchPlayers' => function ($matches) {
                 foreach ($matches as $match) {
                     if (!$match instanceof MatchPlayerInterface) {
                         return false;

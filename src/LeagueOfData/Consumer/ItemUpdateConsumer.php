@@ -75,7 +75,7 @@ class ItemUpdateConsumer implements ConsumerInterface
     /**
      * Build a request object
      *
-     * @param array $input
+     * @param  array $input
      * @return string
      */
     private function buildRequest(array $input) : string

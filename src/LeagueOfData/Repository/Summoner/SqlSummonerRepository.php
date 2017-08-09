@@ -60,7 +60,7 @@ class SqlSummonerRepository implements StoreRepositoryInterface
     /**
      * Factory for creating objects
      *
-     * @param array $summoner
+     * @param  array $summoner
      * @return EntityInterface
      */
     public function create(array $summoner): EntityInterface
@@ -79,8 +79,8 @@ class SqlSummonerRepository implements StoreRepositoryInterface
     /**
      * Fetch Champions
      *
-     * @param string $query
-     * @param array $where
+     * @param  string $query
+     * @param  array  $where
      * @return array Summoner objects
      */
     public function fetch(string $query, array $where = []): array
@@ -139,7 +139,7 @@ class SqlSummonerRepository implements StoreRepositoryInterface
     /**
      * Converts Summoner object into SQL data array
      *
-     * @param SummonerInterface $summoner
+     * @param  SummonerInterface $summoner
      * @return array
      */
     private function convertSummonerToArray(SummonerInterface $summoner): array

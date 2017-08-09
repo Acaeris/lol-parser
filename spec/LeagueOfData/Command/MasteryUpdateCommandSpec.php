@@ -50,8 +50,10 @@ class MasteryUpdateCommandSpec extends ObjectBehavior
         MasteryInterface $mockMastery
     ) {
 
-        $dbRepository->fetch('SELECT * FROM masteries WHERE version = :version AND region = :region',
-            ["version" => "7.9.1", "region" => "euw"])->willReturn([]);
+        $dbRepository->fetch(
+            'SELECT * FROM masteries WHERE version = :version AND region = :region',
+            ["version" => "7.9.1", "region" => "euw"]
+        )->willReturn([]);
         $dbRepository->clear()->shouldBeCalled();
         $dbRepository->add([$mockMastery])->shouldBeCalled();
         $dbRepository->store()->shouldBeCalled();

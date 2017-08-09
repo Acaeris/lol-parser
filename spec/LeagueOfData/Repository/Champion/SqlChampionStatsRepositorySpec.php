@@ -51,7 +51,7 @@ class SqlChampionStatsRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampionStats' => function(array $championStats) {
+            'returnArrayOfChampionStats' => function (array $championStats) {
                 foreach ($championStats as $stat) {
                     if (!$stat instanceof ChampionStatsInterface) {
                         return false;

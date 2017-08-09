@@ -217,7 +217,7 @@ final class Champion implements ChampionInterface, ImmutableInterface
      * Champion resource type
      *
      * @return string
-     * @todo Remove and let the actual resource model handle this.
+     * @todo   Remove and let the actual resource model handle this.
      */
     public function getResourceType() : string
     {

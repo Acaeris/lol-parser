@@ -58,8 +58,10 @@ class MasteryUpdateCommand extends Command
         $this->setName('update:mastery')
             ->setDescription('API processor command for mastery data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for.')
-            ->addOption('masteryId', 'i', InputOption::VALUE_REQUIRED, 'Mastery ID to process data for.'
-                .' (Will fetch all if not supplied)')
+            ->addOption(
+                'masteryId', 'i', InputOption::VALUE_REQUIRED, 'Mastery ID to process data for.'
+                .' (Will fetch all if not supplied)'
+            )
             ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', 'euw')
             ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force a refresh of the data', false);
     }
@@ -67,7 +69,7 @@ class MasteryUpdateCommand extends Command
     /**
      * Execute the command
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)

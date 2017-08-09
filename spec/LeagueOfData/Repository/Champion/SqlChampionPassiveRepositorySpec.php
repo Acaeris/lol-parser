@@ -52,7 +52,7 @@ class SqlChampionPassiveRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfChampionPassives' => function(array $passives) {
+            'returnArrayOfChampionPassives' => function (array $passives) {
                 foreach ($passives as $passive) {
                     if (!$passive instanceof ChampionPassiveInterface) {
                         return false;

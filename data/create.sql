@@ -147,14 +147,19 @@ CREATE TABLE IF NOT EXISTS matches (
   duration   int         NULL,
   match_type varchar(16) NULL,
   match_mode varchar(16) NULL,
-  version    varchar(16) NULL,
+  map_id     int         NULL,
+  season_id  int         NULL,
+  version    varchar(16) NOT NULL,
   region     varchar(8)  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS match_players (
-  PRIMARY KEY (match_id, summoner_id, region),
-  match_id    bigint     NOT NULL,
-  summoner_id int        NOT NULL,
-  champion_id int        NULL,
-  region      varchar(8) NOT NULL
+  PRIMARY KEY (match_id, participant_id, account_id, region),
+		  KEY accounts (match_id, account_id, region),
+          KEY participants (match_id, participant_id, region),
+  match_id    	 bigint     NOT NULL,
+  participant_id int		NOT NULL,
+  account_id  	 int        NOT NULL,
+  champion_id 	 int        NULL,
+  region      	 varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

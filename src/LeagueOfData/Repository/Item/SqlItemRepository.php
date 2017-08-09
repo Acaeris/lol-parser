@@ -66,7 +66,7 @@ class SqlItemRepository implements StoreRepositoryInterface
     /**
      * Build the Item object from the given data.
      *
-     * @param array $item
+     * @param  array $item
      * @return EntityInterface
      */
     public function create(array $item) : EntityInterface
@@ -117,8 +117,8 @@ class SqlItemRepository implements StoreRepositoryInterface
     /**
      * Fetch Items
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array Item Objects
      */
     public function fetch(string $query, array $where = []): array
@@ -138,7 +138,7 @@ class SqlItemRepository implements StoreRepositoryInterface
     /**
      * Fetch the stats for the given item
      *
-     * @param array $item
+     * @param  array $item
      * @return array
      */
     private function fetchStats(array $item) : array
@@ -183,7 +183,7 @@ class SqlItemRepository implements StoreRepositoryInterface
     /**
      * Converts Item object into SQL data array
      *
-     * @param Item $item
+     * @param  Item $item
      * @return array
      */
     private function convertItemToArray(Item $item) : array

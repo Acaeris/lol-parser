@@ -44,13 +44,14 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     /**
      * Create the match player object from array data
      *
-     * @param array $match
+     * @param  array $match
      * @return EntityInterface
      */
     public function create(array $match): EntityInterface
     {
         return new MatchPlayer(
             $match['gameId'],
+            $match['participant_id'] ?? 0,
             $match['account_id'],
             $match['champion'],
             $match['region']
@@ -60,7 +61,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
     /**
      * Fetch Match List
      *
-     * @param array Fetch parameters
+     * @param  array Fetch parameters
      * @return array Match Objects
      */
     public function fetch(array $params): array

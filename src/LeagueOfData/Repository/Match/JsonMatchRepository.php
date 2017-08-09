@@ -7,6 +7,7 @@ use LeagueOfData\Adapters\AdapterInterface;
 use LeagueOfData\Repository\FetchRepositoryInterface;
 use LeagueOfData\Entity\EntityInterface;
 use LeagueOfData\Entity\Match\Match;
+use LeagueOfData\Entity\Match\MatchPlayer;
 
 class JsonMatchRepository implements FetchRepositoryInterface
 {
@@ -44,25 +45,30 @@ class JsonMatchRepository implements FetchRepositoryInterface
     /**
      * Create the match object from array data
      *
-     * @param array $match
+     * @param  array $match
      * @return EntityInterface
      */
     public function create(array $match): EntityInterface
     {
+        $match['participants'] = $this->mergePlayerData($match);
+
         return new Match(
             $match['gameId'],
-            $match['region'],
             $match['gameMode'],
             $match['gameType'],
+            $match['mapId'],
             $match['gameDuration'],
-            $match['gameVersion']
+            $this->buildPlayerObjects($match),
+            $match['gameVersion'],
+            $match['region'],
+            $match['seasonId'] ?? -1
         );
     }
 
     /**
      * Fetch Matches
      *
-     * @param array Fetch parameters
+     * @param  array Fetch parameters
      * @return array Match Objects
      */
     public function fetch(array $params): array
@@ -88,6 +94,52 @@ class JsonMatchRepository implements FetchRepositoryInterface
     public function transfer(): array
     {
         return $this->matches;
+    }
+
+    /**
+     * Merge Participant and Participant Identities data
+     *
+     * @param array $match
+     * @return array
+     */
+    public function mergePlayerData(array $match): array
+    {
+        $players = [];
+
+        foreach ($match['participants'] as $participant) {
+            $players[$participant['participantId']] = $participant;
+        }
+
+        foreach ($match['participantIdentities'] as $participant) {
+            if (isset($participant['player'])) {
+                $players[$participant['participantId']]['accountId'] = $participant['player']['accountId'];
+            }
+        }
+
+        return $players;
+    }
+
+    /**
+     * Build Player Objects
+     *
+     * @param array $match
+     * @return array
+     */
+    public function buildPlayerObjects(array $match): array
+    {
+        $players = [];
+
+        foreach ($match['participants'] as $participant) {
+            $players[] = new MatchPlayer(
+                $match['gameId'],
+                $participant['participantId'] ?? 0,
+                $participant['accountId'] ?? 0,
+                $participant['championId'],
+                $match['region']
+            );
+        }
+
+        return $players;
     }
 
     /**

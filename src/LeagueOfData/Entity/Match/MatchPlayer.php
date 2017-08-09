@@ -11,6 +11,11 @@ class MatchPlayer implements MatchPlayerInterface, ImmutableInterface
     /**
      * @var int
      */
+    private $participantId;
+
+    /**
+     * @var int
+     */
     private $championID;
 
     /**
@@ -32,13 +37,14 @@ class MatchPlayer implements MatchPlayerInterface, ImmutableInterface
         __construct as constructImmutable;
     }
 
-    public function __construct(int $matchId, int $accountId, int $championId, string $region)
+    public function __construct(int $matchId, int $participantId, int $accountId, int $championId, string $region)
     {
         $this->constructImmutable();
         $this->matchId = $matchId;
         $this->accountID = $accountId;
         $this->region = $region;
         $this->championID = $championId;
+        $this->participantId = $participantId;
     }
 
     /**
@@ -50,6 +56,7 @@ class MatchPlayer implements MatchPlayerInterface, ImmutableInterface
     {
         return [
             'match_id' => $this->matchId,
+            'participant_id' => $this->participantId,
             'account_id' => $this->accountID,
             'region' => $this->region
         ];
@@ -93,5 +100,15 @@ class MatchPlayer implements MatchPlayerInterface, ImmutableInterface
     public function getRegion(): string
     {
         return $this->region;
+    }
+
+    /**
+     * Participant ID
+     *
+     * @return int
+     */
+    public function getParticipantID(): int
+    {
+        return $this->participantId;
     }
 }

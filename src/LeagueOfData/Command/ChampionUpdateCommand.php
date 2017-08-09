@@ -57,8 +57,10 @@ class ChampionUpdateCommand extends Command
         $this->setName('update:champion')
             ->setDescription('API processor command for champion data')
             ->addArgument('release', InputArgument::REQUIRED, 'Version number to process data for')
-            ->addOption('championId', 'i', InputOption::VALUE_REQUIRED, 'Champion ID to process data for.'
-                .' (Will fetch all if not supplied)')
+            ->addOption(
+                'championId', 'i', InputOption::VALUE_REQUIRED, 'Champion ID to process data for.'
+                .' (Will fetch all if not supplied)'
+            )
             ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force a refresh of the data.');
     }
@@ -66,7 +68,7 @@ class ChampionUpdateCommand extends Command
     /**
      * Execute the command
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)

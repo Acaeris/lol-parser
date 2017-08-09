@@ -42,7 +42,7 @@ class JsonChampionPassiveRepository implements FetchRepositoryInterface
     /**
      * Factory to create Champion Passive object from JSON
      *
-     * @param array $champion
+     * @param  array $champion
      * @return EntityInterface
      */
     public function create(array $champion): EntityInterface
@@ -60,7 +60,7 @@ class JsonChampionPassiveRepository implements FetchRepositoryInterface
     /**
      * Fetch Champion passives
      *
-     * @param array $params API Parameters
+     * @param  array $params API Parameters
      * @throws Exception
      */
     public function fetch(array $params): array

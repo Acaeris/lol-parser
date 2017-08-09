@@ -72,7 +72,7 @@ class SqlChampionStatsRepository implements StoreRepositoryInterface
     /**
      * Factory to create Champion Stats objects from SQL
      *
-     * @param array $champion
+     * @param  array $champion
      * @return EntityInterface
      */
     public function create(array $champion) : EntityInterface
@@ -84,7 +84,7 @@ class SqlChampionStatsRepository implements StoreRepositoryInterface
             $this->createAttack($champion),
             $this->createDefense(ChampionDefense::DEFENSE_ARMOR, $champion),
             $this->createDefense(ChampionDefense::DEFENSE_MAGICRESIST, $champion),
-            isset($champion['moveSpeed']) ? $champion['moveSpeed'] : 0,
+            $champion['moveSpeed'] ?? 0,
             $champion['version'],
             $champion['region']
         );
@@ -93,8 +93,8 @@ class SqlChampionStatsRepository implements StoreRepositoryInterface
     /**
      * Fetch Champions Stats
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array ChampionStats Objects
      */
     public function fetch(string $query, array $where = []) : array
@@ -177,57 +177,59 @@ class SqlChampionStatsRepository implements StoreRepositoryInterface
     /**
      * Create Champion Resource object
      *
-     * @param string $type
-     * @param array $stats
+     * @param  string $type
+     * @param  array  $stats
      * @return ChampionRegenResourceInterface
      */
     private function createResource(string $type, array $stats) : ChampionRegenResourceInterface
     {
         return new ChampionRegenResource(
-            isset($stats[$type]) ? $stats[$type] : 0,
-            isset($stats[$type.'PerLevel']) ? $stats[$type.'PerLevel'] : 0,
-            isset($stats[$type.'Regen']) ? $stats[$type.'Regen'] : 0,
-            isset($stats[$type.'RegenPerLevel']) ? $stats[$type.'RegenPerLevel'] : 0
+            $stats[$type] ?? 0,
+            $stats[$type.'PerLevel'] ?? 0,
+            $stats[$type.'Regen'] ?? 0,
+            $stats[$type.'RegenPerLevel'] ?? 0
         );
     }
 
     /**
      * Create Champion Defense object
-     * @param string $type
-     * @param array $stats
+     *
+     * @param  string $type
+     * @param  array  $stats
      * @return ChampionDefenseInterface
      */
     private function createDefense(string $type, array $stats) : ChampionDefenseInterface
     {
         return new ChampionDefense(
             $type,
-            isset($stats[$type]) ? $stats[$type] : 0,
-            isset($stats[$type.'PerLevel']) ? $stats[$type.'PerLevel'] : 0
+            $stats[$type] ?? 0,
+            $stats[$type.'PerLevel'] ?? 0
         );
     }
 
     /**
      * Create Champion Attack object
-     * @param array $stats
+     *
+     * @param  array $stats
      * @return ChampionAttackInterface
      */
     private function createAttack(array $stats) : ChampionAttackInterface
     {
         return new ChampionAttack(
-            isset($stats['attackRange']) ? $stats['attackRange'] : 0,
-            isset($stats['attackDamage']) ? $stats['attackDamage'] : 0,
-            isset($stats['attackDamagePerLevel']) ? $stats['attackDamagePerLevel'] : 0,
-            isset($stats['attackSpeedOffset']) ? $stats['attackSpeedOffset'] : 0,
-            isset($stats['attackSpeedPerLevel']) ? $stats['attackSpeedPerLevel'] : 0,
-            isset($stats['crit']) ? $stats['crit'] : 0,
-            isset($stats['critPerLevel']) ? $stats['critPerLevel'] : 0
+            $stats['attackRange'] ?? 0,
+            $stats['attackDamage'] ?? 0,
+            $stats['attackDamagePerLevel'] ?? 0,
+            $stats['attackSpeedOffset'] ?? 0,
+            $stats['attackSpeedPerLevel'] ?? 0,
+            $stats['crit'] ?? 0,
+            $stats['critPerLevel'] ?? 0
         );
     }
 
     /**
      * Converts the champions stats for SQL insertion
      *
-     * @param ChampionStatsInterface $stats
+     * @param  ChampionStatsInterface $stats
      * @return array
      */
     private function convertStatsToArray(ChampionStatsInterface $stats) : array

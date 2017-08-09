@@ -33,7 +33,7 @@ interface ChampionAttackInterface
     /**
      * Calculate attack damage at a given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of attack damage at the given level
      */
     public function calculateDamageAtLevel(int $level) : float;
@@ -55,7 +55,7 @@ interface ChampionAttackInterface
     /**
      * Calculate the attack speed at a given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of the attack speed at the given level
      */
     public function calculateAttackSpeedAtLevel(int $level) : float;
@@ -77,7 +77,7 @@ interface ChampionAttackInterface
     /**
      * Calculate the critical hit chance at a given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of the critical hit chance at the given level
      */
     public function calculateCritChanceAtLevel(int $level) : float;

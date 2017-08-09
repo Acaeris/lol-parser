@@ -51,7 +51,7 @@ class JsonRealmRepository implements FetchRepositoryInterface
     /**
      * Factory for creating Realm objects
      *
-     * @param array $realm
+     * @param  array $realm
      * @return EntityInterface
      */
     public function create(array $realm) : EntityInterface
@@ -62,7 +62,7 @@ class JsonRealmRepository implements FetchRepositoryInterface
     /**
      * Find all Realm data
      *
-     * @param array $params API parameters
+     * @param  array $params API parameters
      * @return array Realm objects
      */
     public function fetch(array $params) : array

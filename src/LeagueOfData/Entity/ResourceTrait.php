@@ -37,11 +37,19 @@ trait ResourceTrait
         'none',
     ];
 
-    /** @var string The type of resource this object represents */
+    /**
+     * @var string The type of resource this object represents 
+     */
     private $type;
-    /** @var float The base amount of that resource the champion starts with */
+
+    /**
+     * @var float The base amount of that resource the champion starts with 
+     */
     private $baseValue;
-    /** @var float The amount the maximum resource increases per level */
+
+    /**
+     * @var float The amount the maximum resource increases per level 
+     */
     private $perLevel;
 
     /**
@@ -94,7 +102,7 @@ trait ResourceTrait
     /**
      * Calculate the max resource value at a given level
      *
-     * @param int $level Level of the champion
+     * @param  int $level Level of the champion
      * @return float Value of max resource at the given level
      */
     public function calculateValueAtLevel(int $level) : float

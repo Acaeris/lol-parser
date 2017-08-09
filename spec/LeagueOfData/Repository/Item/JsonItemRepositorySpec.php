@@ -70,7 +70,7 @@ class JsonItemRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfItems' => function($items) {
+            'returnArrayOfItems' => function ($items) {
                 foreach ($items as $item) {
                     if (!$item instanceof ItemInterface) {
                         return false;

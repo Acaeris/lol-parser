@@ -218,7 +218,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     /**
      * Get spell cooldown by rank
      *
-     * @param int $rank
+     * @param  int $rank
      * @return int
      * @throws \InvalidArgumentException
      */
@@ -243,7 +243,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     /**
      * Get spell range by rank
      *
-     * @param int $rank
+     * @param  int $rank
      * @return int
      * @throws \InvalidArgumentException
      */
@@ -268,7 +268,7 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     /**
      * Get effect by key
      *
-     * @param int $key
+     * @param  int $key
      * @return array
      * @throws \InvalidArgumentException
      */
@@ -283,8 +283,8 @@ class ChampionSpell implements ChampionSpellInterface, ImmutableInterface
     /**
      * Get effect value by key and rank
      *
-     * @param int $key
-     * @param int $rank
+     * @param  int $key
+     * @param  int $rank
      * @return float
      * @throws \InvalidArgumentException
      */

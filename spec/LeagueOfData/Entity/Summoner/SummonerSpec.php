@@ -35,10 +35,12 @@ class SummonerSpec extends ObjectBehavior
 
     public function it_can_return_key_data_for_indexing()
     {
-        $this->getKeyData()->shouldReturn([
+        $this->getKeyData()->shouldReturn(
+            [
             'summoner_id' => 1,
             'region' => "euw"
-        ]);
+            ]
+        );
     }
 
     public function it_has_all_data_available()

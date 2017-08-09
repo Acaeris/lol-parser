@@ -33,7 +33,7 @@ class JsonVersionRepositorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'returnArrayOfVersions' => function($versions) {
+            'returnArrayOfVersions' => function ($versions) {
                 foreach ($versions as $version) {
                     if (!$version instanceof VersionInterface) {
                         return false;

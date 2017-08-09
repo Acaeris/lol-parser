@@ -66,8 +66,8 @@ class SummonerUpdateCommand extends Command
     /**
      * Execute the command
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
      * @return null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -91,8 +91,10 @@ class SummonerUpdateCommand extends Command
         $accountId = $input->getOption('accountId') ?? '';
         $summonerName = $input->getOption('summonerName') ?? '';
         $summonerId = $input->getOption('summonerId') ?? '';
-        $output->writeln('<info>Skipping update for summoner:</info> '.$summonerName
-            .' [summoner_id: '.$summonerId.', account_id: '.$accountId.']');
+        $output->writeln(
+            '<info>Skipping update for summoner:</info> '.$summonerName
+            .' [summoner_id: '.$summonerId.', account_id: '.$accountId.']'
+        );
     }
 
     /**

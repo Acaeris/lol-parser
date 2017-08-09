@@ -152,7 +152,7 @@ class Item implements ItemInterface, ImmutableInterface
     /**
      * Fetch a specific stat
      *
-     * @param string $key
+     * @param  string $key
      * @return float
      */
     public function getStat(string $key) : float

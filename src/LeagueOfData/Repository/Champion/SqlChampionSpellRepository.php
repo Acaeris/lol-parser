@@ -68,7 +68,7 @@ class SqlChampionSpellRepository implements StoreRepositoryInterface
     /**
      * Factory to create Champion Spell objects from SQL
      *
-     * @param array $spell
+     * @param  array $spell
      * @return EntityInterface
      */
     public function create(array $spell) : EntityInterface
@@ -94,8 +94,8 @@ class SqlChampionSpellRepository implements StoreRepositoryInterface
     /**
      * Fetch Champions Spells
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array ChampionSpell Objects
      */
     public function fetch(string $query, array $where = []) : array
@@ -157,7 +157,7 @@ class SqlChampionSpellRepository implements StoreRepositoryInterface
     /**
      * Create Champion Spell Resource object
      *
-     * @param array $resource
+     * @param  array $resource
      * @return ChampionSpellResourceInterface
      */
     private function createResource(array $resource) : ChampionSpellResourceInterface
@@ -168,7 +168,7 @@ class SqlChampionSpellRepository implements StoreRepositoryInterface
     /**
      * Converts Spell object into SQL data array
      *
-     * @param ChampionSpell $spell
+     * @param  ChampionSpell $spell
      * @return array
      */
     private function convertSpellToArray(ChampionSpell $spell) : array
@@ -185,10 +185,12 @@ class SqlChampionSpellRepository implements StoreRepositoryInterface
             'ranges' => json_encode($spell->getRanges()),
             'effects' => json_encode($spell->getEffects()),
             'variables' => json_encode($spell->getVars()),
-            'resource' => json_encode([
+            'resource' => json_encode(
+                [
                 'name' => $spell->getResource()->getName(),
                 'values' => $spell->getResource()->getValues()
-            ]),
+                ]
+            ),
             'version' => $spell->getVersion(),
             'region' => $spell->getRegion()
         ];

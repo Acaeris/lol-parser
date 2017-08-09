@@ -13,8 +13,10 @@ class ChampionController extends Controller
     {
         $championId = $request->query->get('id');
         $version = (null !== $request->query->get('v')) ? $request->query->get('v') : '7.9.1';
-        $champion = $repository->fetch('SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version',
-            [ 'champion_id' => $championId, 'version' => $version ]);
+        $champion = $repository->fetch(
+            'SELECT * FROM champions WHERE champion_id = :champion_id AND version = :version',
+            [ 'champion_id' => $championId, 'version' => $version ]
+        );
 
         return new Response(
             $this->renderView('api/championAnalysis.html.twig', ['champion' => $champion[$championId]]),

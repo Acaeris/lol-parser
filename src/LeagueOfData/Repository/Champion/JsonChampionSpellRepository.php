@@ -42,7 +42,7 @@ class JsonChampionSpellRepository implements FetchRepositoryInterface
     /**
      * Factory to create Champion Spells objects from JSON
      *
-     * @param array $spell
+     * @param  array $spell
      * @return EntityInterface
      */
     public function create(array $spell): EntityInterface
@@ -51,20 +51,17 @@ class JsonChampionSpellRepository implements FetchRepositoryInterface
 
         return new ChampionSpell(
             $spell['id'],
-            isset($spell['name']) ? $spell['name'] : "Missing Data",
+            $spell['name'] ?? "Missing Data",
             $keys[$spell['number']],
             $spell['image']['full'],
             $spell['maxrank'],
-            isset($spell['description']) ? $spell['description'] : "",
-            str_replace('"', "'", isset($spell['tooltip']) ? $spell['tooltip'] : ''),
+            $spell['description'] ?? "",
+            str_replace('"', "'", $spell['tooltip'] ?? ''),
             $spell['cooldown'],
             $spell['range'],
-            $spell['effect'],
-            isset($spell['vars']) ? $spell['vars'] : [],
-            new ChampionSpellResource(
-                isset($spell['costType']) ? $spell['costType'] : '',
-                isset($spell['cost']) ? $spell['cost'] : []
-            ),
+            $spell['effect'] ?? [],
+            $spell['vars'] ?? [],
+            new ChampionSpellResource($spell['costType'] ?? '', $spell['cost'] ?? []),
             $spell['version'],
             $spell['region']
         );
@@ -73,7 +70,7 @@ class JsonChampionSpellRepository implements FetchRepositoryInterface
     /**
      * Fetch Champion spells
      *
-     * @param array $params API Parameters
+     * @param  array $params API Parameters
      * @throws Exception
      */
     public function fetch(array $params): array

@@ -55,7 +55,7 @@ class JsonMasteryRepository implements FetchRepositoryInterface
     /**
      * Create the item object from JSON data
      *
-     * @param array $mastery
+     * @param  array $mastery
      * @return EntityInterface
      */
     public function create(array $mastery): EntityInterface
@@ -75,7 +75,7 @@ class JsonMasteryRepository implements FetchRepositoryInterface
     /**
      * Fetch Items
      *
-     * @param array $params API parameters
+     * @param  array $params API parameters
      * @return array Item Objects
      */
     public function fetch(array $params): array

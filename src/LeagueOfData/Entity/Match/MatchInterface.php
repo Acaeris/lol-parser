@@ -17,4 +17,5 @@ interface MatchInterface extends EntityInterface
     public function getType(): string;
     public function getVersion(): string;
     public function getDuration(): int;
+    public function getMapID(): int;
 }

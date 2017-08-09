@@ -90,7 +90,7 @@ class VersionUpdateConsumer implements ConsumerInterface
     /**
      * Process data and update DB
      *
-     * @param array $message
+     * @param  array $message
      * @return bool Success
      */
     private function updateData(array $message) : bool
@@ -119,10 +119,12 @@ class VersionUpdateConsumer implements ConsumerInterface
     {
         foreach ($this->apiRepository->transfer() as $version) {
             $this->logger->info("Queuing update for version ".$version->getFullVersion());
-            $message = serialize([
-                'version' => $version->getFullVersion(),
-                'force' => $force
-            ]);
+            $message = serialize(
+                [
+                    'version' => $version->getFullVersion(),
+                    'force' => $force
+                ]
+            );
             $this->championProducer->publish($message);
             $this->itemProducer->publish($message);
             $this->runeProducer->publish($message);

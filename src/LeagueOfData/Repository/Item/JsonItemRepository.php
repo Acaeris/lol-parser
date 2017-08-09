@@ -62,17 +62,17 @@ class JsonItemRepository implements FetchRepositoryInterface
     /**
      * Create the item object from JSON data
      *
-     * @param array $item
+     * @param  array $item
      * @return ItemInterface
      */
     public function create(array $item) : EntityInterface
     {
         return new Item(
             $item['id'],
-            (isset($item['name']) ? $item['name'] : ''),
-            (isset($item['description']) ? $item['description'] : ''),
-            (isset($item['gold']['total']) ? $item['gold']['total'] : ''),
-            (isset($item['gold']['sell']) ? $item['gold']['sell'] : ''),
+            $item['name'] ?? '',
+            $item['description'] ?? '',
+            $item['gold']['total'] ?? '',
+            $item['gold']['sell'] ?? '',
             $this->createStats($item),
             $item['version'],
             $item['region']
@@ -82,7 +82,7 @@ class JsonItemRepository implements FetchRepositoryInterface
     /**
      * Fetch Items
      *
-     * @param array $params API parameters
+     * @param  array $params API parameters
      * @return array Item Objects
      */
     public function fetch(array $params) : array
@@ -113,7 +113,7 @@ class JsonItemRepository implements FetchRepositoryInterface
     /**
      * Create the item's stat objects from JSON data
      *
-     * @param array $item
+     * @param  array $item
      * @return array
      */
     private function createStats(array $item) : array

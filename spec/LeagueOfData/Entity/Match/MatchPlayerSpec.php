@@ -10,8 +10,9 @@ class MatchPlayerSpec extends ObjectBehavior
     {
         $this->beConstructedWith(
             1, // Match ID
-            2, // Account ID
-            3, // Champion ID
+            2, // Participant ID
+            3, // Account ID
+            4, // Champion ID
             'euw' // Version
         );
     }
@@ -32,18 +33,22 @@ class MatchPlayerSpec extends ObjectBehavior
 
     public function it_can_return_key_data_for_indexing()
     {
-        $this->getKeyData()->shouldReturn([
-            'match_id' => 1,
-            'account_id' => 2,
-            'region' => 'euw'
-        ]);
+        $this->getKeyData()->shouldReturn(
+            [
+                'match_id' => 1,
+                'participant_id' => 2,
+                'account_id' => 3,
+                'region' => 'euw'
+            ]
+        );
     }
 
     public function it_has_all_data_available()
     {
         $this->getMatchID()->shouldReturn(1);
-        $this->getAccountID()->shouldReturn(2);
+        $this->getParticipantID()->shouldReturn(2);
+        $this->getAccountID()->shouldReturn(3);
+        $this->getChampionID()->shouldReturn(4);
         $this->getRegion()->shouldReturn("euw");
-        $this->getChampionID()->shouldReturn(3);
     }
 }

@@ -32,7 +32,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     /**
      * @var array Player List 
      */
-    private $players;
+    private $matchPlayers;
 
     public function __construct(Connection $dbConn, LoggerInterface $logger)
     {
@@ -49,7 +49,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     {
         foreach ($players as $player) {
             if ($player instanceof MatchPlayerInterface) {
-                $this->players[$player->getAccountID()] = $player;
+                $this->matchPlayers[$player->getMatchID()][] = $player;
                 continue;
             }
             $this->logger->error('Incorrect object supplied to MatchPlayer repository', [$player]);
@@ -61,19 +61,20 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
      */
     public function clear()
     {
-        $this->players = [];
+        $this->matchPlayers = [];
     }
 
     /**
      * Factory for creating objects
      *
-     * @param array $player
+     * @param  array $player
      * @return EntityInterface
      */
     public function create(array $player): EntityInterface
     {
         return new MatchPlayer(
             $player['match_id'],
+            $player['participant_id'],
             $player['account_id'],
             $player['champion_id'],
             $player['region']
@@ -83,22 +84,22 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     /**
      * Fetch Match List
      *
-     * @param string $query SQL Query
-     * @param array  $where SQL Where parameters
+     * @param  string $query SQL Query
+     * @param  array  $where SQL Where parameters
      * @return array MatchPlayer Objects
      */
     public function fetch(string $query, array $where = []): array
     {
-        $this->players = [];
+        $this->matchPlayers = [];
 
         $this->logger->debug('Fetching players from DB');
 
         $results = $this->dbConn->fetchAll($query, $where);
         $this->processResults($results);
 
-        $this->logger->debug(count($this->players)." players fetch from DB");
+        $this->logger->debug(count($this->matchPlayers)." players fetch from DB");
 
-        return $this->players;
+        return $this->matchPlayers;
     }
 
     /**
@@ -106,17 +107,30 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
      */
     public function store()
     {
-        $this->logger->debug("Storing ".count($this->players)." new/updated players");
+        $this->logger->debug("Storing ".count($this->matchPlayers)." new/updated players");
 
-        $select = "SELECT account_id FROM match_players WHERE match_id = :match_id AND account_id = :account_id"
-            . " AND region = :region";
+        $accountSelect = "SELECT account_id FROM match_players WHERE match_id = :match_id AND account_id = :account_id "
+            . "AND region = :region";
+        $participantSelect = "SELECT participant_id FROM match_players WHERE match_id = :match_id "
+            . "AND participant_id = :participant_id AND region = :region";
+        
+        foreach ($this->matchPlayers as $match) {
+            foreach ($match as $player) {
+                $keyData = $player->getKeyData();
+                if (0 !== $player->getAccountID() && $this->dbConn->fetchAll($accountSelect, $player->getKeyData())) {
+                    unset($keyData['participant_id']);
+                    $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $keyData);
+                    continue;
+                }
+                if (0 !== $player->getParticipantID()
+                    && $this->dbConn->fetchAll($participantSelect, $player->getKeyData())) {
 
-        foreach ($this->players as $player) {
-            if ($this->dbConn->fetchAll($select, $player->getKeyData())) {
-                $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $player->getKeyData());
-                continue;
+                    unset($keyData['account_id']);
+                    $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $keyData);
+                    continue;
+                }
+                $this->dbConn->insert('match_players', $this->convertPlayerToArray($player));
             }
-            $this->dbConn->insert('match_players', $this->convertPlayerToArray($player));
         }
     }
 
@@ -127,7 +141,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
      */
     public function transfer(): array
     {
-        return $this->players;
+        return $this->matchPlayers;
     }
 
     /**
@@ -139,7 +153,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     {
         if ($results !== false) {
             foreach ($results as $player) {
-                $this->players[$player['account_id']] = $this->create($player);
+                $this->matchPlayers[$player['match_id']][] = $this->create($player);
             }
         }
     }
@@ -147,7 +161,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     /**
      * Converts MatchPlayer object into SQL data array
      *
-     * @param MatchPlayerInterface $player
+     * @param  MatchPlayerInterface $player
      * @return array
      */
     private function convertPlayerToArray(MatchPlayerInterface $player): array
@@ -155,6 +169,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
         return [
             'match_id' => $player->getMatchID(),
             'account_id' => $player->getAccountID(),
+            'participant_id' => $player->getParticipantID(),
             'champion_id' => $player->getChampionID(),
             'region' => $player->getRegion()
         ];

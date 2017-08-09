@@ -50,8 +50,10 @@ class RuneUpdateCommandSpec extends ObjectBehavior
         RuneInterface $mockRune
     ) {
 
-        $dbRepository->fetch('SELECT * FROM runes WHERE version = :version AND region = :region',
-            ["version" => "7.9.1", "region" => "euw"])->willReturn([]);
+        $dbRepository->fetch(
+            'SELECT * FROM runes WHERE version = :version AND region = :region',
+            ["version" => "7.9.1", "region" => "euw"]
+        )->willReturn([]);
         $dbRepository->clear()->shouldBeCalled();
         $dbRepository->add([$mockRune])->shouldBeCalled();
         $dbRepository->store()->shouldBeCalled();
