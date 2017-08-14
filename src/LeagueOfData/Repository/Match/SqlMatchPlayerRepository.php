@@ -49,7 +49,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     {
         foreach ($players as $player) {
             if ($player instanceof MatchPlayerInterface) {
-                $this->matchPlayers[$player->getMatchID()][] = $player;
+                $this->matchPlayers[] = $player;
                 continue;
             }
             $this->logger->error('Incorrect object supplied to MatchPlayer repository', [$player]);
@@ -103,35 +103,130 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     }
 
     /**
-     * Store the summoner objects in the database
+     * Store the player objects in the database
      */
     public function store()
     {
         $this->logger->debug("Storing ".count($this->matchPlayers)." new/updated players");
 
-        $accountSelect = "SELECT account_id FROM match_players WHERE match_id = :match_id AND account_id = :account_id "
-            . "AND region = :region";
-        $participantSelect = "SELECT participant_id FROM match_players WHERE match_id = :match_id "
-            . "AND participant_id = :participant_id AND region = :region";
+        foreach ($this->matchPlayers as $player) {
+            if ($player->getAccountID() !== 0 && $player->getParticipantID() !== 0) {
+                $this->storeFullData($player);
+                continue;
+            }
+            if ($player->getParticipantID() !== 0) {
+                $this->storeParticipantData($player);
+                continue;
+            }
+            if ($player->getAccountID() !== 0) {
+                $this->storeAccountData($player);
+                continue;
+            }
 
-        foreach ($this->matchPlayers as $match) {
-            foreach ($match as $player) {
-                $keyData = $player->getKeyData();
-                if (0 !== $player->getAccountID() && $this->dbConn->fetchAll($accountSelect, $player->getKeyData())) {
-                    unset($keyData['participant_id']);
-                    $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $keyData);
-                    continue;
-                }
-                if (0 !== $player->getParticipantID()
-                    && $this->dbConn->fetchAll($participantSelect, $player->getKeyData())) {
+            $this->logger->debug("Unable to store player data.", $player);
+        }
+    }
 
-                    unset($keyData['account_id']);
-                    $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $keyData);
-                    continue;
-                }
+    /**
+     * Store player using full key data
+     *
+     * @param MatchPlayer $player
+     * @return null
+     */
+    public function storeFullData(MatchPlayer $player)
+    {
+        $result = $this->dbConn->fetchAll("SELECT * FROM match_players WHERE match_id = :match_id "
+            . "AND region = :region AND (account_id = :account_id OR account_id = 0) "
+            . "AND (participant_id = :participant_id OR participant_id = 0) AND champion_id = :champion_id",
+            $player->getKeyData());
+
+        if ($result) {
+            $currentEntry = $this->create($result[0]);
+            $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $currentEntry->getKeyData());
+            return;
+        }
+
+        $this->dbConn->insert('match_players', $this->convertPlayerToArray($player));
+    }
+
+    /**
+     * Store data when we know the participant ID only
+     *
+     * @param MatchPlayer $player
+     * @return null
+     */
+    public function storeParticipantData(MatchPlayer $player)
+    {
+        $result = $this->dbConn->fetchAll("SELECT * FROM match_players WHERE match_id = :match_id "
+            . "AND region = :region AND participant_id = :participant_id", $player->getKeyData());
+
+        if ($result) {
+            $currentEntry = $this->create($result[0]);
+            $this->dbConn->update('match_players', $this->convertPlayerToArray($player), $currentEntry->getKeyData());
+            return;
+        }
+
+        if ($this->isUniqueChampionInMatch($player)) {
+            $result = $this->dbConn->fetchAll("SELECT * FROM match_players WHERE match_id = :match_id "
+                . "AND region = :region AND champion_id = :champion_id", $player->getKeyData());
+
+            if ($result) {
+                $currentEntry = $this->create($result[0]);
+                $this->dbConn->update('match_players', $this->convertPlayerToArray($player),
+                    $currentEntry->getKeyData());
+                return;
+            }
+
+            $this->dbConn->insert('match_players', $this->convertPlayerToArray($player));
+        }
+
+        // TODO: Make sure there are enough entries of the champion.
+    }
+
+    /**
+     * Store data when we know the account ID only
+     *
+     * @param MatchPlayer $player
+     * @return null
+     */
+    public function storeAccountData(MatchPlayer $player)
+    {
+        if (!$this->dbConn->fetchAll("SELECT account_id FROM match_players WHERE match_id = :match_id "
+            . "AND region = :region AND account_id = :account_id", $player->getKeyData())) {
+
+            $result = $this->dbConn->fetchAll("SELECT * FROM match_players WHERE match_id = :match_id "
+                . "AND region = :region AND champion_id = :champion_id", $player->getKeyData());
+
+            if (count($result) === 1) {
+                $currentEntry = $this->create($result[0]);
+                $this->dbConn->update('match_players', $this->convertPlayerToArray($player),
+                    $currentEntry->getKeyData());
+                return;
+            }
+
+            if (count($result) === 0) {
                 $this->dbConn->insert('match_players', $this->convertPlayerToArray($player));
             }
         }
+    }
+
+    /**
+     * Is this the only occurance of this champion in the match?
+     *
+     * @param MatchPlayer $player
+     * @return bool
+     */
+    public function isUniqueChampionInMatch(MatchPlayer $player): bool
+    {
+        foreach ($this->matchPlayers as $otherPlayer) {
+            if ($otherPlayer->getChampionID() === $player->getChampionID()
+                && $otherPlayer->getParticipantID() !== $player->getParticipantID()) {
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -153,7 +248,7 @@ class SqlMatchPlayerRepository implements StoreRepositoryInterface
     {
         if ($results !== false) {
             foreach ($results as $player) {
-                $this->matchPlayers[$player['match_id']][] = $this->create($player);
+                $this->matchPlayers[] = $this->create($player);
             }
         }
     }

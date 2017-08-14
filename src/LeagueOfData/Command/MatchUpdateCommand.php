@@ -48,6 +48,7 @@ class MatchUpdateCommand extends Command
         $this->setName('update:match')
             ->setDescription('API processor command for match data')
             ->addArgument('matchId', InputArgument::REQUIRED, 'Match ID to process data for')
+            ->addOption('accountId', 'a', InputOption::VALUE_REQUIRED, 'Account ID from match. Used for deobfuscation')
             ->addOption('region', 'r', InputOption::VALUE_REQUIRED, 'Region to fetch data for. (Default "euw")', "euw")
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force a refresh of the data.');
     }
@@ -65,7 +66,8 @@ class MatchUpdateCommand extends Command
         $select = "SELECT * FROM matches WHERE match_id = :match_id AND region = :region";
         $where = [
             'match_id' => $input->getArgument('matchId'),
-            'region' => $input->getOption('region')
+            'region' => $input->getOption('region'),
+            'forAccountId' => $input->getOption('accountId') ?? ""
         ];
 
         if (count($this->dbRepository->fetch($select, $where)) === 0 || $input->getOption('force')) {
@@ -75,7 +77,7 @@ class MatchUpdateCommand extends Command
                 $this->dbRepository->add($this->apiRespository->fetch($where));
                 $this->dbRepository->store();
             } catch (\Exception $exception) {
-                $this->logger->error("Failed to store match data:", ['exception' => $exception]);
+                $this->logger->error("Failed to store match data: " . $exception);
             }
             return;
         }

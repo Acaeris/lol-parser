@@ -58,6 +58,7 @@ class MatchPlayer implements MatchPlayerInterface, ImmutableInterface
             'match_id' => $this->matchId,
             'participant_id' => $this->participantId,
             'account_id' => $this->accountID,
+            'champion_id' => $this->championID,
             'region' => $this->region
         ];
     }

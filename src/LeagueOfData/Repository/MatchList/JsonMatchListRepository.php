@@ -110,7 +110,7 @@ class JsonMatchListRepository implements FetchRepositoryInterface
             foreach ($response['matches'] as $match) {
                 $match['region'] = $params['region'];
                 $match['account_id'] = $params['account_id'];
-                $this->matches[$match['gameId']] = $this->create($match);
+                $this->matches[] = $this->create($match);
             }
         }
     }
