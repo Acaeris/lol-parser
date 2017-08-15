@@ -1,0 +1,10 @@
+{
+    "success": true,
+    "results": [
+        {% for summoner in summoners %}{
+            "name": "{{ summoner.name }}",
+            "value": {{ summoner.accountID }},
+            "text": "{{ summoner.name }}"
+        }{% if not loop.last %},{% endif %}{% endfor %}
+    ]
+}
