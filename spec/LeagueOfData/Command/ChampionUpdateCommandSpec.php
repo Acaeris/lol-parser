@@ -31,6 +31,7 @@ class ChampionUpdateCommandSpec extends ObjectBehavior
 
         $this->beConstructedWith($logger, $apiRepository, $dbRepository);
     }
+
     public function it_is_initializable()
     {
         $this->shouldHaveType('LeagueOfData\Command\ChampionUpdateCommand');
