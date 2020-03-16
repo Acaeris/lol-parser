@@ -1,0 +1,10 @@
+{
+    "success": true,
+    "results": [
+        {% for champion in champions %}{
+            "name": "{{ champion.name }}",
+            "value": {{ champion.championID }},
+            "text": "{{ champion.name }}"
+        }{% if not loop.last %},{% endif %}{% endfor %}
+    ]
+}

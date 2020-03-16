@@ -3,3 +3,16 @@
 /var/logs/
 /app/config/parameters.yml
 /var/
+/.idea/
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+###< symfony/framework-bundle ###
+/config/packages/parameters.yaml
+/bin/var-dump-server
+/bin/phpcbf
+/bin/phpcs

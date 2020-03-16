@@ -36,90 +36,45 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3112,
-                     "count": 1
-                  },
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 2031,
-                     "count": 1
-                  }
+                  { "id": 3112, "count": 1 },
+                  { "id": 1001, "count": 1 },
+                  { "id": 2031, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3152,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3152, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "offensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3157,
-                     "count": 1
-                  },
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  }
+                  { "id": 3157, "count": 1 },
+                  { "id": 3116, "count": 1 },
+                  { "id": 3001, "count": 1 }
                ],
                "type": "defensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  },
-                  {
-                     "id": 2033,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2139, "count": 1 },
+                  { "id": 2033, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -135,104 +90,53 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1056,
-                     "count": 1
-                  },
-                  {
-                     "id": 2003,
-                     "count": 2
-                  },
-                  {
-                     "id": 3340,
-                     "count": 1
-                  }
+                  { "id": 1056, "count": 1 },
+                  { "id": 2003, "count": 2 },
+                  { "id": 3340, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 3802,
-                     "count": 1
-                  }
+                  { "id": 1001, "count": 1 },
+                  { "id": 3802, "count": 1 }
                ],
                "type": "early"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3157,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3157, "count": 1 }
                ],
                "type": "standard"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3029,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  }
+                  { "id": 3116, "count": 1 },
+                  { "id": 3029, "count": 1 },
+                  { "id": 3001, "count": 1 }
                ],
                "type": "situational"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2043,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2043, "count": 1 },
+                  { "id": 2139, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -248,104 +152,53 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1056,
-                     "count": 1
-                  },
-                  {
-                     "id": 2003,
-                     "count": 2
-                  },
-                  {
-                     "id": 3340,
-                     "count": 1
-                  }
+                  { "id": 1056, "count": 1 },
+                  { "id": 2003, "count": 2 },
+                  { "id": 3340, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 1058,
-                     "count": 1
-                  }
+                  { "id": 1001, "count": 1 },
+                  { "id": 1058, "count": 1 }
                ],
                "type": "early"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3157,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3157, "count": 1 }
                ],
                "type": "standard"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  },
-                  {
-                     "id": 3152,
-                     "count": 1
-                  }
+                  { "id": 3116, "count": 1 },
+                  { "id": 3001, "count": 1 },
+                  { "id": 3152, "count": 1 }
                ],
                "type": "situational"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2043,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2043, "count": 1 },
+                  { "id": 2139, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -361,112 +214,55 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3680,
-                     "count": 1
-                  },
-                  {
-                     "id": 3681,
-                     "count": 1
-                  },
-                  {
-                     "id": 3682,
-                     "count": 1
-                  },
-                  {
-                     "id": 3683,
-                     "count": 1
-                  }
+                  { "id": 3680, "count": 1 },
+                  { "id": 3681, "count": 1 },
+                  { "id": 3682, "count": 1 },
+                  { "id": 3683, "count": 1 }
                ],
                "type": "KingPoroSnax"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3112,
-                     "count": 1
-                  },
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 2031,
-                     "count": 1
-                  }
+                  { "id": 3112, "count": 1 },
+                  { "id": 1001, "count": 1 },
+                  { "id": 2031, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3152,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3152, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "offensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3157,
-                     "count": 1
-                  },
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  }
+                  { "id": 3157, "count": 1 },
+                  { "id": 3116, "count": 1 },
+                  { "id": 3001, "count": 1 }
                ],
                "type": "defensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  },
-                  {
-                     "id": 2033,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2139, "count": 1 },
+                  { "id": 2033, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -482,106 +278,49 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3631,
-                     "count": 1
-                  },
-                  {
-                     "id": 3641,
-                     "count": 1
-                  },
-                  {
-                     "id": 3647,
-                     "count": 1
-                  },
-                  {
-                     "id": 3635,
-                     "count": 1
-                  },
-                  {
-                     "id": 3642,
-                     "count": 1
-                  }
+                  { "id": 3631, "count": 1 },
+                  { "id": 3641, "count": 1 },
+                  { "id": 3647, "count": 1 },
+                  { "id": 3635, "count": 1 },
+                  { "id": 3642, "count": 1 }
                ],
                "type": "siegeOffense"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3634,
-                     "count": 1
-                  },
-                  {
-                     "id": 3640,
-                     "count": 1
-                  },
-                  {
-                     "id": 3643,
-                     "count": 1
-                  },
-                  {
-                     "id": 3636,
-                     "count": 1
-                  },
-                  {
-                     "id": 3642,
-                     "count": 1
-                  }
+                  { "id": 3634, "count": 1 },
+                  { "id": 3640, "count": 1 },
+                  { "id": 3643, "count": 1 },
+                  { "id": 3636, "count": 1 },
+                  { "id": 3642, "count": 1 }
                ],
                "type": "siegeDefense"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3157,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3157, "count": 1 }
                ],
                "type": "standard"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3029,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  }
+                  { "id": 3116, "count": 1 },
+                  { "id": 3029, "count": 1 },
+                  { "id": 3001, "count": 1 }
                ],
                "type": "situational"
             }
@@ -597,104 +336,53 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1056,
-                     "count": 1
-                  },
-                  {
-                     "id": 2003,
-                     "count": 2
-                  },
-                  {
-                     "id": 3340,
-                     "count": 1
-                  }
+                  { "id": 1056, "count": 1 },
+                  { "id": 2003, "count": 2 },
+                  { "id": 3340, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 3802,
-                     "count": 1
-                  }
+                  { "id": 1001, "count": 1 },
+                  { "id": 3802, "count": 1 }
                ],
                "type": "early"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3157,
-                     "count": 1
-                  }
+                  { "id": 3089, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3157, "count": 1 }
                ],
                "type": "standard"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3027,
-                     "count": 1
-                  },
-                  {
-                     "id": 3001,
-                     "count": 1
-                  }
+                  { "id": 3116, "count": 1 },
+                  { "id": 3027, "count": 1 },
+                  { "id": 3001, "count": 1 }
                ],
                "type": "situational"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2055,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2055, "count": 1 },
+                  { "id": 2139, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -710,82 +398,43 @@
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1056,
-                     "count": 2
-                  },
-                  {
-                     "id": 2003,
-                     "count": 1
-                  }
+                  { "id": 1056, "count": 2 },
+                  { "id": 2003, "count": 1 }
                ],
                "type": "starting"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3020,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3020, "count": 1 },
+                  { "id": 3285, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "essential"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3090,
-                     "count": 1
-                  },
-                  {
-                     "id": 3135,
-                     "count": 1
-                  },
-                  {
-                     "id": 3027,
-                     "count": 1
-                  }
+                  { "id": 3090, "count": 1 },
+                  { "id": 3135, "count": 1 },
+                  { "id": 3027, "count": 1 }
                ],
                "type": "offensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3001,
-                     "count": 1
-                  },
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3030,
-                     "count": 1
-                  }
+                  { "id": 3001, "count": 1 },
+                  { "id": 3116, "count": 1 },
+                  { "id": 3030, "count": 1 }
                ],
                "type": "defensive"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 2003,
-                     "count": 1
-                  },
-                  {
-                     "id": 2139,
-                     "count": 1
-                  }
+                  { "id": 2003, "count": 1 },
+                  { "id": 2139, "count": 1 }
                ],
                "type": "consumables"
             }
@@ -800,95 +449,50 @@
          "blocks": [
             {
                "recMath": false,
-               "items": [{
-                  "id": 1056,
-                  "count": 1
-               }],
+               "items": [{ "id": 1056, "count": 1 }],
                "type": "beginner_starter"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 1056,
-                     "count": 1
-                  },
-                  {
-                     "id": 2003,
-                     "count": 1
-                  }
+                  { "id": 1056, "count": 1 },
+                  { "id": 2003, "count": 1 }
                ],
                "type": "beginner_starter"
             },
             {
                "recMath": true,
                "items": [
-                  {
-                     "id": 1028,
-                     "count": 1
-                  },
-                  {
-                     "id": 1027,
-                     "count": 1
-                  },
-                  {
-                     "id": 3010,
-                     "count": 1
-                  }
+                  { "id": 1028, "count": 1 },
+                  { "id": 1027, "count": 1 },
+                  { "id": 3010, "count": 1 }
                ],
                "type": "beginner_advanced"
             },
             {
                "recMath": true,
                "items": [
-                  {
-                     "id": 1001,
-                     "count": 1
-                  },
-                  {
-                     "id": 3020,
-                     "count": 1
-                  }
+                  { "id": 1001, "count": 1 },
+                  { "id": 3020, "count": 1 }
                ],
                "type": "beginner_movementspeed"
             },
             {
                "recMath": true,
                "items": [
-                  {
-                     "id": 3010,
-                     "count": 1
-                  },
-                  {
-                     "id": 1026,
-                     "count": 1
-                  },
-                  {
-                     "id": 3165,
-                     "count": 1
-                  }
+                  { "id": 3010, "count": 1 },
+                  { "id": 1026, "count": 1 },
+                  { "id": 3165, "count": 1 }
                ],
                "type": "beginner_legendaryitem"
             },
             {
                "recMath": false,
                "items": [
-                  {
-                     "id": 3027,
-                     "count": 1
-                  },
-                  {
-                     "id": 3116,
-                     "count": 1
-                  },
-                  {
-                     "id": 3089,
-                     "count": 1
-                  },
-                  {
-                     "id": 3285,
-                     "count": 1
-                  }
+                  { "id": 3027, "count": 1 },
+                  { "id": 3116, "count": 1 },
+                  { "id": 3089, "count": 1 },
+                  { "id": 3285, "count": 1 }
                ],
                "type": "beginner_morelegendaryitems"
             }
@@ -908,38 +512,17 @@
    },
    "spells": [
       {
-         "range": [
-            625,
-            625,
-            625,
-            625,
-            625
-         ],
+         "range": [625, 625, 625, 625, 625],
          "leveltip": {
             "effect": [
                "{{ e1 }} -> {{ e1NL }}",
                " {{ cost }} -> {{ costNL }}"
             ],
-            "label": [
-               "Damage",
-               "Mana Cost"
-            ]
+            "label": ["Damage", "Mana Cost"]
          },
          "resource": "{{ cost }} Mana",
          "maxrank": 5,
-         "effectBurn": [
-            "",
-            "80/115/150/185/220",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0"
-         ],
+         "effectBurn": ["", "80/115/150/185/220", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
          "image": {
             "w": 48,
             "full": "Disintegrate.png",
@@ -949,20 +532,8 @@
             "y": 144,
             "x": 432
          },
-         "cooldown": [
-            4,
-            4,
-            4,
-            4,
-            4
-         ],
-         "cost": [
-            60,
-            65,
-            70,
-            75,
-            80
-         ],
+         "cooldown": [4, 4, 4, 4, 4],
+         "cost": [60, 65, 70, 75, 80],
          "vars": [{
             "link": "spelldamage",
             "coeff": [0.8],
@@ -973,76 +544,16 @@
          "costType": " Mana",
          "effect": [
             null,
-            [
-               80,
-               115,
-               150,
-               185,
-               220
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ]
+            [80, 115, 150, 185, 220],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
          ],
          "cooldownBurn": "4",
          "description": "Annie hurls a Mana infused fireball, dealing damage and refunding the Mana cost if it destroys the target.",
@@ -1053,38 +564,17 @@
          "tooltip": "Deals {{ e1 }} <span class=\"color99FF99\">(+{{ a1 }})<\/span> magic damage. Mana cost and half the cooldown are refunded if Disintegrate kills the target."
       },
       {
-         "range": [
-            600,
-            600,
-            600,
-            600,
-            600
-         ],
+         "range": [600, 600, 600, 600, 600],
          "leveltip": {
             "effect": [
                "{{ e1 }} -> {{ e1NL }}",
                " {{ cost }} -> {{ costNL }}"
             ],
-            "label": [
-               "Damage",
-               "Mana Cost"
-            ]
+            "label": ["Damage", "Mana Cost"]
          },
          "resource": "{{ cost }} Mana",
          "maxrank": 5,
-         "effectBurn": [
-            "",
-            "70/115/160/205/250",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0"
-         ],
+         "effectBurn": ["", "70/115/160/205/250", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
          "image": {
             "w": 48,
             "full": "Incinerate.png",
@@ -1094,20 +584,8 @@
             "y": 0,
             "x": 0
          },
-         "cooldown": [
-            8,
-            8,
-            8,
-            8,
-            8
-         ],
-         "cost": [
-            70,
-            80,
-            90,
-            100,
-            110
-         ],
+         "cooldown": [8, 8, 8, 8, 8],
+         "cost": [70, 80, 90, 100, 110],
          "vars": [{
             "link": "spelldamage",
             "coeff": [0.85],
@@ -1118,76 +596,16 @@
          "costType": " Mana",
          "effect": [
             null,
-            [
-               70,
-               115,
-               160,
-               205,
-               250
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ]
+            [70, 115, 160, 205, 250],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
          ],
          "cooldownBurn": "8",
          "description": "Annie casts a blazing cone of fire, dealing damage to all enemies in the area.",
@@ -1198,38 +616,17 @@
          "tooltip": "Casts a cone of fire dealing {{ e1 }} <span class=\"color99FF99\">(+{{ a1 }})<\/span> magic damage to all enemies in the area."
       },
       {
-         "range": [
-            0,
-            0,
-            0,
-            0,
-            0
-         ],
+         "range": [0, 0, 0, 0, 0],
          "leveltip": {
             "effect": [
                "{{ e1 }}% -> {{ e1NL }}%",
                "{{ e2 }} -> {{ e2NL }}"
             ],
-            "label": [
-               "Damage Reduction",
-               "Damage Return"
-            ]
+            "label": ["Damage Reduction", "Damage Return"]
          },
          "resource": "{{ cost }} Mana",
          "maxrank": 5,
-         "effectBurn": [
-            "",
-            "16/22/28/34/40",
-            "20/30/40/50/60",
-            "3",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0",
-            "0"
-         ],
+         "effectBurn": ["", "16/22/28/34/40", "20/30/40/50/60", "3", "0", "0", "0", "0", "0", "0", "0"],
          "image": {
             "w": 48,
             "full": "MoltenShield.png",
@@ -1239,20 +636,8 @@
             "y": 0,
             "x": 48
          },
-         "cooldown": [
-            10,
-            10,
-            10,
-            10,
-            10
-         ],
-         "cost": [
-            20,
-            20,
-            20,
-            20,
-            20
-         ],
+         "cooldown": [10, 10, 10, 10, 10],
+         "cost": [20, 20, 20, 20, 20],
          "vars": [{
             "link": "spelldamage",
             "coeff": [0.2],
@@ -1263,76 +648,16 @@
          "costType": " Mana",
          "effect": [
             null,
-            [
-               16,
-               22,
-               28,
-               34,
-               40
-            ],
-            [
-               20,
-               30,
-               40,
-               50,
-               60
-            ],
-            [
-               3,
-               3,
-               3,
-               3,
-               3
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ],
-            [
-               0,
-               0,
-               0,
-               0,
-               0
-            ]
+            [16, 22, 28, 34, 40],
+            [20, 30, 40, 50, 60],
+            [3, 3, 3, 3, 3],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
          ],
          "cooldownBurn": "10",
          "description": "Grants Annie and Tibbers increased percentage Damage Resist and damages enemies who attack with basic attacks.",
@@ -1343,11 +668,7 @@
          "tooltip": "Annie grants herself and Tibbers {{ e1 }}% damage reduction for {{ e3 }} seconds.<br><br>While the shield is active, enemies who basic attack it take {{ e2 }} <span class=\"color99FF99\">(+{{ a1 }})<\/span> magic damage."
       },
       {
-         "range": [
-            600,
-            600,
-            600
-         ],
+         "range": [600, 600, 600],
          "leveltip": {
             "effect": [
                "{{ e1 }} -> {{ e1NL }}",
@@ -1390,16 +711,8 @@
             "y": 0,
             "x": 96
          },
-         "cooldown": [
-            120,
-            100,
-            80
-         ],
-         "cost": [
-            100,
-            100,
-            100
-         ],
+         "cooldown": [120, 100, 80],
+         "cost": [100, 100, 100],
          "vars": [
             {
                "link": "spelldamage",
@@ -1417,56 +730,16 @@
          "costType": " Mana",
          "effect": [
             null,
-            [
-               150,
-               275,
-               400
-            ],
-            [
-               10,
-               15,
-               20
-            ],
-            [
-               50,
-               75,
-               100
-            ],
-            [
-               -0.1,
-               -0.1,
-               -0.1
-            ],
-            [
-               1,
-               1,
-               1
-            ],
-            [
-               3,
-               3,
-               3
-            ],
-            [
-               30,
-               50,
-               70
-            ],
-            [
-               0,
-               900,
-               1800
-            ],
-            [
-               0.15,
-               0.15,
-               0.15
-            ],
-            [
-               1200,
-               2100,
-               3000
-            ]
+            [150, 275, 400],
+            [10, 15, 20],
+            [50, 75, 100],
+            [-0.1, -0.1, -0.1],
+            [1, 1, 1],
+            [3, 3, 3],
+            [30, 50, 70],
+            [0, 900, 1800],
+            [0.15, 0.15, 0.15],
+            [1200, 2100, 3000]
          ],
          "cooldownBurn": "120/100/80",
          "description": "Annie wills her bear Tibbers to life, dealing damage to units in the area. Tibbers can attack and also burns enemies that stand near him.",
@@ -1510,60 +783,16 @@
    "partype": "Mana",
    "key": "Annie",
    "skins": [
-      {
-         "id": 1000,
-         "num": 0,
-         "name": "default"
-      },
-      {
-         "id": 1001,
-         "num": 1,
-         "name": "Goth Annie"
-      },
-      {
-         "id": 1002,
-         "num": 2,
-         "name": "Red Riding Annie"
-      },
-      {
-         "id": 1003,
-         "num": 3,
-         "name": "Annie in Wonderland"
-      },
-      {
-         "id": 1004,
-         "num": 4,
-         "name": "Prom Queen Annie"
-      },
-      {
-         "id": 1005,
-         "num": 5,
-         "name": "Frostfire Annie"
-      },
-      {
-         "id": 1006,
-         "num": 6,
-         "name": "Reverse Annie"
-      },
-      {
-         "id": 1007,
-         "num": 7,
-         "name": "FrankenTibbers Annie"
-      },
-      {
-         "id": 1008,
-         "num": 8,
-         "name": "Panda Annie"
-      },
-      {
-         "id": 1009,
-         "num": 9,
-         "name": "Sweetheart Annie"
-      },
-      {
-         "id": 1010,
-         "num": 10,
-         "name": "Hextech Annie"
-      }
+      { "id": 1000, "num": 0, "name": "default" },
+      { "id": 1001, "num": 1, "name": "Goth Annie" },
+      { "id": 1002, "num": 2, "name": "Red Riding Annie" },
+      { "id": 1003, "num": 3, "name": "Annie in Wonderland" },
+      { "id": 1004, "num": 4, "name": "Prom Queen Annie" },
+      { "id": 1005, "num": 5, "name": "Frostfire Annie" },
+      { "id": 1006, "num": 6, "name": "Reverse Annie" },
+      { "id": 1007, "num": 7, "name": "FrankenTibbers Annie" },
+      { "id": 1008, "num": 8, "name": "Panda Annie" },
+      { "id": 1009, "num": 9, "name": "Sweetheart Annie" },
+      { "id": 1010, "num": 10, "name": "Hextech Annie" }
    ]
 }

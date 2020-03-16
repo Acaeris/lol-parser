@@ -6,27 +6,32 @@ services:
 
     LeagueOfData\:
         resource: '../../src/LeagueOfData/*'
-        exclude: '../../src/LeagueOfData/{Entity,Repository,Library}'
+        exclude: '../../src/LeagueOfData/{Models,Repository,Library}'
         public: true
     LeagueOfData\Adapters\ApiAdapter:
         arguments:
             $client: '@guzzle.client.riot_api'
             $apiKey: '%apiKey%'
         public: true
-    LeagueOfData\Consumer\VersionUpdateConsumer:
+    LeagueOfData\Services\RiotAPI\ApiAdapter:
+        arguments:
+            $client: '@guzzle.client.riot_api'
+            $apiKey: '%apiKey%'
+        public: true
+    LeagueOfData\Consumers\VersionUpdateConsumer:
         arguments:
             $logger: '@logger'
-            $apiAdapter: '@LeagueOfData\Service\Json\Version\VersionCollection'
-            $dbAdapter: '@LeagueOfData\Service\Sql\Version\VersionCollection'
+            $apiAdapter: '@LeagueOfData\Services\Json\Version\VersionCollection'
+            $dbAdapter: '@LeagueOfData\Services\Sql\Version\VersionCollection'
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
             $masteryProducer: '@old_sound_rabbit_mq.mastery_updates_producer'
-    LeagueOfData\Command\VersionUpdateCommand:
+    LeagueOfData\Commands\VersionUpdateCommand:
         arguments:
             $logger: '@logger'
-            $apiAdapter: '@LeagueOfData\Service\Json\Version\VersionCollection'
-            $dbAdapter: '@LeagueOfData\Service\Sql\Version\VersionCollection'
+            $apiAdapter: '@LeagueOfData\Services\Json\Version\VersionCollection'
+            $dbAdapter: '@LeagueOfData\Services\Sql\Version\VersionCollection'
             $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
             $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
             $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'

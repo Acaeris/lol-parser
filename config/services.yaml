@@ -1,0 +1,45 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    LeagueOfData\:
+        resource: '../../src/LeagueOfData/*'
+        exclude: '../../src/LeagueOfData/{Models,Repository,Library}'
+        public: true
+    LeagueOfData\Adapters\ApiAdapter:
+        arguments:
+            $client: '@guzzle.client.riot_api'
+            $apiKey: '%apiKey%'
+        public: true
+    LeagueOfData\Services\RiotAPI\ApiAdapter:
+        arguments:
+            $client: '@guzzle.client.riot_api'
+            $apiKey: '%apiKey%'
+        public: true
+    LeagueOfData\Consumers\VersionUpdateConsumer:
+        arguments:
+            $logger: '@logger'
+            $apiAdapter: '@LeagueOfData\Services\Json\Version\VersionCollection'
+            $dbAdapter: '@LeagueOfData\Services\Sql\Version\VersionCollection'
+            $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
+            $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
+            $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
+            $masteryProducer: '@old_sound_rabbit_mq.mastery_updates_producer'
+    LeagueOfData\Commands\VersionUpdateCommand:
+        arguments:
+            $logger: '@logger'
+            $apiAdapter: '@LeagueOfData\Services\Json\Version\VersionCollection'
+            $dbAdapter: '@LeagueOfData\Services\Sql\Version\VersionCollection'
+            $championProducer: '@old_sound_rabbit_mq.champion_updates_producer'
+            $itemProducer: '@old_sound_rabbit_mq.item_updates_producer'
+            $runeProducer: '@old_sound_rabbit_mq.rune_updates_producer'
+            $masteryProducer: '@old_sound_rabbit_mq.mastery_updates_producer'

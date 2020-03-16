@@ -1,10 +1,3 @@
-# Docker host Detection from http://go/docker-switcher
-ifndef server
-  ifdef DH
-    server = $(DH)
-    $(info Detected '$(DH)' from Docker Environment Switcher. Go you!)
-  endif
-endif
 server ?= docker
 
 build:
@@ -22,6 +15,9 @@ start: stop
 		--link lol-queue:rmq.local \
 		--link lol-db:mysql.local \
 		lol-parser
+
+test:
+	bin/phpspec r
 
 stop:
 	@docker rm -vf lol-parser lol-queue lol-db||:
@@ -46,4 +42,4 @@ endif
 		--itemize-changes \
 		. CONTAINER:/home/sites/lol-parser/
 
-.PHONY: build start stop clean rsync
+.PHONY: build start test stop clean rsync
