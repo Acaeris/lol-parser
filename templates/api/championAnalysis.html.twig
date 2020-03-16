@@ -1,0 +1,61 @@
+{
+    "id": {{ champion.championID }},
+    "name": "{{ champion.name }}",
+    "imageName": "{{ champion.imageName }}",
+    "title": "{{ champion.title }}",
+    "tags": {{ champion.tags | json_encode | raw }},
+    "resourceType": "{{ champion.resourceType }}",
+    "stats": {
+        "moveSpeed": {{ champion.stats.moveSpeed }},
+        "health": {{ champion.stats.health.baseValue }},
+        "healthPerLevel": {{ champion.stats.health.increasePerLevel }},
+        "healthRegen": {{ champion.stats.health.regenBaseValue }},
+        "healthRegenPerLevel": {{ champion.stats.health.regenIncreasePerLevel }},
+        "resource": {{ champion.stats.resource.baseValue }},
+        "resourcePerLevel": {{ champion.stats.resource.increasePerLevel }},
+        "resourceRegen": {{ champion.stats.resource.regenBaseValue }},
+        "resourceRegenPerLevel": {{ champion.stats.resource.regenIncreasePerLevel }},
+        "attack": {{ champion.stats.attack.baseDamage }},
+        "attackPerLevel": {{ champion.stats.attack.damagePerLevel }},
+        "attackRange": {{ champion.stats.attack.range }},
+        "attackSpeed": {{ champion.stats.attack.attackSpeed }},
+        "attackSpeedPerLevel": {{ champion.stats.attack.attackSpeedPerLevel }},
+        "crit": {{ champion.stats.attack.baseCritChance }},
+        "critPerLevel": {{ champion.stats.attack.critChancePerLevel }},
+        "armor": {{ champion.stats.armor.baseValue }},
+        "armorPerLevel": {{ champion.stats.armor.increasePerLevel }},
+        "magicResist": {{ champion.stats.magicResist.baseValue }},
+        "magicResistPerLevel": {{ champion.stats.magicResist.increasePerLevel }}
+    },
+    "passive": {
+        "name": "{{ champion.passive.passiveName }}",
+        "image": "{{ champion.passive.imageName }}",
+        "description": "{{ champion.passive.description }}"
+    },
+    "spells": [
+        {% for spell in champion.spells %}{
+            "name": "{{ spell.spellName }}",
+            "key": "{{ spell.key }}",
+            "image": "{{ spell.imageName }}",
+            "maxRank": {{ spell.maxRank }},
+            "description": "{{ spell.description }}",
+            "tooltip": "{{ spell.tooltip | raw }}",
+            "cooldowns": {{ spell.cooldowns | json_encode | raw }},
+            "ranges": {{ spell.ranges | json_encode }},
+            "effects": {{ spell.effects | json_encode }},
+            "variables": {{ spell.vars | json_encode | raw }},
+            "resource": {
+                "name": "{{ spell.resource.name }}",
+                "values": {{ spell.resource.values | json_encode }}
+            }
+        }{% if not loop.last %},{% endif %}{% endfor %}
+
+    ],
+    "rating": {
+        "early": 1,
+        "mid": 2,
+        "late": 3
+    },
+    "version": "{{ champion.version }}",
+    "region": "{{ champion.region }}"
+}

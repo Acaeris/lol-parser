@@ -1,0 +1,55 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+        producers:
+            version_updates:
+                connection:       default
+                exchange_options: { name: 'version_updates', type: direct }
+            champion_updates:
+                connection:       default
+                exchange_options: { name: 'champion_updates', type: direct }
+            item_updates:
+                connection:       default
+                exchange_options: { name: 'item_updates', type: direct }
+            rune_updates:
+                connection:       default
+                exchange_options: { name: 'rune_updates', type: direct }
+            mastery_updates:
+                connection:       default
+                exchange_options: { name: 'mastery_updates', type: direct }
+        consumers:
+            version_updates:
+                connection:       default
+                exchange_options: { name: 'version_updates', type: direct }
+                queue_options:    { name: 'version_updates' }
+                callback:         LeagueOfData\Consumers\VersionUpdateConsumer
+            champion_updates:
+                connection:       default
+                exchange_options: { name: 'champion_updates', type: direct }
+                queue_options:    { name: 'champion_updates' }
+                callback:         LeagueOfData\Consumers\ChampionUpdateConsumer
+            item_updates:
+                connection:       default
+                exchange_options: { name: 'item_updates', type: direct }
+                queue_options:    { name: 'item_updates' }
+                callback:         LeagueOfData\Consumers\ItemUpdateConsumer
+            rune_updates:
+                connection:       default
+                exchange_options: { name: 'rune_updates', type: direct }
+                queue_options:    { name: 'rune_updates' }
+                callback:         LeagueOfData\Consumers\RuneUpdateConsumer
+            mastery_updates:
+                connection:       default
+                exchange_options: { name: 'mastery_updates', type: direct }
+                queue_options:    { name: 'mastery_updates' }
+                callback:         LeagueOfData\Consumers\MasteryUpdateConsumer

@@ -1,0 +1,15 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+home:
+  path:       /
+  defaults:   { _controller: LeagueOfData:Default:index }
+
+champion-byId:
+  path:       /champion/id
+  defaults:   { _controller: LeagueOfData:Champion:byId }
+
+champion-list:
+  path:       /champion/list
+  defaults:   { _controller: LeagueOfData:Champion:list }

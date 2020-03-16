@@ -1,0 +1,3 @@
+parameters:
+    secret: "some_value_that_isnt_known_about"
+    apiKey: "riot-api-key"

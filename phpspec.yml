@@ -1,0 +1,4 @@
+suites:
+  league_of_data:
+    namespace: App
+    psr4_prefix: App
