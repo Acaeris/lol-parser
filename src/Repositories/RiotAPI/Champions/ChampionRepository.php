@@ -9,33 +9,21 @@ use App\Repositories\ChampionRepositoryInterface;
 use App\Services\RiotAPI\ApiAdapterInterface;
 
 /**
- * Repository for Riot Games Champion API
+ * Champion Repository for Riot Games API
  *
- * @package LeagueOfData\Repositories\RiotAPI
+ * @package App\Repositories\RiotAPI
  * @author  Caitlyn Osborne <acaeris@gmail.com>
  * @link    http://lod.gg League of Data
  */
 class ChampionRepository implements ChampionRepositoryInterface
 {
-    /**
-     * Logging Service
-     *
-     * @var LoggerInterface
-     */
+    /* @var LoggerInterface Logging Service */
     private $log;
 
-    /**
-     * Riot API
-     *
-     * @var ApiAdapterInterface
-     */
+    /* @var ApiAdapterInterface Riot API */
     private $api;
 
-    /**
-     * API Endpoint for Champion Data
-     *
-     * @var string
-     */
+    /* @var string API Endpoint for Champion Data */
     private $apiEndpoint = 'static-data/v3/champions';
 
     public function __construct(

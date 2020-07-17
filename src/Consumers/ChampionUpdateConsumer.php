@@ -12,28 +12,17 @@ use App\Services\Sql\Champion\ChampionCollection as DbCollection;
 
 class ChampionUpdateConsumer implements ConsumerInterface
 {
-
-    /**
-     * @var StoreServiceInterface
-     */
+    /* @var StoreServiceInterface Database Adapter */
     private $dbAdapter;
 
-    /**
-     * @var FetchServiceInterface
-     */
+    /* @var FetchServiceInterface API Adapter */
     private $apiAdapter;
 
-    /**
-     * @var LoggerInterface
-     */
+    /* @var LoggerInterface Logging Service */
     private $logger;
 
-    /**
-     * @var array
-     */
-    private $defaultParams = [
-        'region' => 'euw'
-    ];
+    /* @var array Default Routing Parameters */
+    private $defaultParams = ['region' => 'euw'];
 
     public function __construct(
         LoggerInterface $logger,

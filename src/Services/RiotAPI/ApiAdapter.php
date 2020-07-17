@@ -3,6 +3,7 @@
 namespace App\Services\RiotAPI;
 
 use bandwidthThrottle\tokenBucket\storage\StorageException;
+use bandwidthThrottle\tokenBucket\TimeoutException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -74,9 +75,14 @@ class ApiAdapter implements ApiAdapterInterface
      * @return ResponseInterface
      * @throws GuzzleException
      * @throws StorageException
+     * @throws TimeoutException
      */
     public function fetch(string $url, array $params): ResponseInterface
     {
+        if (isset($params['region'])) {
+            $this->setRegion($params['region']);
+        }
+
         try {
             $this->consumer->consume(1);
             $response = $this->client->request(
